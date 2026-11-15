@@ -272,6 +272,32 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 .go.locked{background:var(--line);color:var(--mute);box-shadow:0 5px 0 var(--mute);font-size:18px}
 body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
 
+/* How to play: three picture cards before the very first run (and from settings) */
+#tut{position:fixed;inset:0;z-index:45;display:grid;place-items:center;background:var(--shade);padding-block:calc(env(safe-area-inset-top,0px) + 16px) calc(env(safe-area-inset-bottom,0px) + 16px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tut-card{width:min(100%,400px);background:var(--paper);color:var(--navy);border-radius:22px;padding:16px;display:grid;gap:12px;text-align:center;box-shadow:0 8px 0 var(--drop)}
+.tut-top{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:900;color:var(--mute)}
+.tut-skip{border:0;background:none;font-family:var(--body);font-weight:900;font-size:14px;color:var(--mute);text-decoration:underline;min-height:44px;padding:0 4px;cursor:pointer}
+.tut-pic{display:block;width:100%;height:auto;border-radius:16px;background:var(--road)}
+.tut-card h2{margin:0;font-family:var(--display);font-weight:400;font-size:26px;line-height:1.2}
+.tut-card p{margin:0;font-size:15px;font-weight:700;line-height:1.55;text-wrap:balance}
+.tut-dots{display:flex;justify-content:center;gap:8px}
+.tut-dots i{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.tut-dots i.on{background:var(--tomato);transform:scale(1.25)}
+.tut-next{display:block;width:100%;min-height:52px;border:0;border-radius:16px;font-family:var(--display);font-size:22px;background:var(--tomato);color:var(--on-dark);box-shadow:0 5px 0 var(--tomato-deep);cursor:pointer}
+.tut-next:active{transform:translateY(3px);box-shadow:0 2px 0 var(--tomato-deep)}
+.tf{animation:tfSwipe 1.4s ease-in-out infinite}
+@keyframes tfSwipe{0%,100%{transform:translateX(-46px)}50%{transform:translateX(46px)}}
+.tc{animation:tcSwipe 1.4s ease-in-out infinite}
+@keyframes tcSwipe{0%,100%{transform:translateX(-30px)}50%{transform:translateX(30px)}}
+.tr{transform-origin:178px 112px;animation:tRip 1.1s ease-out infinite}
+@keyframes tRip{0%{transform:scale(.3);opacity:1}100%{transform:scale(1.6);opacity:0}}
+.tfl{transform-origin:120px 118px;animation:tFl .25s ease-in-out infinite alternate}
+@keyframes tFl{to{transform:scaleY(1.25)}}
+.tb{transform-origin:128px 62px;animation:tBurst .9s ease-in-out infinite alternate}
+@keyframes tBurst{from{transform:scale(.85)}to{transform:scale(1.1)}}
+@media (min-width:700px) and (min-height:700px){.tut-card{width:min(100%,520px);padding:22px;gap:16px}.tut-card h2{font-size:32px}.tut-card p{font-size:18px}.tut-next{font-size:26px;min-height:60px}}
+@media (prefers-reduced-motion:reduce){.tf,.tc,.tr,.tfl,.tb{animation:none}}
+
 /* Pause and settings sheets */
 .ov{position:fixed;inset:0;z-index:40;background:var(--shade);display:grid;place-items:center;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .sheet{width:min(100%,380px);background:var(--paper);color:var(--navy);border-radius:20px;padding:18px;display:grid;gap:10px}
@@ -514,6 +540,17 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
 <div id="banner" aria-live="polite"></div>
 <div id="toast" aria-live="polite"></div>
 
+<section id="tut" hidden aria-label="あそびかた">
+  <div class="tut-card" role="dialog" aria-label="あそびかた">
+    <div class="tut-top"><span id="tutNo">1 / 3</span><button type="button" class="tut-skip" id="tutSkip">スキップ</button></div>
+    <svg class="tut-pic" id="tutPic" viewBox="0 0 240 150" role="img" aria-label=""></svg>
+    <h2 id="tutHead"></h2>
+    <p id="tutText"></p>
+    <div class="tut-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    <button type="button" class="tut-next" id="tutNext">つぎへ</button>
+  </div>
+</section>
+
 <div id="steerHint" hidden aria-hidden="true">
   <div class="sh-track"><i class="sh-arrow l"></i><i class="sh-arrow r"></i><svg class="sh-finger" viewBox="0 0 36 44"><circle class="rip" cx="18" cy="7" r="9"></circle><rect x="13" y="1.5" width="10" height="26" rx="5"></rect><rect x="6" y="19" width="24" height="23" rx="9"></rect></svg></div>
   <span class="sh-label">なぞって運転</span>
@@ -575,6 +612,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
     <h2>設定</h2>
     <div class="row">効果音<button type="button" class="sw" id="swSe" aria-pressed="true">オン</button></div>
     <div class="row">BGM<button type="button" class="sw" id="swBgm" aria-pressed="true">オン</button></div>
+    <button type="button" class="sub" id="openTut">あそびかた</button>
     <button type="button" class="danger" id="wipe">データを消す</button>
     <div class="confirm" id="wipeAsk" hidden><p>本当に消す？<br>車もコインも称号も、元にもどせないよ</p>
       <div><button type="button" class="yes" id="wipeYes">消す</button><button type="button" class="no" id="wipeNo">やめる</button></div>
@@ -1912,7 +1950,7 @@ const UPGRADES = [
 const SAVE_KEY = 'butto-chase-v1';
 const freshTown = () => ({clear:false, rank:'', best:0, mis:[false, false, false]});
 const freshSave = () => ({money:0, best:0, car:0, owned:CARS.map((c, i) => i === 0), up:CARS.map(() => ({eng:0, body:0, boost:0})), carBest:CARS.map(() => 0), clears:0, hiScore:0, titles:{}, plays:0, tips:{},
-  town:0, towns:TOWNS.map(freshTown), daily:{day:'', done:{}}, gold:CARS.map(() => false), carRank:CARS.map(() => ''), se:true, bgm:true});
+  town:0, towns:TOWNS.map(freshTown), daily:{day:'', done:{}}, gold:CARS.map(() => false), carRank:CARS.map(() => ''), se:true, bgm:true, tutDone:false});
 let save = freshSave();
 function loadSave(){
   let s = null;
@@ -1956,6 +1994,7 @@ function useSave(s){
   if (!(Number.isInteger(save.town) && save.town >= 0 && save.town < TOWNS.length)) save.town = 0;
   if (!obj(save.daily) || typeof save.daily.day !== 'string' || !obj(save.daily.done)) save.daily = {day:'', done:{}};
   if (typeof save.se !== 'boolean') save.se = true;
+  if (typeof s.tutDone !== 'boolean') save.tutDone = (save.plays || 0) > 0;
   if (typeof save.bgm !== 'boolean') save.bgm = true;
 }
 const upLv = k => save.up[save.car][k] || 0;  // upgrades belong to the car you ride
@@ -2064,7 +2103,7 @@ function resetWorld(){
   P = mkBody({role:'player', key:C.key, w:C.w, h:C.h, m:C.m, color:C.color, x:-23, y:0, vy:-C.speed});
   P.maxHp = P.hp = Math.round(C.hp * (1 + 0.25 * upLv('body')));
   cars = []; heli = null; heliCool = 0; fx = []; pops = [];
-  dist = 0; t = 0; star = TOWN.start; heatPts = (star - 1) * 100; nextChaser = 3; comboN = 0; comboT = 0; maxCombo = 0;
+  dist = 0; t = 0; star = TOWN.start; heatPts = (star - 1) * 100; nextChaser = 7; comboN = 0; comboT = 0; maxCombo = 0;
   iceN = 0; finalDown = false; maxStar = star; runMis = new Set(); misQueue = []; misT = 0; misCheckT = 0; onIceNow = false;
   dmgBy = {}; takeN = 0; takeMoney = 0; trafN = 0; trafMoney = 0; nearN = 0; nearMoney = 0;
   ko = {}; for (const k in KO) ko[k] = 0; nearOppN = 0; dmgTaken = 0; ownBlast = false; P.drumT = 1; gomiMoney = 0; noticeT = 0; healT = 0;
@@ -2073,8 +2112,11 @@ function resetWorld(){
   camX = 0; camY = 0; targetX = -23; seen = {}; drag = null; wrongWay = false;
   booms = []; buildWorld();
   const a = AREAS[0];
-  for (let y = -140; y > worldTop() - 40; y -= a.gap) spawnTraffic(y, Math.random() < a.oppRate * 0.6);
+  for (let y = -CALM_D*M; y > worldTop() - 40; y -= a.gap) spawnTraffic(y, Math.random() < a.oppRate * 0.6);
 }
+/* a calm start: nothing on the road for the first CALM_D metres, then traffic thickens over the next CALM_D metres */
+const CALM_D = 150;
+function calmSkip(y){ const d = -y / M; if (d < CALM_D) return true; if (d < CALM_D*2) return Math.random() > 0.35 + 0.65 * (d - CALM_D) / CALM_D; return false; }
 
 function spawnTraffic(y, opp){
   const L = laneInfo(-y / M), a = L.a;
@@ -2756,7 +2798,7 @@ function update(dt){
     // spawns
     const a = AREAS[areaIdx];
     spawnAcc += Math.max(0, -P.vy) * dt;
-    while (spawnAcc > a.gap){ spawnAcc -= a.gap; for (let i = 0; i < a.per; i++) spawnTraffic(worldTop() - 40 - Math.random()*40, Math.random() < a.oppRate); }
+    while (spawnAcc > a.gap){ spawnAcc -= a.gap; for (let i = 0; i < a.per; i++){ const y = worldTop() - 40 - Math.random()*40; if (!calmSkip(y)) spawnTraffic(y, Math.random() < a.oppRate); } }
     nextChaser -= dt;
     if (nextChaser <= 0){ spawnChaser(); nextChaser = HEAT[star-1].every * (heli ? 0.6 : 1) * (boss ? 1.8 : 1) * (0.75 + Math.random()*0.5); }
     // intersections and level crossings
@@ -2793,11 +2835,11 @@ function update(dt){
     if (!boss && nextBoss < BOSSES.length && dist >= BOSSES[nextBoss].from){ if (dist < BOSSES[nextBoss].to - 60) spawnBoss(nextBoss); else nextBoss++; }
     if (boss && dist >= BOSSES[boss.boss.i].to){ boss.boss.mode = 'leave'; toast(`${BOSSES[boss.boss.i].name || TOWN.boss.name}をふりきった！`); endBoss(); }
     if (star >= 2 && !boss){
-      if (!spikeNext) spikeNext = t + 4;
+      if (!spikeNext) spikeNext = Math.max(t + 4, 11);
       if (t >= spikeNext){ if (!undercover() && !cars.some(c => c.plan === 'spike' && c.state === 'drive')) startSpiker(); spikeNext = t + SPIKE_EVERY[star] + Math.random()*3; }
     }
     if (star >= 3 && !boss && halfAt(dist) >= 80){
-      if (!pinchNext) pinchNext = t + 5;
+      if (!pinchNext) pinchNext = Math.max(t + 5, 13);
       if (t >= pinchNext){ if (!undercover() && !cars.some(c => c.plan === 'pin' && c.state === 'drive')) spawnPincers(); pinchNext = t + PINCH_EVERY[star] + Math.random()*4; }
     }
   }
@@ -3626,7 +3668,7 @@ function renderGarage(){
 function openGarage(){
   state = 'garage'; clearTimeout(resBtnT); garageAt = performance.now();
   if (pendingTown !== null){ save.town = pendingTown; pendingTown = null; writeSave(); }
-  $('result').hidden = true; $('title').hidden = true; $('pauseOv').hidden = true; hideRunUi(); $('garage').hidden = false;
+  $('result').hidden = true; $('title').hidden = true; $('pauseOv').hidden = true; if (!tutThen) $('tut').hidden = true; hideRunUi(); $('garage').hidden = false;
   gTab = 'car'; gSel = save.car; $('gPanel').scrollTop = 0;
   renderGarage(); sndDo(R => R.pauseMuffle(false)); playSong('garage');
 }
@@ -3719,7 +3761,7 @@ function startRun(ti){
   // ti: replay a given town (もう1回) without changing the garage's pick
   if (!townOpen(save.town)) save.town = 0;
   setTown(typeof ti === 'number' && townOpen(ti) ? ti : save.town);
-  $('title').hidden = true; $('result').hidden = true; $('garage').hidden = true; $('pauseOv').hidden = true; $('setOv').hidden = true;
+  $('title').hidden = true; $('result').hidden = true; $('garage').hidden = true; $('pauseOv').hidden = true; $('setOv').hidden = true; $('tut').hidden = true;
   clearTimeout(resSongT); clearTimeout(resBtnT);
   $('hud').hidden = false; $('boostBar').hidden = false; $('bossBar').hidden = true; document.body.classList.remove('bossing');
   const pb = $('progBar'); pb.querySelectorAll('em').forEach(e => e.remove());
@@ -3753,14 +3795,61 @@ function setSound(kind, on){
   sndDo(R => { if (kind === 'se'){ R.setSe(on); if (on) R.se('tap'); } else { R.setBgm(on); if (on && curSong){ R.music(null); R.music(curSong); } } });
 }
 
-/* title: the logo stamps on, then the run starts by itself (a tap skips ahead) */
+
+/* ---------- how to play ---------- */
+const TOY = (x, y, col, w, h) => `<g transform="translate(${x} ${y})"><rect x="${-w/2 + 3}" y="${-h/2 + 4}" width="${w}" height="${h}" rx="7" fill="rgba(0,0,0,.28)"/>` +
+  `<g fill="#141c26"><rect x="${-w/2 - 2}" y="${-h/2 + 5}" width="4" height="9" rx="1.5"/><rect x="${w/2 - 2}" y="${-h/2 + 5}" width="4" height="9" rx="1.5"/><rect x="${-w/2 - 2}" y="${h/2 - 14}" width="4" height="9" rx="1.5"/><rect x="${w/2 - 2}" y="${h/2 - 14}" width="4" height="9" rx="1.5"/></g>` +
+  `<rect x="${-w/2}" y="${-h/2}" width="${w}" height="${h}" rx="7" fill="${col}" stroke="#17324d" stroke-width="2"/>` +
+  `<rect x="${-w/2 + 4}" y="${-h/2 + 7}" width="${w - 8}" height="${h*0.18}" rx="3" fill="#bfe6ff"/><rect x="${-w/2 + 5}" y="${h/2 - h*0.26}" width="${w - 10}" height="${h*0.12}" rx="3" fill="#9cc9e6"/></g>`;
+const ROAD = '<rect width="240" height="150" fill="#4f5d6e"/><rect x="0" width="22" height="150" fill="#a8c49a"/><rect x="218" width="22" height="150" fill="#a8c49a"/>' +
+  '<g fill="#f2f4f0" opacity=".8"><rect x="118" y="4" width="4" height="22"/><rect x="118" y="44" width="4" height="22"/><rect x="118" y="84" width="4" height="22"/><rect x="118" y="124" width="4" height="22"/></g>';
+const TUT = [
+  {head:'なぞって運転', text:'画面を左右になぞると、車が動くよ。どこをなぞってもOK',
+   pic: ROAD + `<g class="tc">${TOY(120, 62, '#ff5a36', 26, 44)}</g>` +
+     '<path d="M70 124h100" stroke="#ffffff" stroke-width="3" stroke-dasharray="6 6" opacity=".8"/><path d="M62 124l12-8v16zM178 124l-12-8v16z" fill="#ffffff"/>' +
+     '<g class="tf"><rect x="108" y="112" width="24" height="34" rx="11" fill="#ffffff" stroke="#17324d" stroke-width="3"/><circle cx="120" cy="114" r="10" fill="none" stroke="#ffc83d" stroke-width="3"/></g>'},
+  {head:'満タンでタップ！', text:'車のすれすれ・逆走・ぶつけるとニトロがたまるよ。満タンになったらタップで、むてきの大ばくそう！',
+   pic: ROAD + '<rect x="30" y="12" width="180" height="26" rx="13" fill="#17324d"/><defs><pattern id="tst" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="14" fill="#ff5a36"/><rect x="7" width="7" height="14" fill="#ffc83d"/></pattern></defs>' +
+     '<rect x="36" y="18" width="168" height="14" rx="7" fill="url(#tst)"/><text x="120" y="56" text-anchor="middle" font-size="13" font-weight="900" fill="#ffc83d" font-family="sans-serif">ニトロ満タン！</text>' +
+     '<g class="tfl"><path d="M110 118q10 22 10 28q0-6 10-28z" fill="#ff8a3d"/><path d="M114 118q6 14 6 20q0-6 6-20z" fill="#ffc83d"/></g>' + TOY(120, 98, '#ff5a36', 26, 42) +
+     '<circle class="tr" cx="178" cy="112" r="16" fill="none" stroke="#ffffff" stroke-width="4"/><circle cx="178" cy="112" r="6" fill="#ffffff"/>'},
+  {head:'追っ手をクラッシュ！', text:'パトカーを一般車やかべにぶつけさせると、コインがもらえるよ。コインで車を買いかえて、街をにげきろう',
+   pic: ROAD + TOY(104, 70, '#9fb3c6', 26, 44) +
+     '<g transform="rotate(-24 150 78)">' + TOY(150, 78, '#f7f7f4', 24, 42).replace('fill="#bfe6ff"', 'fill="#17324d"') + '<rect x="140" y="74" width="10" height="5" fill="#ff3b3b"/><rect x="150" y="74" width="10" height="5" fill="#3b8bff"/></g>' +
+     '<g class="tb"><path d="M128 40l6 14 15-4-10 12 10 12-15-3-6 14-6-14-15 3 10-12-10-12 15 4z" fill="#ffc83d" stroke="#17324d" stroke-width="2"/></g>' +
+     '<text x="190" y="40" text-anchor="middle" font-size="22" font-weight="900" fill="#ffc83d" stroke="#17324d" stroke-width="4" paint-order="stroke" font-family="sans-serif">+60</text>' +
+     '<circle cx="62" cy="124" r="11" fill="#ffc83d" stroke="#d9a21f" stroke-width="3"/><circle cx="84" cy="128" r="9" fill="#ffc83d" stroke="#d9a21f" stroke-width="3"/>'},
+];
+let tutI = 0, tutThen = null, tutAt = 0;
+function showTut(then){
+  tutI = 0; tutThen = then || null; state === 'title' && (state = 'tut');
+  $('tut').hidden = false; tutAt = performance.now(); drawTut();
+}
+function drawTut(){
+  const c = TUT[tutI];
+  $('tutNo').textContent = `${tutI + 1} / ${TUT.length}`;
+  $('tutPic').innerHTML = c.pic; $('tutPic').setAttribute('aria-label', c.head);
+  $('tutHead').textContent = c.head; $('tutText').textContent = c.text;
+  [...$('tut').querySelectorAll('.tut-dots i')].forEach((d, k) => d.classList.toggle('on', k === tutI));
+  $('tutNext').textContent = tutI === TUT.length - 1 ? (tutThen ? 'とじる' : 'スタート！') : 'つぎへ';
+}
+function endTut(){
+  $('tut').hidden = true; if (!save.tutDone){ save.tutDone = true; writeSave(); }
+  const then = tutThen; tutThen = null;
+  if (then) then(); else startRun();
+}
+$('tutNext').addEventListener('click', () => { if (performance.now() - tutAt < 400) return; snd('tap'); if (tutI < TUT.length - 1){ tutI++; drawTut(); } else endTut(); });
+$('tutSkip').addEventListener('click', () => { if (performance.now() - tutAt < 400) return; snd('tap'); endTut(); });
+$('openTut').addEventListener('click', () => { snd('tap'); $('setOv').hidden = true; showTut(() => {}); });
+
+/* title: the logo stamps on, then the run starts by itself (a tap skips ahead); the very first time, the picture cards come first */
 let titleTimer = 0;
 function showTitle(){
   state = 'title';
   const el = $('title'); el.classList.remove('out'); el.hidden = false;
   titleTimer = setTimeout(() => { el.classList.add('out'); titleTimer = setTimeout(endTitle, 300); }, reduceMotion ? 1000 : 1500);
 }
-function endTitle(){ if (state !== 'title') return; clearTimeout(titleTimer); startRun(); }
+function endTitle(){ if (state !== 'title') return; clearTimeout(titleTimer); if (!save.tutDone){ $('title').hidden = true; showTut(null); return; } startRun(); }
 $('title').addEventListener('pointerdown', e => { e.preventDefault(); endTitle(); });
 
 /* ---------- input ---------- */
@@ -3784,6 +3873,7 @@ cvs.addEventListener('pointerup', endDrag); cvs.addEventListener('pointercancel'
 const keyOf = e => e.key && e.key.length === 1 ? e.key.toLowerCase() : e.key;  // P / A / D work with Shift or Caps Lock too
 window.addEventListener('keydown', e => {
   if (state === 'title'){ e.preventDefault(); endTitle(); return; }
+  if (state === 'tut'){ if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight'){ e.preventDefault(); $('tutNext').click(); } return; }
   const k = keyOf(e);
   if (k === 'Escape' || k === 'p'){ if (state === 'play') pauseGame(); else if (state === 'pause') resumeGame(); return; }
   if (k === 'ArrowLeft' || k === 'a'){ keys.left = true; steered = true; }
@@ -3844,7 +3934,7 @@ $('pBgm').addEventListener('click', () => setSound('bgm', !save.bgm));
 $('wipe').addEventListener('click', () => { snd('tap'); $('wipe').hidden = true; $('wipeAsk').hidden = false; });
 $('wipeNo').addEventListener('click', () => { snd('tap'); $('wipe').hidden = false; $('wipeAsk').hidden = true; });
 $('wipeYes').addEventListener('click', () => {
-  const se = save.se, bgm = save.bgm; save = freshSave(); save.se = se; save.bgm = bgm; writeSave();
+  const se = save.se, bgm = save.bgm, tut = save.tutDone; save = freshSave(); save.se = se; save.bgm = bgm; save.tutDone = tut; writeSave();  // sound settings and the seen how-to cards stay
   $('wipe').hidden = false; $('wipeAsk').hidden = true; $('setOv').hidden = true; gTab = 'car'; gSel = 0; renderGarage(); toast('データを消しました');
 });
 document.addEventListener('visibilitychange', () => { if (document.hidden){ pauseGame(); sndDo(R => R.suspend()); } else { sndDo(R => R.resume()); if (state === 'garage') renderGarage(); } });

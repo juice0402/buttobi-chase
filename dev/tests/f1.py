@@ -7,7 +7,9 @@ VH = int(sys.argv[2]) if len(sys.argv) > 2 else 844
 with sync_playwright() as p:
     r = Run(p, VW, VH)
     r.wait(300); check('title shown', r.g()['state'] == 'title', r.g())
-    r.wait(2200); g = r.g(); check('auto run starts', g['state'] == 'play', g)
+    r.wait(2200); g = r.g(); check('first launch shows how-to cards', g['state'] == 'tut', g)
+    r.wait(500); r.click('#tutNext'); r.click('#tutNext'); r.click('#tutNext'); r.wait(300)
+    g = r.g(); check('cards → run starts', g['state'] == 'play', g)
     res = r.ev('__butto.sim(700)'); g = r.g()
     check('run ends in result', g['state'] == 'result', (res['end'], res['dist'], g['state']))
     check('result visible', r.vis('#result'))
