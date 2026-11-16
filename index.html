@@ -2604,15 +2604,17 @@ function pop(x, y, text, color, small){
 }
 let toastTimer = 0;
 function banner(text){ const b = $('banner'); b.textContent = text; b.classList.remove('show'); void b.offsetWidth; b.classList.add('show'); }
+/* 11/17: no sentences pop up during a run (しょーくん「読めないし、気が散る」) — warnings, tips, missions and ★ speak by sound, light and the big one-word banners. Toasts are for the garage only */
 function toast(text, ms){
+  if (state !== 'garage') return;
   const el = $('toast'), low = state === 'garage' && !$('garage').hidden; el.textContent = text;
   // in the garage the toast sits just above the town picker instead of over the tabs
   el.classList.toggle('low', low);
   if (low){ const r = $('town').getBoundingClientRect(); el.style.left = (r.left + r.width/2) + 'px'; el.style.bottom = (window.innerHeight - r.top + 10) + 'px'; el.style.maxWidth = Math.max(220, r.width) + 'px'; }
   else el.style.left = el.style.bottom = el.style.maxWidth = '';
   el.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), ms || 1800); }
-/* first time ever: a longer how-to line; after that the short call (or nothing) */
-function tip(id, first, again){ if (!save.tips) save.tips = {}; if (!save.tips[id]){ save.tips[id] = true; writeSave(); toast(first, 2800); } else if (again) toast(again); }
+/* the first-time how-to lines of the run are gone too (11/17); the calls stay as markers of where they were */
+function tip(){}
 
 /* ---------- AI ---------- */
 function driveTraffic(c, dt){

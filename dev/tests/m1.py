@@ -70,9 +70,9 @@ with sync_playwright() as p:
     r.ev('__butto.garage()'); r.wait(500); r.click('.tile[data-i="13"]')
     act = r.ev("document.querySelector('#hero [data-act]').dataset.act")
     check('secret police car unlocked by title', act in ('buy', 'short'), act)
-    # mission toast during run
+    # a mission met during a run is found at once, with no sentence on screen (11/17: no toasts while driving)
     r.ev("(()=>{const s=__butto.save(); s.towns[1].mis=[false,false,false];})()")
     r.ev('__butto.start(1)'); r.ev("__dbg.ev('trafN = 21; misCheckT = 0; misT = 0; update(1/60); update(1/60);')")
-    check('mission toast in run', 'ミッション達成' in r.ev("document.getElementById('toast').textContent"), r.ev("document.getElementById('toast').textContent"))
+    check('mission found in run, no toast', r.ev("__dbg.ev('runMis.has(\"t2\")')") and not r.ev("document.getElementById('toast').classList.contains('show')"), r.ev("document.getElementById('toast').textContent"))
     print('ERR', r.errs[:5], r.cons[:3])
     r.close()
