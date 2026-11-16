@@ -73,6 +73,9 @@ body{margin:0;overflow:hidden;background:var(--navy);color:var(--navy);font-fami
 #boostBar.on .bb-wrap{box-shadow:0 0 0 3px var(--sun),0 0 30px var(--tomato)}
 #boostBar.on .bb-label span,#boostBar.on .bb-label em{color:#ffffff}
 #boostBar.nope .bb-wrap{animation:nope .3s}
+#boostBar.cool .bb{box-shadow:inset 0 0 0 2px var(--sky)}
+#boostBar.cool .bb i{background:var(--sky);opacity:.45;transition:none}
+#boostBar.cool .bb-label span,#boostBar.cool .bb-label em{color:var(--sky)}
 @keyframes readyPulse{from{box-shadow:0 0 0 2px var(--tomato),0 0 6px var(--tomato);transform:scale(1)}to{box-shadow:0 0 0 4px var(--sun),0 0 28px var(--tomato);transform:scale(1.025)}}
 @keyframes stripe{to{background-position:28px 0}}
 @keyframes nope{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
@@ -1813,12 +1816,12 @@ const AREA_BASE = {
 const area = (base, o) => Object.assign({}, AREA_BASE[base], o);
 /* the four towns. Clear one to open the next. d = metres from the start */
 const TOWNS = [
-  {name:'はじまりの街', goal:3600, heat:0.9, cap:3, start:1, goalBonus:1500, ranks:[16000, 10000, 5000, 2000],
+  {name:'はじまりの街', goal:3600, heat:0.9, cap:3, start:1, goalBonus:1500, ranks:[11000, 7000, 3500, 1400],
    boss:{name:'装甲車', color:'#3b4a5e'}, song:'town0',
    areas:[area('alley', {name:'路地', from:0, style:'town'}), area('avenue', {name:'大通り', from:700, style:'avenue'}), area('highway', {name:'高速', from:1900, style:'highway'})],
    isec:[260, 560, 860, 1120, 1380, 1680], rail:[430, 1500], station:[[1000, 1], [1580, -1], [2600, 1], [3250, -1]], crane:[], ice:false,
    bosses:[{from:1450, to:1850, hp:260, money:700, rel:85, every:7.6}, {from:3150, to:3600, hp:420, money:1100, rel:105, every:6.2}]},
-  {name:'港の街', goal:4600, heat:1.15, cap:5, start:1, goalBonus:2500, ranks:[35000, 22000, 12000, 5000],
+  {name:'港の街', goal:4600, heat:1.15, cap:5, start:1, goalBonus:2500, ranks:[25500, 16000, 8500, 3600],
    boss:{name:'装甲トラック', color:'#2d5f86'}, song:'town1',
    areas:[area('avenue', {name:'倉庫街', from:0, half:70, side:'#c3ccd4', style:'port', same:{car:2,van:3,truck:3}, opp:{car:2,van:2,truck:3}}),
           area('avenue', {name:'港通り', from:1200, side:'#b9c2ca', style:'dock'}),
@@ -1826,7 +1829,7 @@ const TOWNS = [
           area('avenue', {name:'埠頭', from:3700, half:100, side:'#b9c2ca', style:'dock', same:{car:2,van:2,truck:4,tanker:1}, opp:{car:2,truck:3,tanker:1}})],
    isec:[300, 650, 950, 1450, 1950], rail:[800, 3950], station:[[2150, -1], [4250, 1]], crane:[1350, 1700, 2050, 2350, 3850, 4150, 4450], ice:false,
    bosses:[{from:1000, to:1300, hp:300, money:800, rel:90, every:7.0}, {from:2250, to:2600, hp:460, money:1100, rel:100, every:6.2}, {from:4150, to:4600, hp:620, money:1500, rel:115, every:5.4}]},
-  {name:'雪の峠', goal:5000, heat:1.25, cap:5, start:1, goalBonus:3500, ranks:[48000, 32000, 18000, 8000],
+  {name:'雪の峠', goal:5000, heat:1.25, cap:5, start:1, goalBonus:3500, ranks:[38000, 25000, 14000, 6500],
    boss:{name:'雪上装甲車', color:'#5c7f99'}, song:'town2',
    areas:[area('alley', {name:'ふもとの村', from:0, half:70, road:'#7d838e', side:'#eef3f7', style:'snowtown'}),
           area('alley', {name:'峠道', from:1100, half:52, road:'#767c87', side:'#f2f6f9', style:'pass', tv:[50,75], ov:[60,95], gap:90}),
@@ -1834,7 +1837,7 @@ const TOWNS = [
           area('alley', {name:'山頂', from:4000, half:74, road:'#767c87', side:'#f2f6f9', style:'pass', tv:[50,80], ov:[60,95]})],
    isec:[280, 600, 900], rail:[1800, 3300], station:[[650, 1], [3000, -1], [3600, 1], [4500, -1]], crane:[], ice:true,
    bosses:[{from:780, to:1100, hp:300, money:900, rel:95, every:6.8}, {from:2330, to:2700, hp:450, money:1300, rel:108, every:6.0}, {from:4480, to:5000, hp:640, money:1800, rel:120, every:5.2}]},
-  {name:'国境の荒れ地', goal:5600, heat:1.3, cap:5, start:2, goalBonus:5000, ranks:[65000, 45000, 25000, 12000],
+  {name:'国境の荒れ地', goal:5600, heat:1.3, cap:5, start:2, goalBonus:5000, ranks:[48000, 33000, 18500, 9000],
    boss:{name:'砂漠の装甲車', color:'#7a6038'}, song:'town3',
    areas:[area('dirt', {name:'荒れ地', from:0, style:'dirt'}),
           area('dirt', {name:'峡谷', from:1500, half:70, road:'#9c7450', side:'#c4683c', style:'canyon'}),
@@ -1878,7 +1881,7 @@ const HEAT = [
 /* cars you can own: sp / hd are the shop's 5-step meters; need = a title that has to be earned before it can be bought.
    The order is the save order (save.owned / save.up / save.carBest are indexed by it), so new cars go at the end. */
 const CARS = [
-  {name:'スポーツカー',       key:'sports',  w:19, h:34, m:1.0, hp:100, speed:150, color:'#ff5a36', price:0,     sp:4, hd:1, short:'ニアミスで ニトロ2倍'},
+  {name:'スポーツカー',       key:'sports',  w:19, h:34, m:1.0, hp:100, speed:150, color:'#ff5a36', price:0,     sp:4, hd:1, short:'ニアミスで ニトロ1.5倍'},
   {name:'マッスルカー',       key:'muscle',  w:22, h:38, m:1.7, hp:150, speed:140, color:'#ffc83d', price:1000,   sp:3, hd:3, short:'体当たりが 強い'},
   {name:'ピックアップ',       key:'pickup',  w:24, h:44, m:2.6, hp:210, speed:125, color:'#38c79a', price:3000,  sp:2, hd:4, short:'後ろに ドラム缶をポイ'},
   {name:'軽自動車',           key:'pkei',    w:15, h:27, m:0.8, hp:85,  speed:145, color:'#f7a1c4', price:5000,  sp:4, hd:1, short:'小さくて すりぬけ上手'},
@@ -1900,6 +1903,13 @@ const CASH_K = () => P && P.key === 'cash' ? 1.3 : 1;
 const NITRO_DRAIN = () => P && P.key === 'rocket' ? 14 : 28;
 const undercover = () => P && P.key === 'ppolice' && noticeT <= 0;
 const DRUM_EVERY = 4.0; // pickup: seconds between drum drops
+/* nitro is still invincible, but no longer both the best shield and the best income */
+const NITRO_GAIN = 0.75;  // every source of nitro charge is scaled by this (with a 3 s overheat: strong cars clear about half their runs)
+const OVERHEAT_T = 3;     // after a nitro ends the gauge stays cold this long (no charging) — the owner chose 3 s
+const NITRO_PAY = 0.4;    // coins for whatever nitro itself smashes (ニトロドーン, traffic) — still counted for missions and titles
+/* only crashes you cause pay in full: police crashing on their own, far from you, pay a share */
+const SELF_K = 0.3, LURE_R = 100; // a crash into traffic / wrecks / road works within LURE_R of you counts as yours
+const CAMP_T = 6;         // seconds in about the same lane before the police get pushy
 /* how a chaser went down: label and coin multiplier (flashier = more coins) */
 const KO = {
   hit:  {l:'テイクダウン！',     k:1.0},
@@ -1911,7 +1921,7 @@ const KO = {
   pinch:{l:'ごっつんこ！',       k:1.6},
   train:{l:'でんしゃドーン！',   k:2.0},
   cont: {l:'コンテナドーン！',   k:2.0},
-  nitro:{l:'ニトロドーン！',     k:1.0},
+  nitro:{l:'ニトロドーン！',     k:NITRO_PAY},
 };
 /* score = coins earned in the run; rank by score */
 const RANK_L = ['S', 'A', 'B', 'C', 'D'];
@@ -2016,7 +2026,7 @@ const DAILY = [
   {id:'nitro5',  t:'ニトロで5台はね飛ばす',    v:s => s.ko.nitro >= 5,             c:1500},
   {id:'wall4',   t:'かべで追っ手を4台',        v:s => s.ko.wall >= 4,              c:1800},
   {id:'boom4',   t:'爆発で追っ手を4台',        v:s => s.ko.boom + s.ko.drum >= 4,  c:1800},
-  {id:'score5k', t:'1回で5,000コイン',        v:s => s.score >= 5000,             c:2100},
+  {id:'score5k', t:'1回で4,000コイン',        v:s => s.score >= 4000,             c:2100},
   {id:'clear',   t:'どこかの街でにげきる',     v:s => s.clear,                     c:2400},
   {id:'dist3k',  t:'3,000m 走る',             v:s => s.dist >= 3000,              c:1500},
   {id:'spike2',  t:'トゲで追っ手を2台',        v:s => s.ko.spike >= 2,             c:1800},
@@ -2068,6 +2078,7 @@ let ko = {}, nearOppN = 0, dmgTaken = 0, ownBlast = false, gomiMoney = 0, notice
 let spikes = [], boss = null, nextBoss = 0, bossN = 0, bossMoney = 0, bossSeen = 0, spikeNext = 0, pinchNext = 0;
 let hurtT = 0, trail = [], trailT = 0, boost = 0, boosting = false, shake = 0, areaIdx = 0, spawnAcc = 0, endT = 0, endKind = null;
 let camX = 0, camY = 0, targetX = 0, seen = {}, hudT = 0, wrongWay = false;
+let coolT = 0, campX = 0, campT = 0, camping = false, works = [];
 let drag = null; const keys = {left:false, right:false};
 
 const SND = () => (window.RaceSound && save.se !== undefined) ? window.RaceSound : null;
@@ -2110,6 +2121,7 @@ function resetWorld(){
   trail = []; spikes = []; boss = null; nextBoss = 0; bossN = 0; bossMoney = 0; bossSeen = 0; spikeNext = 0; pinchNext = 0;
   boost = 0; boosting = false; shake = 0; areaIdx = 0; spawnAcc = 0; endT = 0; endKind = null;
   camX = 0; camY = 0; targetX = -23; seen = {}; drag = null; wrongWay = false;
+  coolT = 0; campX = P.x; campT = 0; camping = false;
   booms = []; buildWorld();
   const a = AREAS[0];
   for (let y = -CALM_D*M; y > worldTop() - 40; y -= a.gap) spawnTraffic(y, Math.random() < a.oppRate * 0.6);
@@ -2123,7 +2135,14 @@ function spawnTraffic(y, opp){
   if (opp && !a.opp) opp = false;
   const key = pickW(opp ? a.opp : a.same), T = TRAFFIC[key];
   const nS = L.n - L.nOn, lane = opp ? nS + ((Math.random() * L.nOn) | 0) : (Math.random() * nS) | 0;
-  const x = -L.half + (lane + 0.5) * L.lw;
+  let x = -L.half + (lane + 0.5) * L.lw;
+  if (works.length){
+    if (!opp && closedAt(x, y, T.w, nS > 1 ? 400 : 700)){ // lane closed here or just ahead: another lane your way, or none
+      const alt = []; for (let i = 0; i < nS; i++){ const lx = -L.half + (i + 0.5) * L.lw; if (!closedAt(lx, y, T.w, 400)) alt.push(lx); }
+      if (!alt.length) return; x = alt[(Math.random() * alt.length) | 0];
+    }
+    if (opp && works.some(w => w.alt && y > w.y0 - 140 && y < w.y1 + 100)) return;
+  }
   for (const c of cars) if (Math.abs(c.y - y) < (c.h + T.h)/2 + 30 && Math.abs(c.x - x) < (c.w + T.w)/2 + 4) return;
   const sp = opp ? a.ov[0] + Math.random()*(a.ov[1]-a.ov[0]) : a.tv[0] + Math.random()*(a.tv[1]-a.tv[0]);
   cars.push(mkBody({role:'traffic', key, w:T.w, h:T.h, m:T.m, tough:T.tough, color:T.colors[(Math.random()*T.colors.length)|0], x, y, laneX:x, opp, tv:sp, a:opp ? Math.PI : 0, vy:opp ? sp : -sp, look:30 + Math.random()*50}));
@@ -2135,13 +2154,13 @@ function spawnChaser(){
   if (n >= Hh.max) return;
   const key = Hh.pool[(Math.random()*Hh.pool.length)|0], C = CHASERS[key];
   const half = halfAt(dist);
-  const x = clamp(P.x + (Math.random()*2 - 1) * 40, -half + C.w, half - C.w);
-  cars.push(mkBody({role:'chaser', key, w:C.w, h:C.h, m:C.m, x, y:worldBottom() + 60 + Math.random()*100, vy:P.vy, aimX:(Math.random()*2-1)*10, think:0, tx:x}));
+  const y = worldBottom() + 60 + Math.random()*100, x = openX(clamp(P.x + (Math.random()*2 - 1) * 40, -half + C.w, half - C.w), y, C.w, 40);
+  cars.push(mkBody({role:'chaser', key, w:C.w, h:C.h, m:C.m, x, y, vy:P.vy, aimX:(Math.random()*2-1)*10, think:0, tx:x}));
   if (!seen[key]){ seen[key] = true; toast(`${C.label}が来た！`); }
 }
 
 /* ---------- chaser tactics: spikes, pincers, armored boss ---------- */
-function newPolice(x, y, extra){ const C = CHASERS.police; return mkBody(Object.assign({role:'chaser', key:'police', w:C.w, h:C.h, m:C.m, x, y, vy:P.vy, aimX:0, think:0, tx:x}, extra)); }
+function newPolice(x, y, extra){ const C = CHASERS.police; x = openX(x, y, C.w, 40); return mkBody(Object.assign({role:'chaser', key:'police', w:C.w, h:C.h, m:C.m, x, y, vy:P.vy, aimX:0, think:0, tx:x}, extra)); }
 function startSpiker(){
   let best = null;
   for (const c of cars){
@@ -2168,7 +2187,7 @@ function spawnPincers(){
 }
 function spawnBoss(i){
   const B = BOSSES[i], C = CHASERS.armor, half = halfAt(dist), bw = B.w || C.w, bh = B.h || C.h;
-  boss = mkBody({role:'chaser', key:'armor', w:bw, h:bh, m:C.m * (B.final ? 1.7 : 1), x:clamp(P.x, -half + bw/2 + 2, half - bw/2 - 2), y:worldBottom() + 120, vy:P.vy, color:B.color || TOWN.boss.color,
+  boss = mkBody({role:'chaser', key:'armor', w:bw, h:bh, m:C.m * (B.final ? 1.7 : 1), x:openX(clamp(P.x, -half + bw/2 + 2, half - bw/2 - 2), worldBottom() + 120, bw, 50), y:worldBottom() + 120, vy:P.vy, color:B.color || TOWN.boss.color,
     boss:{i, hp:B.hp, max:B.hp, mode:'hold', mt:1.6, blockAt:t + B.every*0.8, flash:0, sg:1}});
   cars.push(boss); bossSeen++;
   const nm = B.name || TOWN.boss.name;
@@ -2219,6 +2238,7 @@ function buildWorld(){
   rails = RAIL_D.map(d => ({y:-d*M, state:'idle', fx:-1e9}));
   stations = STATION_D.map(([d, sg]) => ({y:-d*M, sg, alive:true, big:!!TOWN.depot}));
   cranes = CRANE_D.map(d => ({y:-d*M, state:'idle', x:0, w:52, at:0, color:CONT_COL[(Math.random()*CONT_COL.length)|0]}));
+  buildWorks();
   ice = [];
   if (TOWN.ice) for (let d = 240; d < GOAL - 80; d += 110 + Math.random()*130){
     if (nearFeature(d, 50)) continue;
@@ -2228,10 +2248,89 @@ function buildWorld(){
   drums = [];
   const dStep = TOWN.drums || 160;
   for (let d = 150; d < GOAL - 60; d += dStep + Math.random()*dStep){
-    if (nearFeature(d, 45)) continue;
+    if (nearFeature(d, 45) || works.some(w => d > w.d0 - 15 && d < w.d1 + 15)) continue;
     const sg = Math.random() < 0.5 ? -1 : 1, x = sg * (halfAt(d) - 6), n = 3 + ((Math.random()*2)|0);
     for (let i = 0; i < n; i++) drums.push({x, y:-d*M - i*12, alive:true});
   }
+}
+/* road works (工事中): every 350–650 m from 300 m on, 1 lane (2 on roads of 5+ lanes) closed for 40–90 m, away from junctions,
+   level crossings, cranes and stations, with a warning sign 100 m before. Only lanes going your way are closed and never all of
+   them — except on a 2-lane road, where your lane goes and the way through is the oncoming lane (oncoming cars wait at a
+   temporary light past the far end until you are through). The barriers are solid for everyone; police see them late. */
+function featureIn(a, b){ return ISEC_D.some(v => v > a && v < b) || RAIL_D.some(v => v > a && v < b) || STATION_D.some(v => v[0] > a - 15 && v[0] < b + 15) || CRANE_D.some(v => v > a && v < b); }
+function buildWorks(){
+  works = [];
+  for (let d = 300 + Math.random()*120; d < GOAL - 200; ){
+    let w = null;
+    for (let d0 = d; d0 < d + 300 && !w; d0 += 20){
+      const len = 40 + Math.random()*50, d1 = d0 + len, ai = areaIndexAt(d0);
+      if (d1 > GOAL - 150 || areaIndexAt(d1 + 20) !== ai || d0 < AREAS[ai].from + 70) continue;
+      if (featureIn(d0 - 45, d1 + 45) || featureIn(d0 - 112, d0 - 88)) continue;
+      const L = laneInfo(d0), nS = L.n - L.nOn, k = L.n >= 5 ? 2 : 1;
+      // half the time the lanes nearest the middle (that is where a lazy line runs), otherwise any of yours
+      const lo = nS <= k ? 0 : Math.random() < 0.5 ? clamp(Math.round(L.n/2 - k/2), 0, nS - k) : (Math.random() * (nS - k + 1)) | 0;
+      // open = the way round (the arrow): toward the bigger stretch of lanes going your way; on a 2-lane road, the oncoming lane
+      const x0 = -L.half + lo*L.lw, x1 = x0 + k*L.lw, sameL = lo, sameR = nS - lo - k;
+      const open = nS === 1 ? 1 : sameR !== sameL ? (sameR > sameL ? 1 : -1) : Math.random() < 0.5 ? -1 : 1;
+      w = {d0, d1, y0:-d1*M, y1:-d0*M, x0:lo === 0 ? -L.half - 30 : x0, x1:lo + k === L.n ? L.half + 30 : x1, open, signSide:L.nOn ? -1 : -open, signY:-(d0 - 100)*M, alt:nS === 1, seen:false};
+    }
+    if (w){ works.push(w); d = w.d0 + 350 + Math.random()*300; } else d += 300;
+  }
+}
+/* the closure in the way of a car of width cw at x, from `ahead` units before its near end to its far end (you drive toward -y) */
+function closedAt(x, y, cw, ahead){ for (const w of works) if (y <= w.y1 + ahead && y >= w.y0 - 10 && x + cw/2 > w.x0 && x - cw/2 < w.x1) return w; return null; }
+/* x moved out of any closure beside y, to the side `ref` is on if that side has room */
+function openX(x, y, cw, ext, ref){
+  for (const w of works){
+    if (y < w.y0 - ext || y > w.y1 + ext || x + cw/2 + 2 <= w.x0 || x - cw/2 - 2 >= w.x1) continue;
+    const lim = halfAt(-y / M) - cw/2 - 2, l = w.x0 - cw/2 - 3, r = w.x1 + cw/2 + 3, okL = l >= -lim, okR = r <= lim;
+    const left = (ref === undefined ? x : ref) < (w.x0 + w.x1) / 2;
+    x = okL && (left || !okR) ? l : okR ? r : x;
+  }
+  return x;
+}
+/* solid barriers: push anything out; hitting the end face is a frontal hit, scraping the side is like a wall */
+function workHit(b){
+  for (const w of works){
+    if (b.y + b.h/2 + 4 < w.y0 || b.y - b.h/2 - 4 > w.y1 || b.x + b.h/2 < w.x0 || b.x - b.h/2 > w.x1) continue;
+    const c = circlesOf(b), r = c[6];
+    let depth = 0, nx = 0, ny = 0;
+    for (let i = 0; i < 6; i += 2){
+      const cx = c[i], cy = c[i+1], qx = clamp(cx, w.x0, w.x1), qy = clamp(cy, w.y0, w.y1);
+      let dx = cx - qx, dy = cy - qy, dp;
+      const d = Math.hypot(dx, dy);
+      if (d > 0){ if (d >= r) continue; dp = r - d; dx /= d; dy /= d; }
+      else { const l = cx - w.x0, rt = w.x1 - cx, tp = cy - w.y0, bt = w.y1 - cy, m = Math.min(l, rt, tp, bt); dp = m + r; dx = m === l ? -1 : m === rt ? 1 : 0; dy = dx ? 0 : m === tp ? -1 : 1; }
+      if (dp > depth){ depth = dp; nx = dx; ny = dy; }
+    }
+    if (depth <= 0) continue;
+    b.x += nx*depth; b.y += ny*depth;
+    const vn = b.vx*nx + b.vy*ny;
+    if (vn >= 0) continue;
+    b.vx -= 1.35*vn*nx; b.vy -= 1.35*vn*ny;
+    workBump(b, w, -vn, Math.abs(ny) > 0.7);
+  }
+}
+function workBump(b, w, imp, front){
+  if (front && b.state === 'drive') b.vx += w.open * Math.min(70, imp * 0.25); // glance off toward the open side
+  if (imp > 70) burst(b.x, b.y + (front ? b.h/2 * Math.sign(b.y - w.y1 || 1) : 0), 'spark', 4);
+  if (b === P){
+    if (state !== 'play') return;
+    if (imp > (front ? 60 : 110)){ dmgSrc = 'works'; damage((imp - (front ? 60 : 110)) * 0.08); snd('wall'); }
+    if (front && P.state === 'drive'){ // nose into the end of a closure: the barrier shoves you into the nearest open lane, so nobody can park against it
+      const lim = halfAt(-P.y / M) - P.w/2 - 1, l = w.x0 - P.w/2 - 4, r = w.x1 + P.w/2 + 4;
+      const okL = l >= -lim, okR = r <= lim, dl = Math.abs(l - P.x), dr = Math.abs(r - P.x);
+      const to = okL && okR ? (dl < dr ? l : dr < dl ? r : w.open < 0 ? l : r) : okL ? l : okR ? r : null;
+      if (to !== null){ targetX = to; P.vx += Math.sign(to - P.x) * 120; }
+    }
+    return;
+  }
+  if (b.state === 'wreck'){ b.av += (Math.random() - 0.5) * imp * 0.04; return; }
+  if (b.boss){ if (imp > 80) hurtBoss(b, (imp - 80) * 0.15); return; }
+  if (b.role === 'chaser'){
+    const C = CHASERS[b.key], byP = b.lastHit === 'player' && t - b.lastHitT < 1.5;
+    if (front ? imp > C.wall * 0.6 : imp > C.wall && byP) crash(b, 'wall'); // nose first into the barrier: they saw it too late (かべドーン)
+  } else if (imp > 150) crash(b, 'wall');
 }
 function spawnCross(q, dir, x){
   const pool = ['kei','car','car','van','bus'], key = pool[(Math.random()*pool.length)|0], T = TRAFFIC[key];
@@ -2260,8 +2359,8 @@ function blowStation(st){ st.alive = false; explodeAt(st.sg*(halfAt(-st.y/M) + 3
 
 /* ---------- crash logic ---------- */
 function addBoost(v){
-  if (boosting || state !== 'play') return;
-  const was = boost; boost = Math.min(100, boost + v * (1 + 0.3 * upLv('boost')));
+  if (boosting || coolT > 0 || state !== 'play') return;
+  const was = boost; boost = Math.min(100, boost + v * NITRO_GAIN * (1 + 0.3 * upLv('boost')));
   if (was < 100 && boost >= 100){ toast('ニトロ満タン！ タップで無敵！'); snd('nitroReady'); }
 }
 function tryBoost(){
@@ -2301,15 +2400,16 @@ function comboUp(){
   return mult;
 }
 function notice(){ if (noticeT <= 0 && state === 'play'){ pop(P.x, P.y - 30, 'バレた！', '#ff5a36'); snd('busted'); } noticeT = 6; }
-function takedown(b, kind){
-  const C = CHASERS[b.key], K = KO[kind];
+function takedown(b, kind, earned){
+  const C = CHASERS[b.key], K = KO[kind], own = earned !== false;
   if (P.key === 'ppolice') notice();
   const mult = comboUp();
-  const gain = Math.round(C.money * K.k * mult * CASH_K());
+  const gain = Math.round(C.money * K.k * mult * CASH_K() * (own ? 1 : SELF_K));
   takeN++; takeMoney += gain; heatPts += 12; addBoost(25); ko[kind]++; if (ice.length && onIce(b)) iceN++;
   snd('coin', comboN); if (kind === 'pinch') snd('bonk'); else if (kind === 'train' || kind === 'cont') snd('bigcrash');
   const label = kind === 'hit' && P.key === 'muscle' ? 'ドゴォン！' : kind === 'hit' && P.key === 'monster' ? 'ペシャンコ！' : K.l;
-  pop(b.x, b.y, `${label} +${gain}`, K.k >= 1.6 ? '#ffc83d' : '#ff5a36');
+  if (own) pop(b.x, b.y, `${label} +${gain}`, K.k >= 1.6 ? '#ffc83d' : '#ff5a36');
+  else pop(b.x, b.y, `${label.replace('！', '')} +${gain}`, '#c9ced6', true); // crashed on its own, far from you: a small grey pop
 }
 
 function crash(b, how){
@@ -2321,8 +2421,15 @@ function crash(b, how){
   burst(b.x, b.y, 'debris', 8, b.color || '#cfd6dd'); burst(b.x, b.y, 'spark', 8);
   shake = Math.max(shake, 3); snd(how === 'crush' ? 'crush' : 'crash');
   const byPlayer = b.lastHit === 'player' && t - b.lastHitT < 2;
-  if (b.role === 'chaser'){ burst(b.x, b.y, 'boom', 12); if (state === 'play') takedown(b, how === 'boom' ? (ownBlast ? 'drum' : 'boom') : KO[how] && how !== 'hit' ? how : byPlayer ? 'hit' : 'maki'); }
-  else if (byPlayer && state === 'play'){ const g = Math.round(10 * CASH_K()); trafN++; trafMoney += g; pop(b.x, b.y, (how === 'nitro' ? 'ドーン！ ' : how === 'crush' ? 'ペシャンコ！ ' : '') + '+' + g, '#ffc83d'); }
+  if (b.role === 'chaser'){
+    burst(b.x, b.y, 'boom', 12);
+    if (state === 'play'){
+      const kind = how === 'boom' ? (ownBlast ? 'drum' : 'boom') : KO[how] && how !== 'hit' ? how : byPlayer ? 'hit' : 'maki';
+      // traps you lure them into (train, container, blasts, spikes, pincer bonk) are yours; a crash into traffic, a wreck or road works is yours when you touched it or it happened right by you
+      takedown(b, kind, (kind !== 'maki' && kind !== 'wall') || byPlayer || Math.hypot(b.x - P.x, b.y - P.y) < LURE_R);
+    }
+  }
+  else if (byPlayer && state === 'play'){ const g = Math.round(10 * CASH_K() * (how === 'nitro' ? NITRO_PAY : 1)); trafN++; trafMoney += g; pop(b.x, b.y, (how === 'nitro' ? 'ドーン！ ' : how === 'crush' ? 'ペシャンコ！ ' : '') + '+' + g, '#ffc83d'); }
   if (b.key === 'tanker'){ pop(b.x, b.y - 20, 'ドッカーン！', '#ffc83d'); explodeAt(b.x, b.y, 90, 420, byPlayer, 25); }
 }
 function rammer(X, O){ // whichever of the two was driving into the other harder
@@ -2432,10 +2539,10 @@ function burst(x, y, type, n, color){
   if (fx.length > 280) fx.splice(0, fx.length - 280);
 }
 function smoke(x, y, color){ if (fx.length < 280) fx.push({type:'smoke', x:x + (Math.random()-0.5)*6, y, vx:(Math.random()-0.5)*14, vy:-8 - Math.random()*10, life:1.2, max:1.2, size:4 + Math.random()*3, color:color || '#5b616b', rot:0, vr:0}); }
-function pop(x, y, text, color){
-  const p = {rx:x - P.x, ry:y - P.y, text, color, life:1};
+function pop(x, y, text, color, small){
+  const p = {rx:x - P.x, ry:y - P.y, text, color, life:1, small:!!small};
   // a pop that would land on a recent one moves up a line, so two at once never print over each other
-  const wid = q => [...q.text].reduce((a, ch) => a + (ch.charCodeAt(0) < 128 ? 10 : 17), 0);
+  const wid = q => [...q.text].reduce((a, ch) => a + (ch.charCodeAt(0) < 128 ? 10 : 17), 0) * (q.small ? 0.7 : 1);
   for (let k = 0; k <= pops.length; k++){
     const hit = pops.find(q => q.life > 0.25 && Math.abs((q.rx - p.rx) * s) < (wid(q) + wid(p)) / 2 + 4 && Math.abs((p.ry - q.ry) * s + (1 - q.life) * 34) < 21);
     if (!hit) break;
@@ -2467,9 +2574,27 @@ function driveTraffic(c, dt){
     const ov = o.state === 'wreck' ? 0 : o.vy;
     if (ov * dir < desired * dir) desired = ov * dir > 0 ? ov : 0;
   }
+  if (works.length) desired = trafficWorks(c, desired);
   c.vy += clamp(desired - c.vy, -240*dt, 240*dt);
   c.vx += clamp((c.laneX - c.x) * 3 - c.vx, -200*dt, 200*dt);
   c.a = (c.opp ? Math.PI : 0) + clamp(c.vx / 500, -0.3, 0.3) * (c.opp ? -1 : 1);
+}
+function trafficWorks(c, desired){
+  if (!c.opp){
+    const w = closedAt(c.laneX, c.y, c.w, 260);
+    if (!w) return desired;
+    const L = laneInfo(-c.y / M), nS = L.n - L.nOn; let to = null;
+    for (let i = 0; i < nS; i++){ const lx = -L.half + (i + 0.5) * L.lw; if (closedAt(lx, c.y, c.w, 260)) continue; if (to === null || Math.abs(lx - c.x) < Math.abs(to - c.x)) to = lx; }
+    if (to !== null && !cars.some(o => o !== c && o.state === 'drive' && !o.cross && Math.abs(o.x - to) < (o.w + c.w)/2 + 2 && Math.abs(o.y - c.y) < (o.h + c.h)/2 + 26)){ c.laneX = to; return desired; }
+    return Math.max(desired, -Math.max(0, c.y - c.h/2 - w.y1 - 10) * 1.6); // no way round yet: ease to a stop before the barrier
+  }
+  for (const w of works){
+    if (!w.alt || c.y > w.y0 || P.y < w.y0 - 30) continue;
+    const gap = (w.y0 - 110) - (c.y + c.h/2);
+    if (gap < -6 || gap > 240) continue;
+    return Math.min(desired, Math.max(0, gap) * 1.6);
+  }
+  return desired;
 }
 function driveCross(c, dt){
   let desired = c.tv * c.dir, acc = 260;
@@ -2525,6 +2650,7 @@ function driveSpiker(c, dt){
       c.plan = 'gone'; c.strip = null;
     }
   }
+  if (works.length) tx = openX(tx, c.y, c.w, c.h/2, c.x);
   steer(c, dt, tx, vyT, 180, 900, 320);
   c.a = clamp(c.vx / 500, -0.35, 0.35);
 }
@@ -2543,9 +2669,10 @@ function drivePincer(c, dt){
     vyT = c.slamV; tx = c.x - c.sg * 400; lat = 200; ax = 2400;
     if (c.pt > 0.55){ c.plan = m.plan = null; }
   }
+  if (works.length && c.phase !== 'slam') tx = openX(tx, c.y, c.w, c.h/2, c.x);
   steer(c, dt, tx, vyT, lat, ax, 340);
   c.a = clamp(c.vx / 500, -0.35, 0.35);
-  if (dy > 900){ c.y = P.y + 480; c.vy = P.vy; }
+  if (dy > 900){ c.y = P.y + 480; c.vy = P.vy; c.x = openX(c.x, c.y, c.w, 40); }
 }
 function driveBoss(c, dt){
   const B = c.boss, S = BOSSES[B.i], dy = c.y - P.y, ps = Math.max(60, -P.vy) * (c.slowT > 0 ? 0.6 : 1), lim = halfAt(-c.y / M) - c.w/2 - 2;
@@ -2583,10 +2710,11 @@ function driveBoss(c, dt){
     default: // leave
       tx = c.x; vyT = -ps * 0.45;
   }
+  if (works.length) tx = openX(tx, c.y, c.w, c.h/2, c.x);
   c.vx += clamp(clamp((clamp(tx, -lim, lim) - c.x) * 4, -lat, lat) - c.vx, -600*dt, 600*dt);
   c.vy += clamp(vyT - c.vy, -280*dt, 280*dt);
   c.a = clamp(c.vx / 700, -0.18, 0.18);
-  if (dy > 900 && B.mode !== 'leave'){ c.y = P.y + 480; c.vy = P.vy; }
+  if (dy > 900 && B.mode !== 'leave'){ c.y = P.y + 480; c.vy = P.vy; c.x = openX(c.x, c.y, c.w, 40); }
 }
 /* police: pull up beside you, hold, lean out (the tell), then tackle from the side — no more riding your bumper.
    One car per side; extra cars queue diagonally behind until a side frees up.
@@ -2616,12 +2744,13 @@ function policeThreat(c, x, reach){
   }
   for (const dr of drums) if (dr.alive) test(dr.x, dr.y, 12, 12, 0, 0, false);
   for (const sp of spikes) test(sp.x, sp.y, sp.w, 8, 0, 0, false);
+  for (const w of works) test((w.x0 + w.x1)/2, (w.y0 + w.y1)/2, w.x1 - w.x0, w.y1 - w.y0, 0, 0, false); // road works: seen late too
   return best;
 }
 function drivePolice(c, dt){
   const C = CHASERS.police, ps = Math.max(60, -P.vy), dy = c.y - P.y, lim = roadLim(c);
   const slot = sg => clamp(P.x + sg*(P.w/2 + c.w/2 + TK.gap), -lim, lim);
-  const fits = sg => Math.abs(slot(sg) - P.x) >= (P.w + c.w)/2 + 6;
+  const fits = sg => Math.abs(slot(sg) - P.x) >= (P.w + c.w)/2 + 6 && !(works.length && closedAt(slot(sg), P.y, c.w, 25)); // no lining up inside road works beside you (or right in front of you)
   if (!c.tk){ c.tk = 'come'; c.tt = 0; c.sg = c.x < P.x ? -1 : 1; }
   c.tt += dt;
   if (c.tk === 'come' || (c.tk === 'wait' && c.tt > 0.5)){
@@ -2645,7 +2774,7 @@ function drivePolice(c, dt){
   switch (c.tk){
     case 'wait': tdy = 120; break;
     case 'come':
-      if (Math.abs(dy) < 16 && Math.abs(c.x - tx) < 10 && !thr){ c.tk = 'side'; c.tt = 0; c.hold = 0.3 + Math.random()*0.35; }
+      if (Math.abs(dy) < 16 && Math.abs(c.x - tx) < 10 && !thr){ c.tk = 'side'; c.tt = 0; c.hold = (0.3 + Math.random()*0.35) * (camping ? 0.35 : 1); }
       break;
     case 'side':
       if (Math.abs(dy) > 50){ c.tk = 'come'; c.tt = 0; }
@@ -2665,7 +2794,7 @@ function drivePolice(c, dt){
       if (c.tt > TK.hit || c.tkHit || (P.x - c.x) * -c.sg <= 2){ c.tk = 'back'; c.tt = 0; }
       break;
     case 'back':
-      if (c.tt > TK.back){ c.tk = Math.abs(dy) < 30 ? 'side' : 'come'; c.tt = 0; c.hold = 0.25 + Math.random()*0.35; }
+      if (c.tt > TK.back * (camping ? 0.5 : 1)){ c.tk = Math.abs(dy) < 30 ? 'side' : 'come'; c.tt = 0; c.hold = (0.25 + Math.random()*0.35) * (camping ? 0.35 : 1); }
       break;
   }
   if (!thr && c.tk !== 'tackle' && Math.abs(tx - c.x) > 8) thr = policeThreat(c, tx); // the lane it is heading for
@@ -2687,7 +2816,7 @@ function drivePolice(c, dt){
     }
   }
   if (vyT === null){
-    vyT = -(ps + C.rel * clamp((dy - tdy) / 90, -0.8, 1.8)); // far behind: hurry back into the chase
+    vyT = -(ps + C.rel * (camping ? 1.35 : 1) * clamp((dy - tdy) / 90, -0.8, 1.8)); // far behind: hurry back into the chase (harder when you sit in one lane)
     // never ride the bumper: lined up right behind you, it eases off while moving out to its side
     if (dy > 0 && dy < (c.h + P.h)/2 + 40 && Math.abs(c.x - P.x) < (c.w + P.w)/2 + 1) vyT = -(ps - 25);
   }
@@ -2695,11 +2824,11 @@ function drivePolice(c, dt){
     c.vx += clamp(clamp((P.x - c.x) * 8, -TK.speed, TK.speed) - c.vx, -1600*dt, 1600*dt);
     c.vy += clamp(vyT - c.vy, -ay*dt, ay*dt);
   } else {
-    c.tx = tx = clamp(tx, -lim, lim);
+    c.tx = tx = works.length ? openX(clamp(tx, -lim, lim), c.y, c.w, c.h/2, c.x) : clamp(tx, -lim, lim); // beside road works: don't steer into the barrier
     steer(c, dt, tx, vyT, c.tk === 'wind' ? 120 : C.lat, 900, ay);
   }
   c.a = clamp(c.vx / 500, -0.35, 0.35);
-  if (dy > 900){ c.y = P.y + 480; c.vy = P.vy; c.tk = 'come'; c.tt = 0; }
+  if (dy > 900){ c.y = P.y + 480; c.vy = P.vy; c.tk = 'come'; c.tt = 0; c.x = openX(c.x, c.y, c.w, 40); }
 }
 
 function driveChaser(c, dt){
@@ -2724,12 +2853,17 @@ function driveChaser(c, dt){
         tx = Math.abs(left - c.x) < Math.abs(right - c.x) ? left : right; break;
       }
     }
-    c.tx = tx;
+    if (C.look > 0) for (const w of works){
+      const ahead = (c.y - c.h/2) - w.y1;
+      if (ahead < -6 || ahead > C.look || tx + c.w/2 + 3 <= w.x0 || tx - c.w/2 - 3 >= w.x1) continue;
+      tx = openX(tx, w.y1, c.w, 0, c.x);
+    }
+    c.tx = works.length ? openX(tx, c.y, c.w, c.h/2, c.x) : tx;
   }
   c.vx += clamp(clamp((c.tx - c.x) * 5, -C.lat, C.lat) - c.vx, -900*dt, 900*dt);
   c.vy += clamp(vyT - c.vy, -300*dt, 300*dt);
   c.a = clamp(c.vx / 500, -0.35, 0.35);
-  if (dy > 900){ c.y = P.y + 480; c.vy = P.vy; }
+  if (dy > 900){ c.y = P.y + 480; c.vy = P.vy; c.x = openX(c.x, c.y, c.w, 40); }
 }
 
 /* ---------- update ---------- */
@@ -2765,11 +2899,12 @@ function update(dt){
     if (ns > star){ star = ns; maxStar = Math.max(maxStar, star); toast(`手配度 ★${star}`); snd('star'); sndDo(R => R.heat(star)); }
     if (comboT > 0){ comboT -= dt; if (comboT <= 0){ comboN = 0; $('combo').hidden = true; } }
     if (boosting){
-      boost -= NITRO_DRAIN()*dt; if (boost <= 0){ boost = 0; boosting = false; sndDo(R => R.nitro(false)); }
+      boost -= NITRO_DRAIN()*dt; if (boost <= 0){ boost = 0; boosting = false; coolT = OVERHEAT_T; sndDo(R => R.nitro(false)); }
       trailT -= dt; if (trailT <= 0){ trailT = 0.035; trail.unshift({x:P.x, y:P.y, a:P.a}); if (trail.length > 6) trail.pop(); }
       if (Math.random() < 0.6) burst(P.x + (Math.random() - 0.5)*P.w, P.y + P.h/2, 'spark', 1);
       if (Math.random() < 0.5 && fx.length < 280) fx.push({type:'boom', x:P.x + (Math.random() - 0.5)*P.w*0.6, y:P.y + P.h/2 + 6, vx:(Math.random() - 0.5)*30, vy:40 + Math.random()*40, life:0.35, max:0.35, size:3 + Math.random()*3, color:['#e3261b','#ff8a3d','#ffc83d'][(Math.random()*3)|0], rot:0, vr:0});
     } else if (trail.length) trail.pop();
+    if (coolT > 0) coolT -= dt;
     // player control
     const L = laneInfo(dist), lim = L.half - P.w/2 - 1;
     if (keys.left) targetX -= 300*dt;
@@ -2784,6 +2919,12 @@ function update(dt){
     P.a = clamp(P.vx / 700, -0.3, 0.3);
     wrongWay = L.nOn > 0 && P.x > -L.half + (L.n - L.nOn) * L.lw + 4;
     if (wrongWay) addBoost(10 * dt);
+    // sitting in one lane gets you noticed: after CAMP_T s within half a lane, the police push harder until you move a whole lane
+    if (Math.abs(P.x - campX) > (camping ? LANE : LANE * 0.5)){ campX = P.x; campT = 0; camping = false; }
+    else if ((campT += dt) >= CAMP_T && !camping){
+      camping = true; pinchNext = Math.min(pinchNext || 1e9, t + 2.5);
+      if (!undercover()){ pop(P.x, P.y - 34, '目立ってる！', '#ff5a36'); snd('warn'); tip('camp', 'じっとしてると目立つ！ 車線を変えよう'); }
+    }
     // pickup: tosses a drum off the bed when a chaser sits right behind
     if (P.key === 'pickup' && P.state === 'drive'){
       P.drumT -= dt;
@@ -2800,7 +2941,7 @@ function update(dt){
     spawnAcc += Math.max(0, -P.vy) * dt;
     while (spawnAcc > a.gap){ spawnAcc -= a.gap; for (let i = 0; i < a.per; i++){ const y = worldTop() - 40 - Math.random()*40; if (!calmSkip(y)) spawnTraffic(y, Math.random() < a.oppRate); } }
     nextChaser -= dt;
-    if (nextChaser <= 0){ spawnChaser(); nextChaser = HEAT[star-1].every * (heli ? 0.6 : 1) * (boss ? 1.8 : 1) * (0.75 + Math.random()*0.5); }
+    if (nextChaser <= 0){ spawnChaser(); nextChaser = HEAT[star-1].every * (heli ? 0.6 : 1) * (boss ? 1.8 : 1) * (camping ? 0.7 : 1) * (0.75 + Math.random()*0.5); }
     // intersections and level crossings
     const eR = camX + W/(2*s) + 40, eL = camX - W/(2*s) - 40;
     for (const q of isecs){
@@ -2817,6 +2958,7 @@ function update(dt){
       r.hornAt = t + Math.max(0.2, eta - 0.3);
     }
     for (const r of rails) if (r.hornAt && t >= r.hornAt){ r.hornAt = 0; snd('train'); }
+    for (const w of works) if (!w.seen && w.signY > worldTop() - 20){ w.seen = true; tip('works', 'この先 工事中！ 車線がへるよ。さくにパトカーをさそいこもう'); }
     // harbor cranes: a container comes down right after you pass under — lure the police below it
     for (const c of cranes){
       if (c.state === 'idle' && P.y > c.y && P.y - c.y < 330){
@@ -2840,7 +2982,7 @@ function update(dt){
     }
     if (star >= 3 && !boss && halfAt(dist) >= 80){
       if (!pinchNext) pinchNext = Math.max(t + 5, 13);
-      if (t >= pinchNext){ if (!undercover() && !cars.some(c => c.plan === 'pin' && c.state === 'drive')) spawnPincers(); pinchNext = t + PINCH_EVERY[star] + Math.random()*4; }
+      if (t >= pinchNext){ if (!undercover() && !cars.some(c => c.plan === 'pin' && c.state === 'drive')) spawnPincers(); pinchNext = t + (PINCH_EVERY[star] + Math.random()*4) * (camping ? 0.5 : 1); }
     }
   }
   if (heli){
@@ -2858,6 +3000,7 @@ function update(dt){
   const all = [P, ...cars];
   all.sort((p, q) => p.y - q.y);
   for (let i = 0; i < all.length; i++) for (let j = i + 1; j < all.length && all[j].y - all[i].y < 90; j++) collide(all[i], all[j]);
+  if (works.length) for (const b of all) if (!b.free && !b.fixed) workHit(b);
 
   // trains, drums, chained explosions
   for (const r of rails){
@@ -2911,7 +3054,7 @@ function update(dt){
     if (playing && !c.cross && c.state === 'drive' && !c.nm && c.prevRel !== null && c.prevRel < 0 && rel >= 0){
       const gap = Math.abs(c.x - P.x) - (c.w + P.w)/2;
       const sports = P.key === 'sports';
-      if (gap > 0 && gap < (sports ? 15 : 12)){ c.nm = true; nearN++; if (c.opp) nearOppN++; nearMoney += 5; snd('near'); addBoost((c.opp ? 16 : 9) * (sports ? 2 : 1)); pop(P.x, P.y - 24, (c.opp ? 'すれすれ逆走！' : 'ニアミス！') + (sports ? ' ×2' : ''), '#7fd3ff'); if (sports) burst(P.x, P.y, 'spark', 3); }
+      if (gap > 0 && gap < (sports ? 15 : 12)){ c.nm = true; nearN++; if (c.opp) nearOppN++; nearMoney += 5; snd('near'); addBoost((c.opp ? 16 : 9) * (sports ? 1.5 : 1)); pop(P.x, P.y - 24, (c.opp ? 'すれすれ逆走！' : 'ニアミス！') + (sports ? ' ×1.5' : ''), '#7fd3ff'); if (sports) burst(P.x, P.y, 'spark', 3); }
     }
     c.prevRel = rel;
     const keep = c.role === 'chaser' && c.state === 'drive' && c.plan !== 'gone' && !(c.boss && c.boss.mode === 'leave');
@@ -3302,6 +3445,7 @@ function drawGround(top, bot, left, right){
     ctx.moveTo(p.x - p.w*0.3, p.y + p.h*0.2); ctx.lineTo(p.x - p.w*0.05, p.y - p.h*0.15); ctx.moveTo(p.x + p.w*0.05, p.y + p.h*0.3); ctx.lineTo(p.x + p.w*0.3, p.y - p.h*0.05); ctx.stroke();
   }
   drawFeatures(top, bot, left, right);
+  drawWorks(top, bot);
   ctx.fillStyle = '#f2f4f0'; ctx.fillRect(-AREAS[0].half, 24, AREAS[0].half, 5);
   const gy = -GOAL*M, gh = halfAt(GOAL);
   if (gy > top - 60 && gy < bot + 60){
@@ -3355,6 +3499,74 @@ function drawFeatures(top, bot, left, right){
       ctx.fillStyle = active && on ? '#ff2d2d' : '#6a1a1a'; circle(gx - 6, gy + 7*dir, 3);
       ctx.fillStyle = active && !on ? '#ff2d2d' : '#6a1a1a'; circle(gx + 6, gy + 7*dir, 3);
     }
+  }
+}
+/* road works, in the toy style: orange-and-white blocks along the open side, striped barricades and cones at both ends,
+   an arrow board with running chevrons and blinking lamps at the near end, a temporary light on one-lane stretches */
+function cone(x, y){ ctx.fillStyle = 'rgba(18,28,38,0.25)'; circle(x + 2, y + 3, 5); ctx.fillStyle = '#ff8a3d'; circle(x, y, 5); ctx.fillStyle = '#f7f7f4'; circle(x, y, 3.1); ctx.fillStyle = '#ff8a3d'; circle(x, y, 1.6); }
+function stripeBar(x, y, w, h){
+  ctx.fillStyle = 'rgba(18,28,38,0.25)'; rr(x + 2, y + 3, w, h, 2); ctx.fill();
+  ctx.save(); rr(x, y, w, h, 2); ctx.fillStyle = '#f7f7f4'; ctx.fill(); ctx.clip();
+  ctx.fillStyle = '#ff8a3d'; ctx.beginPath();
+  for (let k = x - h; k < x + w; k += 10){ ctx.moveTo(k, y + h); ctx.lineTo(k + h, y); ctx.lineTo(k + h + 5, y); ctx.lineTo(k + 5, y + h); ctx.closePath(); }
+  ctx.fill(); ctx.restore(); rr(x, y, w, h, 2); outline('#ff8a3d');
+}
+function lamp(x, y, on){ if (on){ ctx.fillStyle = 'rgba(255,210,74,0.35)'; circle(x, y, 6); } ctx.fillStyle = on ? '#ffd24a' : '#7a6420'; circle(x, y, 2.6); }
+function drawWorks(top, bot){
+  const blink = ((t * 3) | 0) % 2 === 0, run = ((t * 6) | 0) % 4;
+  for (const w of works){
+    if (w.y0 > bot + 60 || w.y1 < top - 160) continue;
+    const half = halfAt(w.d0 + 1), x0 = Math.max(w.x0, -half), x1 = Math.min(w.x1, half), cw = x1 - x0, len = w.y1 - w.y0, mx = x0 + cw/2;
+    if (w.alt){ // one-lane stretch: stop line and temporary light for the oncoming lane, past the far end
+      const sy = w.y0 - 110, red = P.y > w.y0 - 30;
+      ctx.fillStyle = '#f2f4f0'; ctx.fillRect(x1 + 2, sy - 2, half - x1 - 4, 4);
+      const lx = half + 9; ctx.fillStyle = 'rgba(18,28,38,0.25)'; rr(lx - 5 + 3, sy - 22 + 4, 10, 20, 3); ctx.fill();
+      ctx.fillStyle = '#20242c'; rr(lx - 5, sy - 22, 10, 20, 3); ctx.fill();
+      ctx.fillStyle = red ? '#ff2d2d' : '#6a1a1a'; circle(lx, sy - 16, 3); ctx.fillStyle = red ? '#1f4a35' : '#38c79a'; circle(lx, sy - 8, 3);
+    }
+    if (w.y0 > bot + 20 || w.y1 < top - 20) continue;
+    ctx.fillStyle = 'rgba(18,28,38,0.16)'; ctx.fillRect(x0, w.y0, cw, len); // the closed lane: dug up, a heap of earth
+    ctx.fillStyle = 'rgba(18,28,38,0.2)'; ctx.fillRect(x0 + cw*0.22, w.y0 + len*0.22, cw*0.56, len*0.2);
+    ctx.fillStyle = '#a47c53'; ellipse(mx, w.y0 + len*0.62, cw*0.27, 11); ctx.fillStyle = '#8a6440'; ellipse(mx - cw*0.06, w.y0 + len*0.6, cw*0.13, 5);
+    for (const ex of [w.x0 > -half + 1 ? x0 + 4 : null, w.x1 < half - 1 ? x1 - 4 : null]){
+      if (ex === null) continue;
+      for (let y = w.y0 + 14, k = 0; y < w.y1 - 30; y += 22, k++){
+        if (y < top - 30 || y > bot + 10) continue;
+        ctx.fillStyle = 'rgba(18,28,38,0.25)'; rr(ex - 3.5 + 2, y + 3, 7, 18, 3); ctx.fill();
+        ctx.fillStyle = k & 1 ? '#f7f7f4' : '#ff8a3d'; rr(ex - 3.5, y, 7, 18, 3); ctx.fill(); outline(k & 1 ? '#c9ced6' : '#ff8a3d');
+      }
+    }
+    stripeBar(x0 + 3, w.y0 + 2, cw - 6, 7);
+    for (let i = 0; i < 3; i++) cone(x0 + 8 + i*(cw - 16)/2, w.y0 + 17);
+    // near end: arrow board, cones, barricade with lamps
+    const bw = Math.min(cw - 10, 36), by = w.y1 - 40, dir = w.open;
+    ctx.fillStyle = 'rgba(18,28,38,0.25)'; rr(mx - bw/2 + 3, by - 8 + 4, bw, 16, 4); ctx.fill();
+    ctx.fillStyle = '#20242c'; rr(mx - bw/2, by - 8, bw, 16, 4); ctx.fill();
+    ctx.lineWidth = 2.6; ctx.lineCap = 'round';
+    for (let i = 0; i < 3; i++){
+      const cx = mx + dir*(i - 1)*9; ctx.strokeStyle = run > i ? '#ffd24a' : '#5c4c1c';
+      ctx.beginPath(); ctx.moveTo(cx - dir*3, by - 5); ctx.lineTo(cx + dir*3, by); ctx.lineTo(cx - dir*3, by + 5); ctx.stroke();
+    }
+    ctx.lineCap = 'butt';
+    for (let i = 0; i < 3; i++) cone(x0 + 8 + i*(cw - 16)/2, w.y1 - 20);
+    stripeBar(x0 + 3, w.y1 - 10, cw - 6, 7);
+    lamp(x0 + 7, w.y1 - 7, blink); lamp(x1 - 7, w.y1 - 7, !blink);
+  }
+}
+/* the warning sign, 100 m before: on a pole at the roadside (drawn over the cars, it may lean over the edge of a wide road) */
+function drawWorkSigns(top, bot){
+  for (const w of works){
+    const y = w.signY; if (y < top - 50 || y > bot + 50) continue;
+    const half = halfAt(-y / M), sg = w.signSide, px = sg * (half + Math.max(4, Math.min(26, W/(2*s) - half - 22))), bw = 42, bh = 40;
+    ctx.fillStyle = 'rgba(18,28,38,0.25)'; rr(px - bw/2 + 4, y - bh/2 + 6, bw, bh, 6); ctx.fill();
+    ctx.fillStyle = '#9aa4ae'; ctx.fillRect(px - 1.5, y + bh/2 - 2, 3, 8);
+    ctx.fillStyle = '#f7f7f4'; rr(px - bw/2, y - bh/2, bw, bh, 6); ctx.fill();
+    ctx.lineWidth = 2.5; ctx.strokeStyle = '#ff8a3d'; ctx.stroke();
+    ctx.textAlign = 'center'; ctx.fillStyle = '#17324d';
+    ctx.font = '400 8px "Dela Gothic One", sans-serif'; ctx.fillText('この先', px, y - 9);
+    ctx.font = '400 11px "Dela Gothic One", sans-serif'; ctx.fillText('工事中', px, y + 4);
+    const d = w.open, ay = y + 12; ctx.fillStyle = '#ff5a36'; ctx.fillRect(d > 0 ? px - 8 : px - 4, ay - 1.5, 12, 3);
+    ctx.beginPath(); ctx.moveTo(px + d*11, ay); ctx.lineTo(px + d*4, ay - 5); ctx.lineTo(px + d*4, ay + 5); ctx.closePath(); ctx.fill();
   }
 }
 function drawCranes(top, bot){
@@ -3456,6 +3668,7 @@ function draw(){
       const ax = c.x - c.sg*(c.w/2 + 5); ctx.fillStyle = '#ffc83d'; ctx.beginPath(); ctx.moveTo(ax - c.sg*9, c.y); ctx.lineTo(ax, c.y - 7); ctx.lineTo(ax, c.y + 7); ctx.closePath(); ctx.fill();
     }
   }
+  drawWorkSigns(top, bot);
   drawTrains(left, right);
   drawCranes(top, bot); drawFalling();
   if (heli) drawHeli(heli.x, heli.y);
@@ -3483,10 +3696,11 @@ function draw(){
       ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + len); ctx.stroke();
     }
   }
-  ctx.textAlign = 'center'; ctx.font = '400 17px "Dela Gothic One", sans-serif';
+  ctx.textAlign = 'center';
   for (const p of pops){
     const x = (P.x + p.rx - camX)*s + W/2, y = (P.y + p.ry - camY)*s + H*ANCHOR - (1 - p.life)*34;
-    ctx.globalAlpha = Math.min(1, p.life*2); ctx.lineWidth = 4; ctx.strokeStyle = '#17324d'; ctx.strokeText(p.text, x, y); ctx.fillStyle = p.color; ctx.fillText(p.text, x, y);
+    ctx.font = p.small ? '400 12px "Dela Gothic One", sans-serif' : '400 17px "Dela Gothic One", sans-serif';
+    ctx.globalAlpha = Math.min(1, p.life*2) * (p.small ? 0.9 : 1); ctx.lineWidth = p.small ? 3 : 4; ctx.strokeStyle = '#17324d'; ctx.strokeText(p.text, x, y); ctx.fillStyle = p.color; ctx.fillText(p.text, x, y);
   }
   ctx.globalAlpha = 1;
   if (state === 'play'){
@@ -3518,11 +3732,13 @@ function hud(dt){
   danger.style.opacity = boosting ? 0 : Math.max(low, hurtT > 0 ? 0.65 : 0);
   hProg.style.width = Math.min(100, dist / GOAL * 100) + '%';
   if (boss){ const B = boss.boss; bossHpEl.style.width = (B.hp / B.max * 100) + '%'; bossLeft.textContent = `あと ${Math.max(0, Math.ceil(BOSSES[B.i].to - dist))}m で去る`; }
-  bbFill.style.width = boost + '%';
+  const cool = coolT > 0 && !boosting;
+  bbFill.style.width = (cool ? coolT / OVERHEAT_T * 100 : boost) + '%'; // while it cools, a pale bar drains away
   bbBar.classList.toggle('ready', !boosting && boost >= 100);
   bbBar.classList.toggle('on', boosting);
+  bbBar.classList.toggle('cool', cool);
   nitroFx.classList.toggle('on', boosting);
-  bbHint.textContent = boosting ? 'ニトロ中！ 無敵で突っ走れ！' : boost >= 100 ? 'ニトロ満タン！ タップ！' : P.slowT > 0 ? 'パンク中… すぐ直るよ' : wrongWay ? '逆走でたまってる…' : P.key === 'ppolice' ? (noticeT > 0 ? `バレてる！ あと${Math.ceil(noticeT)}秒` : 'まぎれこみ中… ぶつけるとバレる') : 'すれすれ・逆走・ぶつけてたまる';
+  bbHint.textContent = boosting ? 'ニトロ中！ 無敵で突っ走れ！' : boost >= 100 ? 'ニトロ満タン！ タップ！' : cool ? `オーバーヒート… あと${Math.ceil(coolT)}秒` : P.slowT > 0 ? 'パンク中… すぐ直るよ' : camping && !undercover() ? '目立ってる！ 車線を変えよう' : wrongWay ? '逆走でたまってる…' : P.key === 'ppolice' ? (noticeT > 0 ? `バレてる！ あと${Math.ceil(noticeT)}秒` : 'まぎれこみ中… ぶつけるとバレる') : 'すれすれ・逆走・ぶつけてたまる';
 }
 
 const ICONS = {
@@ -3964,6 +4180,7 @@ if (location.protocol === 'file:') window.__butto = {
           for (const c of cars){ const ahead = P.y - c.y; if (ahead < -10 || ahead > 420) continue; if (c.role === 'chaser' && c.state === 'drive' && !c.boss) continue;
             if (Math.abs(c.x - x) < (c.w + P.w)/2 + 6) free = Math.min(free, ahead - (c.opp ? 120 : 0)); }
           for (const sp of spikes){ const ahead = P.y - sp.y; if (ahead > 0 && ahead < 300 && Math.abs(sp.x - x) < sp.w/2 + P.w/2 + 4) free = Math.min(free, ahead); }
+          for (const w of works){ const ahead = P.y - w.y1; if (ahead < w.y0 - w.y1 - 10 || ahead > 420) continue; if (x + P.w/2 + 4 > w.x0 && x - P.w/2 - 4 < w.x1) free = Math.min(free, Math.max(0, ahead)); }
           for (const p of ice){ const ahead = P.y - p.y; if (ahead > -p.h/2 && ahead < 200 && Math.abs(p.x - x) < p.w/2 + 4) free -= 60; }
           const sc = free - Math.abs(x - P.x) * 0.25 + (opt.wild ? Math.random() * 40 : 0);
           if (sc > bs){ bs = sc; best = x; }
