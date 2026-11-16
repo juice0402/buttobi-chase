@@ -128,7 +128,7 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 
 /* Result: stamp, title and score up top; what you earned and two big buttons at the bottom, in thumb reach. The buttons wait 0.8 s so a nitro tap can't hit them */
 #result{position:fixed;inset:0;display:flex;flex-direction:column;color:var(--on-dark);background:var(--shade);overflow-y:auto;padding-block:calc(env(safe-area-inset-top,0px) + 16px) calc(env(safe-area-inset-bottom,0px) + 16px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.r-in{flex:1;min-height:0;width:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.r-in{flex:1;min-height:0;width:100%;max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
 .r-main{flex:1 0 auto;display:grid;place-content:center;justify-items:center;gap:6px;text-align:center}
 .res-town{margin:0;font-size:13px;font-weight:700;letter-spacing:.08em;opacity:.9}
 .res-kind{margin:0;font-family:var(--display);font-size:24px;letter-spacing:.06em;text-shadow:0 3px 0 var(--navy)}
@@ -152,10 +152,10 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 .r-gain li.star i,.r-gain li.gold i,.r-gain li.title i{background:var(--sun);color:var(--navy)}
 .r-gain li.open i{background:var(--sky);color:var(--navy)}
 .r-gain li em{margin-left:auto;font-style:normal;font-family:var(--display);font-size:15px;color:var(--sun);white-space:nowrap}
-.res-btns{flex:none;display:grid;gap:10px;transition:opacity .3s,transform .3s}
-.res-btns.wait{opacity:0;transform:translateY(16px);pointer-events:none}
-.again{display:block;width:100%;border:0;border-radius:16px;padding:16px;font-family:var(--display);font-size:26px;background:var(--tomato);color:var(--on-dark);box-shadow:0 5px 0 var(--tomato-deep);cursor:pointer}
-.to-g{display:flex;justify-content:center;align-items:baseline;gap:10px;border:0;border-radius:16px;padding:13px;font-family:var(--display);font-size:20px;background:var(--sun);color:var(--navy);box-shadow:0 5px 0 var(--sun-deep);cursor:pointer}
+.res-btns{flex:none;display:grid;gap:12px;transition:opacity .3s,transform .3s}
+.res-btns.wait{opacity:0;transform:translateX(24px);pointer-events:none}
+.again{display:block;width:100%;min-height:60px;border:0;border-radius:16px;padding:0 16px;font-family:var(--display);font-size:26px;background:var(--tomato);color:var(--on-dark);box-shadow:0 5px 0 var(--tomato-deep);cursor:pointer}
+.to-g{display:flex;justify-content:center;align-items:center;gap:10px;min-height:60px;border:0;border-radius:16px;padding:0 13px;font-family:var(--display);font-size:20px;background:var(--sun);color:var(--navy);box-shadow:0 5px 0 var(--sun-deep);cursor:pointer}
 .to-g small{font-family:var(--body);font-weight:900;font-size:12px}
 .to-g small b{font-family:var(--display);font-weight:400;font-size:17px;color:var(--tomato-deep);margin-right:2px}
 .again:active,.to-g:active{transform:translateY(3px);box-shadow:none}
@@ -164,8 +164,7 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 .rank-B{background:var(--mint);color:var(--on-dark)}
 .rank-C{background:var(--sky);color:var(--navy)}
 .rank-D{background:var(--paper);color:var(--navy)}
-.new{font-style:normal;font-family:var(--display);font-size:12px;text-shadow:none;background:var(--tomato);color:var(--on-dark);border-radius:999px;padding:3px 10px;animation:newPop .9s ease-in-out infinite alternate}
-@keyframes newPop{to{transform:scale(1.08)}}
+.new{font-style:normal;font-family:var(--display);font-size:12px;text-shadow:none;background:var(--tomato);color:var(--on-dark);border-radius:999px;padding:3px 10px;animation:fxPop .32s cubic-bezier(.2,1.4,.4,1) .7s both}
 
 /* Garage: coins and settings on top, four tabs, the picked car big, the 15-car grid under it (no sideways scrolling), the town picker and the start button at the bottom. Landscape: two columns */
 #garage{position:fixed;inset:0;display:flex;flex-direction:column;background:var(--paper);color:var(--navy);padding-block:calc(env(safe-area-inset-top,0px) + 12px) calc(env(safe-area-inset-bottom,0px) + 12px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
@@ -222,8 +221,8 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 .gnote{margin:0;text-align:center;font-size:12px;font-weight:700;color:var(--mute)}
 .for{margin:0;font-size:13px;font-weight:700;color:var(--mute)}
 .for b{font-family:var(--display);font-weight:400;color:var(--navy)}
-.ups{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.up{display:flex;align-items:center;gap:12px;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px}
+.ups{list-style:none;margin:0;padding:0;display:grid;grid-auto-rows:1fr;gap:6px}
+.up{display:flex;align-items:center;gap:10px;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px}
 .ic{flex:none;display:grid;place-items:center;width:46px;height:46px;border-radius:12px;color:var(--on-dark)}
 .ic svg{width:26px;height:26px;fill:currentColor}
 .ic.eng{background:var(--sun);color:var(--navy)}
@@ -233,7 +232,7 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 .up-t b{font-family:var(--display);font-weight:400;font-size:16px;line-height:1.1}
 .up-t small{font-size:12px;font-weight:700;color:var(--mute)}
 .nw{white-space:nowrap}
-.up .act{margin:0;flex:none;min-width:96px;font-size:15px}
+.up .act{margin:0;flex:none;min-width:88px;font-size:15px}
 .mis-sec{display:grid;gap:6px}
 .stats{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
 .stats li{min-width:0;display:grid;gap:2px;justify-items:center;align-content:center;text-align:center;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:8px 4px}
@@ -243,7 +242,7 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 .mis-sec h3{margin:0;font-family:var(--display);font-weight:400;font-size:16px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
 .mis-sec h3 small{font-family:var(--body);font-size:12px;font-weight:700;color:var(--mute)}
 .mlist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-.mlist li{display:flex;align-items:center;gap:10px;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:9px 10px;font-size:14px;font-weight:900}
+.mlist li{min-height:50px;display:flex;align-items:center;gap:10px;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:9px 10px;font-size:14px;font-weight:900}
 .mlist li i{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:13px;border:2px dashed var(--line)}
 .mlist li em{margin-left:auto;font-style:normal;font-family:var(--display);font-size:14px;color:var(--tomato-deep);white-space:nowrap}
 .mlist li.done{background:#e3f6ee;border-color:var(--mint)}
@@ -255,14 +254,14 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 .slist li b{font-family:var(--display);font-weight:400;font-size:14px}
 .slist li span{font-family:var(--display);font-size:16px;letter-spacing:.08em;color:var(--sun-deep)}
 .slist li small{font-size:11px;font-weight:700;color:var(--mute)}
-.titles{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.titles{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:1fr;gap:6px}
 .ttl{min-width:0;display:grid;gap:3px;align-content:start;text-align:center;border:2px dashed var(--line);border-radius:12px;padding:8px 5px}
 .ttl b{font-family:var(--display);font-weight:400;font-size:13px;line-height:1.25;color:var(--mute)}
 .ttl span{font-size:11px;line-height:1.35;color:var(--mute);text-wrap:balance}
 .ph{display:inline-block}
 .ttl.got{border:2px solid var(--navy);background:var(--card)}
 .ttl.got b{color:var(--tomato)}
-.g-foot{display:grid;gap:8px}
+.g-foot{display:grid;gap:10px}
 .town{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;align-items:center;gap:8px;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:4px}
 .town button{height:48px;border:0;border-radius:10px;background:var(--paper);font-family:var(--display);font-size:22px;color:var(--navy);cursor:pointer}
 .town div{text-align:center;display:grid;gap:1px;min-width:0}
@@ -276,8 +275,8 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
 
 /* How to play: three picture cards before the very first run (and from settings) */
-#tut{position:fixed;inset:0;z-index:45;display:grid;place-items:center;background:var(--shade);padding-block:calc(env(safe-area-inset-top,0px) + 16px) calc(env(safe-area-inset-bottom,0px) + 16px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.tut-card{width:min(100%,400px);background:var(--paper);color:var(--navy);border-radius:22px;padding:16px;display:grid;gap:12px;text-align:center;box-shadow:0 8px 0 var(--drop)}
+#tut{position:fixed;inset:0;z-index:45;display:grid;grid-template-columns:minmax(0,1fr);place-items:center;background:var(--shade);padding-block:calc(env(safe-area-inset-top,0px) + 16px) calc(env(safe-area-inset-bottom,0px) + 16px);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tut-card{box-sizing:border-box;width:min(100%,400px);background:var(--paper);color:var(--navy);border-radius:22px;padding:16px;display:grid;gap:12px;text-align:center;box-shadow:0 8px 0 var(--drop)}
 .tut-top{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:900;color:var(--mute)}
 .tut-skip{border:0;background:none;font-family:var(--body);font-weight:900;font-size:14px;color:var(--mute);text-decoration:underline;min-height:44px;padding:0 4px;cursor:pointer}
 .tut-pic{display:block;width:100%;height:auto;border-radius:16px;background:var(--road)}
@@ -298,24 +297,27 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
 @keyframes tFl{to{transform:scaleY(1.25)}}
 .tb{transform-origin:128px 62px;animation:tBurst .9s ease-in-out infinite alternate}
 @keyframes tBurst{from{transform:scale(.85)}to{transform:scale(1.1)}}
-@media (min-width:700px) and (min-height:700px){.tut-card{width:min(100%,520px);padding:22px;gap:16px}.tut-card h2{font-size:32px}.tut-card p{font-size:18px}.tut-next{font-size:26px;min-height:60px}}
+@media (min-width:700px) and (min-height:700px){.tut-card{width:min(100%,564px);padding:22px;gap:16px}.tut-card h2{font-size:32px}.tut-card p{font-size:18px}.tut-next{font-size:26px;min-height:60px}}
 @media (prefers-reduced-motion:reduce){.tf,.tc,.tr,.tfl,.tb{animation:none}}
 
 /* Pause and settings sheets */
-.ov{position:fixed;inset:0;z-index:40;background:var(--shade);display:grid;place-items:center;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.sheet{width:min(100%,380px);background:var(--paper);color:var(--navy);border-radius:20px;padding:18px;display:grid;gap:10px}
-.sheet h2{margin:0 0 4px;text-align:center;font-family:var(--display);font-weight:400;font-size:24px}
+.ov{position:fixed;inset:0;z-index:40;background:var(--shade);display:grid;grid-template-columns:minmax(0,1fr);place-items:center;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sheet{box-sizing:border-box;justify-self:center;width:min(100%,380px);background:var(--paper);color:var(--navy);border-radius:20px;padding:16px;display:grid;gap:10px}
+.sheet .go,.sheet .sub,.sheet .danger{min-height:56px;padding:0 13px;display:grid;place-items:center}
+.sheet .go{font-size:22px}
+.sheet h2{margin:0;text-align:center;font-family:var(--display);font-weight:400;font-size:24px}
 .sub{border:0;border-radius:14px;padding:13px;font-family:var(--display);font-size:18px;background:var(--card);color:var(--navy);box-shadow:0 4px 0 var(--line);cursor:pointer}
 .sub:active{transform:translateY(2px);box-shadow:none}
 .row{display:flex;align-items:center;justify-content:space-between;gap:10px;background:transparent;border:2px solid var(--line);border-radius:14px;padding:4px 4px 4px 14px;font-weight:900}
 .sw{min-height:44px;border:0;border-radius:999px;padding:8px 16px;font-family:var(--body);font-weight:900;font-size:14px;min-width:72px;background:var(--mint);color:var(--on-dark);cursor:pointer}
 .sw[aria-pressed="false"]{background:var(--line);color:var(--mute)}
-.danger{min-height:44px;border:0;background:none;color:var(--tomato-deep);font-family:var(--body);font-weight:900;font-size:14px;padding:10px;text-decoration:underline;cursor:pointer}
+.danger{border:0;border-radius:14px;background:var(--card);color:var(--tomato-deep);font-family:var(--display);font-size:18px;box-shadow:0 4px 0 var(--line);cursor:pointer}
+.danger:active{transform:translateY(2px);box-shadow:none}
 .confirm{display:grid;gap:8px;background:#ffe6df;border-radius:14px;padding:12px;text-align:center;font-weight:900;font-size:14px;color:var(--tomato-deep)}
 .confirm p{margin:0;text-wrap:balance}
 .confirm div{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.confirm .yes{min-height:44px;border:0;border-radius:12px;padding:10px;background:var(--tomato);color:var(--on-dark);font-family:var(--display);cursor:pointer}
-.confirm .no{min-height:44px;border:0;border-radius:12px;padding:10px;background:var(--card);color:var(--navy);font-family:var(--display);cursor:pointer}
+.confirm .yes{min-height:48px;border:0;border-radius:12px;padding:10px;background:var(--tomato);color:var(--on-dark);font-family:var(--display);cursor:pointer}
+.confirm .no{min-height:48px;border:0;border-radius:12px;padding:10px;background:var(--card);color:var(--navy);font-family:var(--display);cursor:pointer}
 .ov-note{margin:0;text-align:center;font-size:12px;font-weight:700;color:var(--mute)}
 .go{display:block;width:100%;max-width:560px;margin:0 auto;font-family:var(--display);font-size:24px;border:0;border-radius:16px;padding:14px;background:var(--tomato);color:var(--on-dark);box-shadow:0 5px 0 var(--tomato-deep);cursor:pointer}
 .go:active{transform:translateY(3px);box-shadow:0 2px 0 var(--tomato-deep)}
@@ -330,8 +332,8 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   .r-gain{gap:4px;padding:8px 10px}
   .r-gain li{font-size:13px}
   .r-gain li i{width:20px;height:20px;font-size:11px}
-  .again{padding:13px;font-size:23px}
-  .to-g{padding:11px;font-size:18px}
+  .again{min-height:52px;padding:0 13px;font-size:23px}
+  .to-g{min-height:52px;padding:0 11px;font-size:18px}
   /* garage: the big card, all 15 tiles and the start button fit without scrolling */
   #garage{padding-block:calc(env(safe-area-inset-top,0px) + 6px) calc(env(safe-area-inset-bottom,0px) + 6px)}
   .g-in{gap:6px}
@@ -378,9 +380,9 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:grid}
   .pic{min-height:0}
   .info h3{font-size:24px}
-  .r-in{max-width:1000px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);align-items:center;column-gap:32px}
+  .r-in{max-width:1000px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);align-items:stretch;column-gap:32px}
   .r-main{flex:none}
-  .r-side{max-height:100%}
+  .r-side{max-height:100%;justify-content:center}
   .tile canvas{height:clamp(50px,12.5vh,140px)}
   .grid{gap:8px}
 }
@@ -410,13 +412,13 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   .res-score b{font-size:64px}
   .res-next{font-size:16px}
   .new{font-size:15px;padding:4px 12px}
-  .r-side{gap:18px}
+  .r-side,.res-btns{gap:16px}
   .r-gain{padding:14px 16px;gap:10px;background:rgba(23,50,77,.8)}
   .r-gain li{font-size:17px}
   .r-gain li i{width:28px;height:28px;font-size:14px}
   .r-gain li em{font-size:18px}
-  .again{font-size:30px;padding:18px}
-  .to-g{font-size:24px;padding:15px}
+  .again{font-size:30px;min-height:72px;padding:0 18px}
+  .to-g{font-size:24px;min-height:72px;padding:0 15px}
   .to-g small{font-size:15px}
   .to-g small b{font-size:20px}
   .g-head h2{font-size:32px}
@@ -457,7 +459,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   .stats b{font-size:26px}
   .stats b small{font-size:15px}
   .mlist{gap:8px}
-  .mlist li{font-size:17px;padding:12px 14px}
+  .mlist li{min-height:60px;font-size:17px;padding:12px 14px}
   .mlist li i{width:28px;height:28px;font-size:15px}
   .mlist li em{font-size:17px}
   .mlist li.done em{font-size:15px}
@@ -478,12 +480,15 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   .tstars{font-size:15px}
   .tstars b{font-size:17px}
   .go{font-size:28px;padding:16px}
-  .sheet{width:min(100%,440px);padding:22px;gap:12px}
+  .sheet{width:min(100%,564px);padding:22px;gap:12px}
   .sheet h2{font-size:28px}
   .sub{font-size:21px;padding:15px}
+  .sheet .go,.sheet .sub,.sheet .danger,.sheet .row{min-height:64px}
+  .sheet .go{font-size:26px}
+  .sheet .danger{font-size:21px}
   .row{font-size:17px}
   .sw{font-size:16px;min-width:84px}
-  .danger,.confirm{font-size:16px}
+  .confirm{font-size:16px}
   .ov-note{font-size:14px}
 }
 /* tablets held upright: one wider column, a bigger car card and bigger tiles to fill the height */
@@ -505,6 +510,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
 /* big tablets held sideways: the strengthen tab's cards and the performance block grow into the tall right column */
 @media (min-width:700px) and (max-height:800px) and (orientation:landscape){
   .up{padding:8px 14px}
+  .panel{padding-bottom:5px}
 }
 @media (min-width:700px) and (min-height:950px) and (orientation:landscape){
   .tile canvas{height:clamp(50px,15vh,156px)}
@@ -514,6 +520,49 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   .stats b{font-size:32px}
 }
 :focus-visible{outline:3px solid var(--mint);outline-offset:2px}
+/* Motion (11/17): one-shot moves named fx…, shoot's set plus a car feel — panels drive in from the side and brake (a lean, a small overshoot),
+   speed lines behind them, a ガシャン when you get in a car. Nothing loops or keeps swelling, no panel rises from below */
+.ov{overflow:hidden}
+.ov.fxbg{animation:fxBg .16s ease-out both}
+@keyframes fxBg{0%{background-color:transparent}}
+.fxdrive{animation:fxDrive .32s cubic-bezier(.2,1,.3,1) both}
+@keyframes fxDrive{0%{transform:translateX(110vw) skewX(-14deg)}60%{transform:translateX(-12px) skewX(4deg)}82%{transform:translateX(3px) skewX(-1deg)}100%{transform:none}}
+.ov.fxclose{pointer-events:none;z-index:41;animation:fxBgOut .22s ease-in both}
+.ov.fxclose .sheet{animation:fxDriveOut .22s cubic-bezier(.55,0,.85,.3) both}
+@keyframes fxBgOut{to{background-color:transparent}}
+@keyframes fxDriveOut{0%{transform:none}30%{transform:translateX(10px) skewX(-3deg)}100%{transform:translateX(-110vw) skewX(12deg)}}
+.fxinr{animation:fxInR .26s cubic-bezier(.2,1.15,.4,1) both;animation-delay:var(--d,0s)}
+.fxinl{animation:fxInL .26s cubic-bezier(.2,1.15,.4,1) both;animation-delay:var(--d,0s)}
+@keyframes fxInR{0%{transform:translateX(56px) skewX(-8deg);opacity:0}50%{opacity:1}100%{transform:none}}
+@keyframes fxInL{0%{transform:translateX(-56px) skewX(8deg);opacity:0}50%{opacity:1}100%{transform:none}}
+.fxcarr{animation:fxCarR .34s cubic-bezier(.2,1.2,.35,1) both}
+.fxcarl{animation:fxCarL .34s cubic-bezier(.2,1.2,.35,1) both}
+@keyframes fxCarR{0%{transform:translateX(90px) skewX(-16deg);opacity:0}40%{opacity:1}72%{transform:translateX(-5px) skewX(5deg)}100%{transform:none}}
+@keyframes fxCarL{0%{transform:translateX(-90px) skewX(16deg);opacity:0}40%{opacity:1}72%{transform:translateX(5px) skewX(-5deg)}100%{transform:none}}
+.fxtile{animation:fxTile .26s cubic-bezier(.2,1.3,.4,1) both;animation-delay:var(--d,0s)}
+@keyframes fxTile{0%{opacity:0;transform:translate(-10px,-10px) scale(.6)}55%{opacity:1}100%{transform:none}}
+.fxpick{animation:fxPick .3s ease-out both}
+@keyframes fxPick{0%{transform:none}25%{transform:scale(1.06);filter:brightness(1.2)}55%{transform:scale(.98)}100%{transform:none}}
+.fxbuy{position:relative;animation:fxBuy .44s ease-out both}
+.fxbuy::after{content:'';position:absolute;inset:-4px;border:3px solid var(--sun);border-radius:inherit;pointer-events:none;animation:fxRing .44s ease-out both}
+@keyframes fxBuy{0%{transform:none}20%{transform:scale(1.05);filter:brightness(1.25)}45%{transform:scale(.98)}100%{transform:none}}
+@keyframes fxRing{0%{opacity:1;transform:none}100%{opacity:0;transform:scale(1.1)}}
+.fxgachan{animation:fxGachan .36s ease-out both}
+@keyframes fxGachan{0%{transform:translateY(-14px) scale(1.08)}38%{transform:scale(.96,1.03)}52%{transform:translate(2px,1px)}64%{transform:translate(-2px,0)}76%{transform:translate(1px,-1px)}100%{transform:none}}
+.fxpop{animation:fxPop .32s cubic-bezier(.2,1.4,.4,1) both;animation-delay:var(--d,0s)}
+@keyframes fxPop{0%{transform:scale(.5);opacity:0}60%{opacity:1}100%{transform:none}}
+.fxshake{animation:fxShake .18s steps(4,end) both}
+@keyframes fxShake{0%{transform:translate(3px,1px)}25%{transform:translate(-3px,0)}50%{transform:translate(2px,-1px)}75%{transform:translate(-1px,1px)}100%{transform:none}}
+.fxlines{position:fixed;z-index:70;pointer-events:none;overflow:hidden;--lc:rgba(23,50,77,.28)}
+.fxlines.dk{--lc:rgba(255,255,255,.8)}
+.fxlines i{position:absolute;height:3px;border-radius:2px}
+.fxlines.l i{left:100%;background:linear-gradient(90deg,var(--lc),transparent);animation:fxStkL .36s ease-out both}
+.fxlines.r i{right:100%;background:linear-gradient(270deg,var(--lc),transparent);animation:fxStkR .36s ease-out both}
+@keyframes fxStkL{0%{opacity:0}20%{opacity:1}100%{left:-60%;opacity:0}}
+@keyframes fxStkR{0%{opacity:0}20%{opacity:1}100%{right:-60%;opacity:0}}
+.fxgo{position:fixed;inset:0;z-index:65;pointer-events:none;overflow:hidden}
+.fxgo i{position:absolute;top:0;width:3px;border-radius:2px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.85));animation:fxGo .4s cubic-bezier(.3,0,.7,1) both}
+@keyframes fxGo{0%{transform:translateY(-40vh);opacity:0}25%{opacity:1}100%{transform:translateY(110vh);opacity:0}}
 @media (prefers-reduced-motion: reduce){.new,#boostBar.ready .bb-wrap,#boostBar .bb i,#nitroFx.on,#flash.go,.logo .a,.logo .b,.ver,#title.out,.sh-finger,.sh-finger .rip,#result .res-rank{animation:none}#boostBar.ready .bb-wrap{box-shadow:0 0 0 3px var(--tomato)}#banner.show{animation:banfade 1.8s linear forwards}@keyframes banfade{0%,80%{opacity:1}100%{opacity:0}}#result .res-rank{transform:rotate(-4deg)}.go:active,.again:active,.to-g:active{transform:none}.res-btns{transition:none}}
 </style>
 
@@ -561,7 +610,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
 
 <div id="title" hidden role="button" tabindex="0" aria-label="ぶっとびチェイス　タップでスタート">
   <h1 class="logo"><span class="a">ぶっとび</span><span class="b">チェイス</span></h1>
-  <p class="ver">ver 1.1.3</p>
+  <p class="ver">ver 1.2</p>
 </div>
 
 <section id="result" hidden aria-label="けっか">
@@ -571,7 +620,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
       <p class="res-kind" id="rKind"></p>
       <b class="res-rank" id="rRank"></b>
       <p class="res-title" id="rTitle"></p>
-      <p class="res-score"><span>スコア</span><b id="rScore">0</b><em class="new" id="rHi" hidden>ハイスコア！</em></p>
+      <p class="res-score"><span>スコア</span><b id="rScore">0</b><em class="new" id="rHi" hidden>ハイスコア</em></p>
       <p class="res-next" id="rNext"></p>
     </div>
     <div class="r-side">
@@ -605,7 +654,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
         <div><small id="townNo"></small><b id="townName"></b><span class="tstars" id="townStars"></span></div>
         <button type="button" id="townNext" aria-label="次の街">›</button>
       </div>
-      <button type="button" class="go" id="go">しゅっぱつ！</button>
+      <button type="button" class="go" id="go">しゅっぱつ</button>
     </footer>
   </div>
 </section>
@@ -617,7 +666,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
     <div class="row">BGM<button type="button" class="sw" id="swBgm" aria-pressed="true">オン</button></div>
     <button type="button" class="sub" id="openTut">あそびかた</button>
     <button type="button" class="danger" id="wipe">データを消す</button>
-    <div class="confirm" id="wipeAsk" hidden><p>本当に消す？<br>車もコインも称号も、元にもどせないよ</p>
+    <div class="confirm" id="wipeAsk" hidden><p>データを全部消す。元にもどせない</p>
       <div><button type="button" class="yes" id="wipeYes">消す</button><button type="button" class="no" id="wipeNo">やめる</button></div>
     </div>
     <button type="button" class="sub" id="closeSet">とじる</button>
@@ -632,7 +681,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
     <button type="button" class="sub" id="quit">ガレージへ</button>
     <div class="row">効果音<button type="button" class="sw" id="pSe" aria-pressed="true">オン</button></div>
     <div class="row">BGM<button type="button" class="sw" id="pBgm" aria-pressed="true">オン</button></div>
-    <p class="ov-note">やめても、ここまでのコインはもらえるよ</p>
+    <p class="ov-note">やめても、ここまでのコインはもらえる</p>
   </div>
 </div>
 
@@ -3777,6 +3826,70 @@ function carPic(cv, c, hide){
   g.setTransform(1, 0, 0, 1, 0, 0); g.drawImage(oc, 0, 0);
 }
 const titleName = id => (TITLES.find(T => T.id === id) || {}).name || '';
+/* ---------- motion (11/17): shoot's fx moves plus a car feel (speed lines, a braking lean, a ガシャン) ----------
+   one-shot moves only, named fx…; nothing loops or keeps swelling, no panel rises from below.
+   What a tap does happens at once; the moves are only a picture on top. RM() (reduced motion, or window.__NOFX in tests) turns them off */
+const RM = () => reduceMotion || !!window.__NOFX;
+function fxRestart(e, c){ if (!e || RM()) return; e.classList.remove(c); void e.offsetWidth; e.classList.add(c); }
+// a finished fx class comes off again, so :active presses and later moves work as before
+document.addEventListener('animationend', e => { if (!e.pseudoElement && /^fx/.test(e.animationName)) for (const c of [...e.target.classList]) if (/^fx/.test(c)) e.target.classList.remove(c); });
+// speed lines: thin streaks that shoot once across a box. dir -1 = the thing moves left (it came in from the right)
+const FX_LINES = [[.1, .5, 0], [.24, .8, .04], [.38, .42, .08], [.52, .9, .02], [.66, .55, .06], [.8, .72, .03], [.92, .38, .09]];
+function fxLines(r, dir, dark){
+  if (RM() || !r || r.height < 1) return;
+  const box = document.createElement('div'); box.className = 'fxlines ' + (dir < 0 ? 'l' : 'r') + (dark ? ' dk' : ''); box.setAttribute('aria-hidden', 'true');
+  box.style.cssText = `left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px`;
+  box.innerHTML = FX_LINES.map(([y, w, d]) => `<i style="top:${(y * 100).toFixed(0)}%;width:${(w * 55).toFixed(0)}%;animation-delay:${d}s"></i>`).join('');
+  document.body.appendChild(box); setTimeout(() => box.remove(), 480);
+}
+// slide a box in from the side it was asked for (dir 1 = from the right), with speed lines behind it
+function fxIn(e, dir, lines, dark){
+  if (RM() || !e) return;
+  e.classList.remove('fxinr', 'fxinl'); const r = e.getBoundingClientRect();
+  fxRestart(e, dir < 0 ? 'fxinl' : 'fxinr'); if (lines) fxLines(r, -dir, dark);
+}
+// tiles are laid from the top left, row + column a little later each (0.4 s at most; off-screen ones are left alone)
+function tilesIn(box, sel){
+  if (RM() || !box) return;
+  const items = [...box.querySelectorAll(sel)]; if (!items.length) return;
+  const rs = items.map(e => e.getBoundingClientRect()), tops = [...new Set(rs.map(r => Math.round(r.top)))].sort((a, b) => a - b), lefts = [...new Set(rs.map(r => Math.round(r.left)))].sort((a, b) => a - b);
+  items.forEach((e, k) => { const r = rs[k]; if (r.height < 1 || r.top > innerHeight + 20) return;
+    e.style.setProperty('--d', Math.min(0.4, (tops.indexOf(Math.round(r.top)) + lefts.indexOf(Math.round(r.left))) * 0.04) + 's'); fxRestart(e, 'fxtile'); });
+}
+// a number counts up (from 0) or rolls (from → to); the last frame is always the real text
+function fxCount(e, to, from, delay, ms){
+  if (RM() || !e) return;
+  from = from || 0; if (from === to) return;
+  const t0 = performance.now() + (delay || 0), dur = ms || 420, end = e.textContent;
+  e.textContent = fmt(from);
+  const step = () => { if (!e.isConnected) return; const p = Math.min(1, Math.max(0, (performance.now() - t0) / dur));
+    if (p >= 1){ e.textContent = end; return; } e.textContent = fmt(Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3)))); requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+// sheets (settings / pause): drive in from the right and brake; on closing a copy drives off to the left
+function openOv(id){
+  const ov = $(id), was = !ov.hidden; ov.hidden = false;
+  if (RM() || was) return;
+  const sh = ov.querySelector('.sheet'); sh.classList.remove('fxdrive'); const r = sh.getBoundingClientRect();
+  fxRestart(ov, 'fxbg'); fxRestart(sh, 'fxdrive'); setTimeout(() => fxLines(r, -1), 90);
+}
+function closeOv(id){
+  const ov = $(id); if (ov.hidden) return;
+  if (!RM()){
+    const g = ov.cloneNode(true); g.removeAttribute('id'); g.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
+    g.classList.remove('fxbg'); g.classList.add('fxclose'); g.setAttribute('aria-hidden', 'true');
+    g.querySelectorAll('[class*="fx"]').forEach(e => { for (const c of [...e.classList]) if (/^fx/.test(c)) e.classList.remove(c); });
+    document.body.appendChild(g); setTimeout(() => g.remove(), 260);
+  }
+  ov.hidden = true;
+}
+// a run starts: streaks race down the screen once
+function fxGo(){
+  if (RM()) return;
+  const box = document.createElement('div'); box.className = 'fxgo'; box.setAttribute('aria-hidden', 'true');
+  box.innerHTML = [8, 19, 31, 44, 57, 69, 81, 92].map((x, k) => `<i style="left:${x}%;animation-delay:${(k * 37 % 90) / 1000}s;height:${18 + (k * 13 % 16)}vh"></i>`).join('');
+  document.body.appendChild(box); setTimeout(() => box.remove(), 520);
+}
 /* ---------- garage ---------- */
 const fmt = n => Math.round(n).toLocaleString();
 let gTab = 'car', gSel = 0, pendingTown = null, garageAt = 0;
@@ -3795,12 +3908,12 @@ const LOCK = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"
 function renderHero(){
   const i = gTab === 'car' ? gSel : save.car, c = CARS[i], st = carState(i), sil = isSil(st), el = $('hero');
   const best = save.carBest[i] || 0;
-  const bestHtml = best > 0 ? `この車のベスト ${rankChip(save.carRank[i])}<b>${fmt(best)}</b>${save.gold[i] ? '<i class="gd">金</i>' : ''}` : (sil ? '' : 'まだ走っていない');
+  const bestHtml = best > 0 ? `ベスト ${rankChip(save.carRank[i])}<b>${fmt(best)}</b>${save.gold[i] ? '<i class="gd">金</i>' : ''}` : (sil ? '' : '記録なし');
   let btn;
   if (st === 'riding') btn = '<button type="button" class="act now" data-act="none">のってる</button>';
   else if (st === 'owned') btn = '<button type="button" class="act ride" data-act="ride">のる</button>';
   else if (st === 'buyable') btn = `<button type="button" class="act buy" data-act="buy">買う ${fmt(c.price)}</button>`;
-  else if (st === 'need') btn = `<button type="button" class="act need" data-act="need">称号「${titleName(c.need)}」で 買えるように</button>`;
+  else if (st === 'need') btn = `<button type="button" class="act need" data-act="need">称号「${titleName(c.need)}」で解禁</button>`;
   else btn = `<button type="button" class="act" data-act="short">あと ${fmt(c.price - save.money)} コイン</button>`;
   el.className = 'hero st-' + st; el.dataset.i = i;
   el.innerHTML = `<div class="pic"><canvas class="hpic" aria-hidden="true"></canvas></div><div class="info"><h3>${sil ? '？？？' : c.name}</h3>` +
@@ -3817,24 +3930,24 @@ function renderPanel(){
       const st = carState(i); if (save.gold[i]) gold++;
       const lab = st === 'riding' ? 'のってる' : st === 'owned' ? 'もってる' : st === 'buyable' ? fmt(c.price) : '？？？';
       return `<li><button type="button" class="tile st-${st}${i === gSel ? ' sel' : ''}" data-i="${i}" aria-label="${isSil(st) ? 'まだの車' : c.name}"><canvas aria-hidden="true"></canvas><span>${lab}</span>${save.gold[i] ? '<i class="gd">金</i>' : ''}</button></li>`;
-    }).join('') + `</ul><p class="gnote">金のしるし ${gold} / ${CARS.length}（Sランクをとった車につくよ）</p>`;
+    }).join('') + `</ul><p class="gnote">金のしるし ${gold} / ${CARS.length}・Sランクでつく</p>`;
     p.querySelectorAll('.tile').forEach(b => { const i = +b.dataset.i; carPic(b.querySelector('canvas'), CARS[i], isSil(carState(i))); });
   } else if (gTab === 'up'){
     const U = save.up[save.car];
-    p.innerHTML = `<p class="for">のってる <b>${car().name}</b> の強化（車ごと）</p><ul class="ups">` + UPGRADES.map(it => {
+    p.innerHTML = `<p class="for"><b>${car().name}</b> の強化</p><ul class="ups">` + UPGRADES.map(it => {
       const lv = U[it.key] || 0, max = it.prices.length, price = upPrice(it, lv, save.car);
       const btn = price === null ? '<button type="button" class="act now" data-act="none">さいだい</button>' : `<button type="button" class="act ${save.money >= price ? 'buy' : ''}" data-act="up" data-k="${it.key}">${fmt(price)}</button>`;
       return `<li class="up"><span class="ic ${it.key}">${ICONS[it.key]}</span><div class="up-t"><b>${it.name}</b><span class="pips" role="img" aria-label="レベル ${lv} / ${max}">${pipsHtml(lv, max)}</span><small>${it.desc(lv).replace(/^(\S+) (.+)$/, '$1 <span class="nw">$2</span>')}</small></div>${btn}</li>`;
     }).join('') + '</ul>' + nowStats();
   } else if (gTab === 'mis'){
     const T = save.towns[ti], open = townOpen(ti), D = dailyState();
-    const row = (done, text, c, lock) => `<li class="${done ? 'done' : lock ? 'lock' : ''}"><i>${done ? '✓' : ''}</i><span>${text}</span><em>${done ? 'もらった' : '+' + fmt(c)}</em></li>`;
+    const row = (done, text, c, lock) => `<li class="${done ? 'done' : lock ? 'lock' : ''}"><i>${done ? '✓' : ''}</i><span>${text}</span><em>${done ? '' : '+' + fmt(c)}</em></li>`;
     let stars = 0; for (let i = 0; i < TOWNS.length; i++) stars += townStars(i);
     const left = 24 - new Date().getHours();
-    p.innerHTML = `<section class="mis-sec"><h3>街のミッション <small>${TOWNS[ti].name}・1回の走りで達成・1度だけもらえる</small></h3><ul class="mlist">${TOWN_MIS[ti].map((m, k) => row(T.mis[k], m.t, m.c, !open)).join('')}</ul></section>` +
-      `<section class="mis-sec"><h3>今日のミッション <small>どの街でもOK・あと${left}時間で入れかわる</small></h3><ul class="mlist">${todayMis().map(m => row(D.done[m.id], m.t, m.c)).join('')}</ul></section>` +
-      `<section class="mis-sec"><h3>星あつめ <small>★ ${stars} / ${TOWNS.length * 3}・にげきる／Aランク／街のミッション3つ</small></h3><ul class="slist">${TOWNS.map((Tn, i) => { const n = townStars(i), R = save.towns[i];
-        return `<li><b>${Tn.name}</b><span>${'★'.repeat(n)}${'☆'.repeat(3 - n)}</span><small>${townOpen(i) ? (R.best ? `ベスト ${R.rank} ${fmt(R.best)}` : 'まだ走っていない') : 'まだ開いていない'}</small></li>`; }).join('')}</ul></section>`;
+    p.innerHTML = `<section class="mis-sec"><h3>街のミッション <small>${TOWNS[ti].name}・1度だけ</small></h3><ul class="mlist">${TOWN_MIS[ti].map((m, k) => row(T.mis[k], m.t, m.c, !open)).join('')}</ul></section>` +
+      `<section class="mis-sec"><h3>今日のミッション <small>あと${left}時間で入れかわり</small></h3><ul class="mlist">${todayMis().map(m => row(D.done[m.id], m.t, m.c)).join('')}</ul></section>` +
+      `<section class="mis-sec"><h3>星あつめ <small>★ ${stars} / ${TOWNS.length * 3}</small></h3><ul class="slist">${TOWNS.map((Tn, i) => { const n = townStars(i), R = save.towns[i];
+        return `<li><b>${Tn.name}</b><span>${'★'.repeat(n)}${'☆'.repeat(3 - n)}</span><small>${townOpen(i) ? (R.best ? `ベスト ${R.rank} ${fmt(R.best)}` : '記録なし') : 'ロック中'}</small></li>`; }).join('')}</ul></section>`;
   } else {
     p.innerHTML = '<ul class="titles">' + TITLES.map(T => save.titles[T.id] ? `<li class="ttl got"><b>${T.name}</b><span>${phrases(T.hint)}</span></li>` : `<li class="ttl"><b>？？？</b><span>${phrases(T.hint)}</span></li>`).join('') + '</ul>';
   }
@@ -3875,9 +3988,9 @@ function renderTown(){
   const ti = save.town, T = TOWNS[ti], open = townOpen(ti), n = townStars(ti), R = save.towns[ti];
   $('townNo').textContent = `街 ${ti + 1} / ${TOWNS.length}`;
   $('townName').innerHTML = (open ? '' : LOCK) + T.name;
-  $('townStars').innerHTML = open ? `<b>${'★'.repeat(n)}${'☆'.repeat(3 - n)}</b>${R.best ? `　ベスト ${R.rank}` : ''}` : `「${TOWNS[ti - 1].name}」をにげきると開く`;
+  $('townStars').innerHTML = open ? `<b>${'★'.repeat(n)}${'☆'.repeat(3 - n)}</b>${R.best ? `　ベスト ${R.rank}` : ''}` : `${TOWNS[ti - 1].name}をにげきると開く`;
   $('town').classList.toggle('locked', !open);
-  const g = $('go'); g.classList.toggle('locked', !open); g.textContent = open ? 'しゅっぱつ！' : 'まだ走れない街';
+  const g = $('go'); g.classList.toggle('locked', !open); g.textContent = open ? 'しゅっぱつ' : 'ロック中';
 }
 function renderGarage(){
   $('gMoney').textContent = fmt(save.money);
@@ -3895,6 +4008,20 @@ function openGarage(){
   $('result').hidden = true; $('title').hidden = true; $('pauseOv').hidden = true; if (!tutThen) $('tut').hidden = true; hideRunUi(); $('garage').hidden = false;
   gTab = 'car'; gSel = save.car; $('gPanel').scrollTop = 0;
   renderGarage(); sndDo(R => R.pauseMuffle(false)); playSong('garage');
+  fxHero(1, true); tilesIn($('gPanel'), '.tile');
+}
+/* got in a car (bought = also a ring around the card): the car lands with a ガシャン and its tile rings */
+function fxGot(i, bought){
+  if (RM()) return; const h = $('hero');
+  fxRestart(h.querySelector('.pic'), 'fxgachan'); if (bought) fxRestart(h, 'fxbuy');
+  fxRestart($('gPanel').querySelector(`.tile[data-i="${i}"]`), 'fxbuy');
+}
+/* the hero card's car drives in from the side it was picked on (dir 1 = from the right); lines = speed lines across the card */
+function fxHero(dir, lines){
+  if (RM()) return; const h = $('hero'); if (!h || getComputedStyle(h).display === 'none') return;
+  const r = h.getBoundingClientRect();
+  fxRestart(h.querySelector('.pic'), dir < 0 ? 'fxcarl' : 'fxcarr'); fxIn(h.querySelector('.info'), dir);
+  if (lines) fxLines(r, -dir);
 }
 const titleStats = () => ({clear:endKind === 'clear', boss:bossN, traf:trafN, near:nearN, nearOpp:nearOppN, maxCombo, ko, dmgR:dmgTaken / P.maxHp});
 function pickTitle(){
@@ -3920,7 +4047,7 @@ function finishRun(show){
   if (!endKind) endKind = 'quit';
   if (boosting){ boosting = false; nitroOff(); }
   checkMis(true);
-  const sum = runScore(), rank = rankOf(sum), title = pickTitle(), newTitle = !save.titles[title.id], hiNew = sum > save.hiScore;
+  const m0 = save.money, sum = runScore(), rank = rankOf(sum), title = pickTitle(), newTitle = !save.titles[title.id], hiNew = sum > save.hiScore;
   const rs = ranksOf(townI), nextRank = rs[rs.findIndex(r => r.r === rank.r) - 1];
   const T = save.towns[townI], starsBefore = townStars(townI), gain = [];
   save.money += sum; save.best = Math.max(save.best, Math.floor(dist)); if (endKind === 'clear') save.clears++;
@@ -3942,8 +4069,8 @@ function finishRun(show){
   if (endKind === 'clear' && !T.clear){ T.clear = true; if (townI + 1 < TOWNS.length){ opened = TOWNS[townI + 1]; save.town = townI + 1; } }
   const starsNow = townStars(townI);
   if (starsNow > starsBefore) gain.push({k:'star', t:`${TOWN.name} ${'★'.repeat(starsNow)}${'☆'.repeat(3 - starsNow)}`});
-  if (rank.r === 'S' && !save.gold[save.car]){ save.gold[save.car] = true; gain.push({k:'gold', t:`金のしるし！ ${car().name}`}); }
-  if (opened) gain.push({k:'open', t:`次の街「${opened.name}」が開いた！`});
+  if (rank.r === 'S' && !save.gold[save.car]){ save.gold[save.car] = true; gain.push({k:'gold', t:`金のしるし ${car().name}`}); }
+  if (opened) gain.push({k:'open', t:`次の街「${opened.name}」が開いた`});
   writeSave();
   sndDo(R => { R.engineOff(); R.siren(0); R.nitro(false); R.boss(false); });
   hideRunUi(); clearTimeout(toastTimer); $('toast').classList.remove('show'); $('banner').classList.remove('show');
@@ -3953,17 +4080,23 @@ function finishRun(show){
   $('rTown').textContent = TOWN.name;
   $('rKind').textContent = endKind === 'clear' ? 'にげきった！' : 'クラッシュ！';
   rk.className = 'res-rank rank-' + rank.r; rk.textContent = rank.r; rk.setAttribute('aria-label', rank.r + 'ランク');
-  $('rTitle').innerHTML = `<span>${title.name}</span>${newTitle ? '<em class="new">NEW 称号！</em>' : ''}`;
+  $('rTitle').innerHTML = `<span>${title.name}</span>${newTitle ? '<em class="new">NEW</em>' : ''}`;
   $('rScore').textContent = fmt(sum);
-  $('rHi').textContent = hiNew ? 'ハイスコア！' : 'この車でベスト！';
+  $('rHi').textContent = hiNew ? 'ハイスコア' : 'この車でベスト';
   $('rHi').hidden = !((hiNew || carNew) && sum > 0);
-  $('rNext').textContent = nextRank ? `${nextRank.r}ランクまで あと ${fmt(nextRank.min - sum)}` : 'さいこうランク！';
-  const ic = {mis:'✓', star:'★', gold:'金', open:'!', title:'称'};
+  $('rNext').textContent = nextRank ? `${nextRank.r}ランクまで あと ${fmt(nextRank.min - sum)}` : '最高ランク';
+  const ic = {mis:'✓', star:'★', gold:'金', open:'›', title:'称'};
   $('rGain').innerHTML = gain.map(g => `<li class="${g.k}"><i>${ic[g.k]}</i><span>${g.t}</span>${g.c ? `<em>+${fmt(g.c)}</em>` : ''}</li>`).join('');
   $('rMoney').textContent = fmt(save.money);
   state = 'result';
   $('garage').hidden = true; el.hidden = false; el.scrollTop = 0; $('rGain').scrollTop = 0; fadeMore($('rGain'));
   rk.style.animation = 'none'; void rk.offsetWidth; rk.style.animation = '';
+  if (!RM()){  // the headline slides in with speed lines, the title pops after the stamp, the numbers count up, the rows come in one by one
+    fxIn($('rKind'), -1, true, true);
+    $('rTitle').style.setProperty('--d', '.5s'); fxRestart($('rTitle'), 'fxpop');
+    fxCount($('rScore'), sum, 0, 350, 650); fxCount($('rMoney'), save.money, m0, 900, 600);
+    $('rGain').querySelectorAll('li').forEach((li, k) => { li.style.setProperty('--d', (0.6 + k * 0.07).toFixed(2) + 's'); fxRestart(li, 'fxinr'); });
+  }
   const rb = $('rBtns'); rb.classList.add('wait'); clearTimeout(resBtnT); resBtnT = setTimeout(() => rb.classList.remove('wait'), 800);
   // the result's sounds stop at the next run (もう1回 can be tapped after 0.8 s, before the last of them)
   const later = (fn, ms) => setTimeout(() => { if (state === 'result' || state === 'garage') fn(); }, ms);
@@ -4000,14 +4133,14 @@ function startRun(ti){
 /* pause: the II button, Esc / P, or the app going to the background */
 function pauseGame(){
   if (state !== 'play') return;
-  state = 'pause'; drag = null; keys.left = keys.right = false; syncSw(); $('pauseOv').hidden = false;
+  state = 'pause'; drag = null; keys.left = keys.right = false; syncSw(); if (document.hidden) $('pauseOv').hidden = false; else openOv('pauseOv');
   // nothing sits over the pause sheet: a showing toast or banner goes away (queued mission toasts wait, since update() is stopped)
   clearTimeout(toastTimer); $('toast').classList.remove('show'); $('banner').classList.remove('show');
   sndDo(R => { R.engineOff(); R.siren(0); R.pauseMuffle(true); });  // siren first: the engine ignores siren() while muffled
 }
 function resumeGame(){
   if (state !== 'pause') return;
-  $('pauseOv').hidden = true; state = 'play'; last = 0; sndDo(R => R.pauseMuffle(false));
+  closeOv('pauseOv'); state = 'play'; last = 0; sndDo(R => R.pauseMuffle(false));
 }
 /* sound switches (saved) and the song that should be playing */
 let curSong = null, audioOn = false;
@@ -4029,16 +4162,16 @@ const TOY = (x, y, col, w, h) => `<g transform="translate(${x} ${y})"><rect x="$
 const ROAD = '<rect width="240" height="150" fill="#4f5d6e"/><rect x="0" width="22" height="150" fill="#a8c49a"/><rect x="218" width="22" height="150" fill="#a8c49a"/>' +
   '<g fill="#f2f4f0" opacity=".8"><rect x="118" y="4" width="4" height="22"/><rect x="118" y="44" width="4" height="22"/><rect x="118" y="84" width="4" height="22"/><rect x="118" y="124" width="4" height="22"/></g>';
 const TUT = [
-  {head:'なぞって運転', text:'画面を左右になぞると、車が動くよ。どこをなぞってもOK',
+  {head:'なぞって運転', text:'画面のどこをなぞっても動く',
    pic: ROAD + `<g class="tc">${TOY(120, 62, '#ff5a36', 26, 44)}</g>` +
      '<path d="M70 124h100" stroke="#ffffff" stroke-width="3" stroke-dasharray="6 6" opacity=".8"/><path d="M62 124l12-8v16zM178 124l-12-8v16z" fill="#ffffff"/>' +
      '<g class="tf"><rect x="108" y="112" width="24" height="34" rx="11" fill="#ffffff" stroke="#17324d" stroke-width="3"/><circle cx="120" cy="114" r="10" fill="none" stroke="#ffc83d" stroke-width="3"/></g>'},
-  {head:'満タンでタップ！', text:'車のすれすれ・逆走・ぶつけるとニトロがたまるよ。満タンになったらタップで、むてきの大ばくそう！',
+  {head:'満タンでタップ', text:'すれすれ・逆走・体当たりでたまる',
    pic: ROAD + '<rect x="30" y="12" width="180" height="26" rx="13" fill="#17324d"/><defs><pattern id="tst" width="14" height="14" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="14" fill="#ff5a36"/><rect x="7" width="7" height="14" fill="#ffc83d"/></pattern></defs>' +
      '<rect x="36" y="18" width="168" height="14" rx="7" fill="url(#tst)"/><text x="120" y="56" text-anchor="middle" font-size="13" font-weight="900" fill="#ffc83d" font-family="sans-serif">ニトロ満タン！</text>' +
      '<g class="tfl"><path d="M110 118q10 22 10 28q0-6 10-28z" fill="#ff8a3d"/><path d="M114 118q6 14 6 20q0-6 6-20z" fill="#ffc83d"/></g>' + TOY(120, 98, '#ff5a36', 26, 42) +
      '<circle class="tr" cx="178" cy="112" r="16" fill="none" stroke="#ffffff" stroke-width="4"/><circle cx="178" cy="112" r="6" fill="#ffffff"/>'},
-  {head:'追っ手をクラッシュ！', text:'パトカーを一般車やかべにぶつけさせると、コインがもらえるよ。コインで車を買いかえて、街をにげきろう',
+  {head:'追っ手をクラッシュ', text:'かべや車にぶつけさせるとコイン',
    pic: ROAD + TOY(104, 70, '#9fb3c6', 26, 44) +
      '<g transform="rotate(-24 150 78)">' + TOY(150, 78, '#f7f7f4', 24, 42).replace('fill="#bfe6ff"', 'fill="#17324d"') + '<rect x="140" y="74" width="10" height="5" fill="#ff3b3b"/><rect x="150" y="74" width="10" height="5" fill="#3b8bff"/></g>' +
      '<g class="tb"><path d="M128 40l6 14 15-4-10 12 10 12-15-3-6 14-6-14-15 3 10-12-10-12 15 4z" fill="#ffc83d" stroke="#17324d" stroke-width="2"/></g>' +
@@ -4049,6 +4182,7 @@ let tutI = 0, tutThen = null, tutAt = 0;
 function showTut(then){
   tutI = 0; tutThen = then || null; state === 'title' && (state = 'tut');
   $('tut').hidden = false; tutAt = performance.now(); drawTut();
+  if (!RM()){ const c = $('tut').querySelector('.tut-card'); c.classList.remove('fxdrive'); const r = c.getBoundingClientRect(); fxRestart(c, 'fxdrive'); setTimeout(() => fxLines(r, -1, true), 90); }
 }
 function drawTut(){
   const c = TUT[tutI];
@@ -4056,16 +4190,18 @@ function drawTut(){
   $('tutPic').innerHTML = c.pic; $('tutPic').setAttribute('aria-label', c.head);
   $('tutHead').textContent = c.head; $('tutText').textContent = c.text;
   [...$('tut').querySelectorAll('.tut-dots i')].forEach((d, k) => d.classList.toggle('on', k === tutI));
-  $('tutNext').textContent = tutI === TUT.length - 1 ? (tutThen ? 'とじる' : 'スタート！') : 'つぎへ';
+  $('tutNext').textContent = tutI === TUT.length - 1 ? (tutThen ? 'とじる' : 'スタート') : 'つぎへ';
 }
 function endTut(){
   $('tut').hidden = true; if (!save.tutDone){ save.tutDone = true; writeSave(); }
   const then = tutThen; tutThen = null;
   if (then) then(); else startRun();
 }
-$('tutNext').addEventListener('click', () => { if (performance.now() - tutAt < 400) return; snd('tap'); if (tutI < TUT.length - 1){ tutI++; drawTut(); } else endTut(); });
-$('tutSkip').addEventListener('click', () => { if (performance.now() - tutAt < 400) return; snd('tap'); endTut(); });
-$('openTut').addEventListener('click', () => { snd('tap'); $('setOv').hidden = true; showTut(() => {}); });
+$('tutNext').addEventListener('click', () => { if (performance.now() - tutAt < 400) return; snd('tap');
+  if (tutI < TUT.length - 1){ tutI++; drawTut(); for (const id of ['tutPic', 'tutHead', 'tutText']) fxIn($(id), 1); fxRestart($('tut').querySelector('.tut-dots i.on'), 'fxpop'); }
+  else { const go = !tutThen; endTut(); if (go) fxGo(); } });
+$('tutSkip').addEventListener('click', () => { if (performance.now() - tutAt < 400) return; snd('tap'); const go = !tutThen; endTut(); if (go) fxGo(); });
+$('openTut').addEventListener('click', () => { snd('tap'); closeOv('setOv'); showTut(() => {}); });
 
 /* title: the logo stamps on, then the run starts by itself (a tap skips ahead); the very first time, the picture cards come first */
 let titleTimer = 0;
@@ -4113,13 +4249,13 @@ window.addEventListener('keyup', e => {
 window.addEventListener('blur', () => { keys.left = keys.right = false; });  // a key let go in another window never sends keyup here
 $('pauseBtn').addEventListener('click', () => { snd('tap'); pauseGame(); });
 $('resume').addEventListener('click', () => { snd('tap'); resumeGame(); });
-$('retry').addEventListener('click', () => { if (state !== 'pause') return; snd('tap'); $('pauseOv').hidden = true; finishRun(false); startRun(townI); });
+$('retry').addEventListener('click', () => { if (state !== 'pause') return; snd('tap'); $('pauseOv').hidden = true; finishRun(false); startRun(townI); fxGo(); });
 $('quit').addEventListener('click', () => {
   if (state !== 'pause') return;
-  snd('tap'); $('pauseOv').hidden = true; const before = save.money; finishRun(false); openGarage();
+  snd('tap'); closeOv('pauseOv'); const before = save.money; finishRun(false); openGarage();
   const got = save.money - before; if (got > 0) toast(`ここまでのコイン +${fmt(got)}`);
 });
-$('again').addEventListener('click', () => { if (state !== 'result') return; snd('tap'); startRun(townI); });
+$('again').addEventListener('click', () => { if (state !== 'result') return; snd('tap'); startRun(townI); fxGo(); });
 $('gPanel').addEventListener('scroll', e => fadeMore(e.currentTarget), {passive:true});
 if (window.ResizeObserver) new ResizeObserver(() => fadeMore($('gPanel'))).observe($('gPanel'));
 $('rGain').addEventListener('scroll', e => fadeMore(e.currentTarget), {passive:true});
@@ -4127,40 +4263,55 @@ $('toGarage').addEventListener('click', () => { if (state !== 'result') return; 
 $('garage').addEventListener('click', e => {
   if (garageFresh()) return;
   const tab = e.target.closest('[data-tab]');
-  if (tab){ gTab = tab.dataset.tab; if (gTab === 'car') gSel = save.car; $('gPanel').scrollTop = 0; snd('tap'); renderGarage(); return; }
+  if (tab){
+    const order = ['car', 'up', 'mis', 'title'], was = gTab, heroWas = $('hero').dataset.i;
+    gTab = tab.dataset.tab; if (gTab === 'car') gSel = save.car; $('gPanel').scrollTop = 0; snd('tap'); renderGarage();
+    if (gTab !== was){ const dir = order.indexOf(gTab) > order.indexOf(was) ? 1 : -1;
+      fxRestart(tab, 'fxpick'); fxIn($('gPanel'), dir); tilesIn($('gPanel'), '.tile, .ttl');
+      if ($('hero').dataset.i !== heroWas) fxHero(dir); }
+    return;
+  }
   const tile = e.target.closest('.tile');
-  if (tile){ gSel = +tile.dataset.i; snd('tap'); renderHero(); for (const b of $('gPanel').querySelectorAll('.tile')) b.classList.toggle('sel', +b.dataset.i === gSel); return; }
+  if (tile){
+    const was = gSel; gSel = +tile.dataset.i; snd('tap'); renderHero(); for (const b of $('gPanel').querySelectorAll('.tile')) b.classList.toggle('sel', +b.dataset.i === gSel);
+    fxRestart(tile, 'fxpick'); if (gSel !== was) fxHero(gSel > was ? 1 : -1, true);
+    return;
+  }
   const a = e.target.closest('[data-act]'); if (!a) return;
-  const act = a.dataset.act, hi = +$('hero').dataset.i;
-  if (act === 'ride'){ save.car = hi; writeSave(); snd('ride'); renderGarage(); }
-  else if (act === 'buy'){ const c = CARS[hi]; if (save.owned[hi] || save.money < c.price) return; save.money -= c.price; save.owned[hi] = true; save.car = hi; writeSave(); snd('buy'); toast(`${c.name}を買った！`); renderGarage(); }
-  else if (act === 'short'){ snd('denied'); toast(`あと ${fmt(CARS[hi].price - save.money)} コイン！`); }
-  else if (act === 'need'){ snd('denied'); toast(`称号「${titleName(CARS[hi].need)}」をとろう`); }
+  const act = a.dataset.act, hi = +$('hero').dataset.i, m0 = save.money;
+  if (act === 'ride'){ save.car = hi; writeSave(); snd('ride'); renderGarage(); fxGot(hi, false); }
+  else if (act === 'buy'){ const c = CARS[hi]; if (save.owned[hi] || save.money < c.price) return; save.money -= c.price; save.owned[hi] = true; save.car = hi; writeSave(); snd('buy'); toast(`${c.name}を買った`); renderGarage(); fxGot(hi, true); fxCount($('gMoney'), save.money, m0); }
+  else if (act === 'short'){ snd('denied'); toast(`あと ${fmt(CARS[hi].price - save.money)} コイン`); fxRestart(a, 'fxshake'); }
+  else if (act === 'need'){ snd('denied'); toast(`称号「${titleName(CARS[hi].need)}」で解禁`); fxRestart(a, 'fxshake'); }
   else if (act === 'up'){
     const it = UPGRADES.find(u => u.key === a.dataset.k), U = save.up[save.car], lv = U[it.key] || 0, price = upPrice(it, lv, save.car);
     if (price === null) return;
-    if (save.money < price){ snd('denied'); toast(`あと ${fmt(price - save.money)} コイン！`); return; }
+    if (save.money < price){ snd('denied'); toast(`あと ${fmt(price - save.money)} コイン`); fxRestart(a, 'fxshake'); return; }
     save.money -= price; U[it.key] = lv + 1; writeSave(); snd('upgrade'); renderGarage();
+    if (!RM()){ const li = $('gPanel').querySelectorAll('.up')[UPGRADES.indexOf(it)];
+      if (li){ fxRestart(li, 'fxbuy'); fxRestart(li.querySelectorAll('.pips i.on')[lv], 'fxpop'); }
+      const st = $('gPanel').querySelectorAll('.stats li'); ({eng:[0, 1], body:[2], boost:[3]})[it.key].forEach(k => fxRestart(st[k], 'fxpick'));
+      fxCount($('gMoney'), save.money, m0); }
   }
 });
-$('townPrev').addEventListener('click', () => { if (garageFresh()) return; save.town = (save.town + TOWNS.length - 1) % TOWNS.length; writeSave(); snd('tap'); renderTown(); if (gTab === 'mis') renderPanel(); });
-$('townNext').addEventListener('click', () => { if (garageFresh()) return; save.town = (save.town + 1) % TOWNS.length; writeSave(); snd('tap'); renderTown(); if (gTab === 'mis') renderPanel(); });
+$('townPrev').addEventListener('click', () => { if (garageFresh()) return; save.town = (save.town + TOWNS.length - 1) % TOWNS.length; writeSave(); snd('tap'); renderTown(); if (gTab === 'mis'){ renderPanel(); fxIn($('gPanel'), -1); } fxIn($('town').children[1], -1, true); });
+$('townNext').addEventListener('click', () => { if (garageFresh()) return; save.town = (save.town + 1) % TOWNS.length; writeSave(); snd('tap'); renderTown(); if (gTab === 'mis'){ renderPanel(); fxIn($('gPanel'), 1); } fxIn($('town').children[1], 1, true); });
 $('go').addEventListener('click', () => {
   if (garageFresh()) return;
-  if (!townOpen(save.town)){ snd('denied'); toast(`「${TOWNS[save.town - 1].name}」をにげきると開くよ`); return; }
-  snd('tap'); startRun();
+  if (!townOpen(save.town)){ snd('denied'); toast(`${TOWNS[save.town - 1].name}をにげきると開く`); fxRestart($('go'), 'fxshake'); return; }
+  snd('tap'); startRun(); fxGo();
 });
-$('openSet').addEventListener('click', () => { if (garageFresh()) return; snd('tap'); syncSw(); $('wipe').hidden = false; $('wipeAsk').hidden = true; $('setOv').hidden = false; });
-$('closeSet').addEventListener('click', () => { snd('tap'); $('setOv').hidden = true; });
-$('swSe').addEventListener('click', () => setSound('se', !save.se));
-$('pSe').addEventListener('click', () => setSound('se', !save.se));
-$('swBgm').addEventListener('click', () => setSound('bgm', !save.bgm));
-$('pBgm').addEventListener('click', () => setSound('bgm', !save.bgm));
-$('wipe').addEventListener('click', () => { snd('tap'); $('wipe').hidden = true; $('wipeAsk').hidden = false; });
-$('wipeNo').addEventListener('click', () => { snd('tap'); $('wipe').hidden = false; $('wipeAsk').hidden = true; });
+$('openSet').addEventListener('click', () => { if (garageFresh()) return; snd('tap'); syncSw(); $('wipe').hidden = false; $('wipeAsk').hidden = true; openOv('setOv'); });
+$('closeSet').addEventListener('click', () => { snd('tap'); closeOv('setOv'); });
+$('swSe').addEventListener('click', e => { setSound('se', !save.se); fxRestart(e.currentTarget, 'fxpick'); });
+$('pSe').addEventListener('click', e => { setSound('se', !save.se); fxRestart(e.currentTarget, 'fxpick'); });
+$('swBgm').addEventListener('click', e => { setSound('bgm', !save.bgm); fxRestart(e.currentTarget, 'fxpick'); });
+$('pBgm').addEventListener('click', e => { setSound('bgm', !save.bgm); fxRestart(e.currentTarget, 'fxpick'); });
+$('wipe').addEventListener('click', () => { snd('tap'); $('wipe').hidden = true; $('wipeAsk').hidden = false; fxRestart($('wipeAsk'), 'fxpop'); });
+$('wipeNo').addEventListener('click', () => { snd('tap'); $('wipe').hidden = false; $('wipeAsk').hidden = true; fxRestart($('wipe'), 'fxpop'); });
 $('wipeYes').addEventListener('click', () => {
   const se = save.se, bgm = save.bgm, tut = save.tutDone; save = freshSave(); save.se = se; save.bgm = bgm; save.tutDone = tut; writeSave();  // sound settings and the seen how-to cards stay
-  $('wipe').hidden = false; $('wipeAsk').hidden = true; $('setOv').hidden = true; gTab = 'car'; gSel = 0; renderGarage(); toast('データを消しました');
+  $('wipe').hidden = false; $('wipeAsk').hidden = true; closeOv('setOv'); gTab = 'car'; gSel = 0; renderGarage(); toast('データを消した'); fxHero(1, true); tilesIn($('gPanel'), '.tile');
 });
 document.addEventListener('visibilitychange', () => { if (document.hidden){ pauseGame(); sndDo(R => R.suspend()); } else { sndDo(R => R.resume()); if (state === 'garage') renderGarage(); } });
 window.addEventListener('pagehide', () => pauseGame());
