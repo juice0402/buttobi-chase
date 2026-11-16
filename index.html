@@ -2406,7 +2406,7 @@ function takedown(b, kind, earned){
   if (P.key === 'ppolice') notice();
   const mult = comboUp();
   const gain = Math.round(C.money * K.k * mult * CASH_K() * (own ? 1 : SELF_K));
-  takeN++; takeMoney += gain; heatPts += 12; addBoost(own ? 25 : 25 * SELF_K); // a far-off crash you had no part in barely fills nitro ko[kind]++; if (ice.length && onIce(b)) iceN++;
+  takeN++; takeMoney += gain; heatPts += 12; addBoost(own ? 25 : 25 * SELF_K); ko[kind]++; if (ice.length && onIce(b)) iceN++; // a far-off crash you had no part in barely fills nitro
   snd('coin', comboN); if (kind === 'pinch') snd('bonk'); else if (kind === 'train' || kind === 'cont') snd('bigcrash');
   const label = kind === 'hit' && P.key === 'muscle' ? 'ドゴォン！' : kind === 'hit' && P.key === 'monster' ? 'ペシャンコ！' : K.l;
   if (own) pop(b.x, b.y, `${label} +${gain}`, K.k >= 1.6 ? '#ffc83d' : '#ff5a36');

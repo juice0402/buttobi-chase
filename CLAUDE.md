@@ -12,5 +12,5 @@
 - file: で開いたときだけ window.__butto がある（get・save・load・start・sim・garage・pause）。公開ページにはない
 - 試しに遊ぶページ（アーティファクト）https://claude.ai/artifact/9MNEHG5BAX88qBR5FT1h45 にも同じ中身を出している。アーティファクトはスケルトン（doctype・head）なしの中身だけで出す
 - 絵・音・コインのしくみを変えるときは claude/game-art-rule.md（音はコードで作る・運でコインを増やさない）
-- 直したら node --check（ゲームの script）と dev/tests/f1.py・final.py でエラー0を確かめる
+- 直したら node --check（ゲームの script）と dev/tests/f1.py・final.py・ko_check.py（倒した種類の数え忘れ）でエラー0を確かめる
 - ライセンスファイルは置かない（著作権はしょーくんのまま）
