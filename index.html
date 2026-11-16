@@ -2225,7 +2225,7 @@ function landContainer(c){
   shake = Math.max(shake, 9); burst(x0, y0, 'debris', 12, '#c9783d'); burst(x0, y0, 'spark', 10); snd('container');
   for (const b of [P, ...cars]){
     if (Math.abs(b.x - x0) > hw + b.w/2 - 2 || Math.abs(b.y - y0) > hh + b.h/2 - 4) continue;
-    if (b === P){ if (state !== 'play') continue; if (boosting){ pop(P.x, P.y - 30, 'へっちゃら！', '#ffc83d'); continue; } damage(35); P.vy *= 0.4; pop(P.x, P.y - 30, 'ドスン！', '#ffffff'); continue; }
+    if (b === P){ if (state !== 'play') continue; if (boosting){ popMe(P.x, P.y - 30, 'へっちゃら！', '#ffc83d'); continue; } damage(35); P.vy *= 0.4; popMe(P.x, P.y - 30, 'ドスン！', '#ffffff'); continue; }
     b.lastHit = 'player'; b.lastHitT = t;
     if (b.boss){ if (b.state === 'drive'){ hurtBoss(b, 160); pop(b.x, b.y - 30, 'コンテナドーン！', '#ffc83d'); } }
     else if (b.state === 'drive') crash(b, 'cont');
@@ -2347,7 +2347,7 @@ function explodeAt(x, y, R, F, credit, dmgP, big){
     const k = 1 - d/R, f = k * F / o.m;
     if (o === P && boosting) continue;
     o.vx += dx/(d||1)*f; o.vy += dy/(d||1)*f;
-    if (o === P){ dmgSrc = 'boom'; if (P.key === 'fire'){ if (k > 0.3 && t - (P.fireSaidT || -9) > 1.2){ P.fireSaidT = t; pop(P.x, P.y - 30, 'へっちゃら！', '#ffc83d'); } } else damage(dmgP * k); continue; }
+    if (o === P){ dmgSrc = 'boom'; if (P.key === 'fire'){ if (k > 0.3 && t - (P.fireSaidT || -9) > 1.2){ P.fireSaidT = t; popMe(P.x, P.y - 30, 'へっちゃら！', '#ffc83d'); } } else damage(dmgP * k); continue; }
     if (credit){ o.lastHit = 'player'; o.lastHitT = t; }
     if (o.boss){ if (o.state === 'drive') hurtBoss(o, F * k * 0.22); else o.av += 3*k; continue; }
     if (o.state === 'drive'){ if (d < R*0.8) crash(o, 'boom'); } else o.av += 8*k;
@@ -2355,18 +2355,18 @@ function explodeAt(x, y, R, F, credit, dmgP, big){
   for (const dr of drums) if (dr.alive && Math.hypot(dr.x - x, dr.y - y) < R){ dr.alive = false; booms.push({x:dr.x, y:dr.y, R:60, F:320, credit, dmg:12, at:t + 0.08 + Math.random()*0.12}); }
   for (const st of stations){ const sx = st.sg*(halfAt(-st.y/M) + 30); if (st.alive && Math.hypot(sx - x, st.y - y) < R + 40){ st.alive = false; booms.push({x:sx, y:st.y, R:st.big ? 210 : 150, F:st.big ? 640 : 560, credit, dmg:28, at:t + 0.15, big:true}); } }
 }
-function blowStation(st){ st.alive = false; explodeAt(st.sg*(halfAt(-st.y/M) + 30), st.y, st.big ? 210 : 150, st.big ? 640 : 560, true, 28, true); pop(P.x, P.y - 40, st.big ? '燃料タンクが…！' : 'ガソリンスタンドが…！', '#ff5a36'); }
+function blowStation(st){ st.alive = false; explodeAt(st.sg*(halfAt(-st.y/M) + 30), st.y, st.big ? 210 : 150, st.big ? 640 : 560, true, 28, true); popMe(P.x, P.y - 40, st.big ? '燃料タンクが…！' : 'ガソリンスタンドが…！', '#ff5a36'); }
 
 /* ---------- crash logic ---------- */
 function addBoost(v){
   if (boosting || coolT > 0 || state !== 'play') return;
   const was = boost; boost = Math.min(100, boost + v * NITRO_GAIN * (1 + 0.3 * upLv('boost')));
-  if (was < 100 && boost >= 100){ toast('ニトロ満タン！ タップで無敵！'); snd('nitroReady'); }
+  if (was < 100 && boost >= 100){ tip('nitroFull', 'ニトロ満タン！ タップで無敵！'); snd('nitroReady'); }
 }
 function tryBoost(){
   if (state !== 'play' || boosting) return;
   if (boost < 100){ const bb = $('boostBar'); bb.classList.remove('nope'); void bb.offsetWidth; bb.classList.add('nope'); return; }
-  boosting = true; P.slowT = 0; shake = Math.max(shake, 8); banner('ニトロ！'); burst(P.x, P.y, 'spark', 24); snd('nitroGo'); sndDo(R => R.nitro(true));
+  boosting = true; P.slowT = 0; shake = Math.max(shake, 8); burst(P.x, P.y, 'spark', 24); snd('nitroGo'); sndDo(R => R.nitro(true));
   const f = $('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
 }
 function nitroHit(X){ // invincible nitro: whatever you touch goes flying
@@ -2383,7 +2383,7 @@ function damage(d){
   if (d <= 0 || state !== 'play' || boosting) return;
   dmgBy[dmgSrc] = (dmgBy[dmgSrc] || 0) + d; dmgSrc = '?';
   P.hp -= d; dmgTaken += d; shake = Math.max(shake, Math.min(8, 2 + d*0.3)); if (d >= 3) hurtT = 0.25;
-  if (d >= 4){ pop(P.x, P.y + 12, `-${Math.round(d)}`, '#ffffff'); snd('hit', Math.min(1, d / 30)); }
+  if (d >= 4){ popMe(P.x, P.y + 12, `-${Math.round(d)}`, '#ffffff'); snd('hit', Math.min(1, d / 30)); }
   if (P.hp <= 0){ P.hp = 0; playerWreck(); }
 }
 /* the HUD is not refreshed while a run ends, so a nitro that was on when it ended has its glow taken down here */
@@ -2399,7 +2399,7 @@ function comboUp(){
   if (comboN >= 2){ const el = $('combo'); el.textContent = `コンボ ×${mult % 1 ? mult.toFixed(1) : mult}`; el.hidden = false; }
   return mult;
 }
-function notice(){ if (noticeT <= 0 && state === 'play'){ pop(P.x, P.y - 30, 'バレた！', '#ff5a36'); snd('busted'); } noticeT = 6; }
+function notice(){ if (noticeT <= 0 && state === 'play'){ popMe(P.x, P.y - 30, 'バレた！', '#ff5a36'); snd('busted'); } noticeT = 6; }
 function takedown(b, kind, earned){
   const C = CHASERS[b.key], K = KO[kind], own = earned !== false;
   if (P.key === 'ppolice') notice();
@@ -2454,7 +2454,7 @@ function impactOn(X, O, vn){
     // route bus: a pincer just bounces off the long body and the police car wrecks
     if (P.key === 'pbus' && O.plan === 'pin' && O.phase === 'slam' && O.state === 'drive'){
       O.vx += (Math.sign(O.x - P.x) || 1) * 260; crash(O, 'pinch');
-      pop(P.x, P.y - 30, 'はじき返した！', '#ffc83d'); shake = Math.max(shake, 5); snd('bonk'); return;
+      popMe(P.x, P.y - 30, 'はじき返した！', '#ffc83d'); shake = Math.max(shake, 5); snd('bonk'); return;
     }
     if (O.plan === 'pin' && O.phase === 'slam' && O.pinHit) return;
     const tackled = O.tk === 'tackle' && !O.plan && O.state === 'drive';
@@ -2467,13 +2467,13 @@ function impactOn(X, O, vn){
     const tankT = tackled && P.key === 'ptank' ? 0 : 1;
     dmgSrc = O.boss ? 'boss' : O.role === 'chaser' ? (tackled ? 'tackle' : O.plan === 'pin' ? 'pin' : 'chaser-' + O.key) : O.state === 'wreck' ? 'wreck' : O.cross ? 'cross' : O.opp ? 'oncoming' : 'traffic';
     damage(Math.max(0, eff - 60) * 0.08 * (O.state === 'wreck' ? 0.8 : 1) * bossRam * tough * tankT * (tackled ? TK.dmg : 1));
-    if (tackled){ O.tkHit = true; if (!boosting){ pop(P.x, P.y - 30, tankT ? 'タックル！' : 'びくともしない！', tankT ? '#ffffff' : '#ffc83d'); shake = Math.max(shake, tankT ? 5 : 2); snd('tackle'); } }
+    if (tackled){ O.tkHit = true; if (!boosting){ popMe(P.x, P.y - 30, tankT ? 'タックル！' : 'びくともしない！', tankT ? '#ffffff' : '#ffc83d'); shake = Math.max(shake, tankT ? 5 : 2); snd('tackle'); } }
     if (eff > 60) burst((X.x + O.x)/2, (X.y + O.y)/2, 'spark', 5);
     if (!boosting && O.plan === 'pin' && O.phase === 'slam'){
       if (O.pinHit) return;
       O.pinHit = t;
       const m = O.mate;
-      if (m && !O.pinDone && t - (m.pinHit || -9) < 0.6){ O.pinDone = m.pinDone = true; P.slowT = Math.max(P.slowT, 1.3); shake = Math.max(shake, 8); pop(P.x, P.y - 30, 'はさみうち！', '#ffffff'); }
+      if (m && !O.pinDone && t - (m.pinHit || -9) < 0.6){ O.pinDone = m.pinDone = true; P.slowT = Math.max(P.slowT, 1.3); shake = Math.max(shake, 8); popMe(P.x, P.y - 30, 'はさみうち！', '#ffffff'); }
     }
     return;
   }
@@ -2539,6 +2539,8 @@ function burst(x, y, type, n, color){
   if (fx.length > 280) fx.splice(0, fx.length - 280);
 }
 function smoke(x, y, color){ if (fx.length < 280) fx.push({type:'smoke', x:x + (Math.random()-0.5)*6, y, vx:(Math.random()-0.5)*14, vy:-8 - Math.random()*10, life:1.2, max:1.2, size:4 + Math.random()*3, color:color || '#5b616b', rot:0, vr:0}); }
+/* no words come out of the player's own car any more (the owner found it distracting): the gauge hint, sounds and effects carry those cues */
+function popMe(){}
 function pop(x, y, text, color, small){
   const p = {rx:x - P.x, ry:y - P.y, text, color, life:1, small:!!small};
   // a pop that would land on a recent one moves up a line, so two at once never print over each other
@@ -2892,9 +2894,9 @@ function update(dt){
   if (playing){
     // heat, combo, boost
     heatPts += dt * 1.8 * TOWN.heat * (undercover() ? 0.5 : 1);
-    if (noticeT > 0){ noticeT -= dt; if (noticeT <= 0 && P.key === 'ppolice') pop(P.x, P.y - 30, 'まぎれこんだ…', '#7fd3ff'); }
+    if (noticeT > 0){ noticeT -= dt; if (noticeT <= 0 && P.key === 'ppolice') popMe(P.x, P.y - 30, 'まぎれこんだ…', '#7fd3ff'); }
     // ambulance: the body mends itself bit by bit
-    if (P.key === 'amb' && P.state === 'drive' && P.hp < P.maxHp){ P.hp = Math.min(P.maxHp, P.hp + P.maxHp * 0.011 * dt); healT -= dt; if (healT <= 0){ healT = 1.6; pop(P.x + 14, P.y - 18, '＋', '#38c79a'); snd('heal'); } }
+    if (P.key === 'amb' && P.state === 'drive' && P.hp < P.maxHp){ P.hp = Math.min(P.maxHp, P.hp + P.maxHp * 0.011 * dt); healT -= dt; if (healT <= 0){ healT = 1.6; popMe(P.x + 14, P.y - 18, '＋', '#38c79a'); snd('heal'); } }
     const ns = Math.min(TOWN.cap, 1 + Math.floor(heatPts / 100));
     if (ns > star){ star = ns; maxStar = Math.max(maxStar, star); toast(`手配度 ★${star}`); snd('star'); sndDo(R => R.heat(star)); }
     if (comboT > 0){ comboT -= dt; if (comboT <= 0){ comboN = 0; $('combo').hidden = true; } }
@@ -2912,7 +2914,7 @@ function update(dt){
     targetX = clamp(targetX, -lim, lim);
     if (drag) drag.tx = targetX - (drag.lastX - drag.x) * 1.3 / s;
     const slick = ice.length > 0 && onIce(P) && !boosting;
-    if (slick && !onIceNow){ pop(P.x, P.y - 24, 'つるつる！', '#7fd3ff'); snd('ice'); tip('ice', '凍った道！ すべるよ。追っ手をすべらせて かべにぶつけよう'); }
+    if (slick && !onIceNow){ popMe(P.x, P.y - 24, 'つるつる！', '#7fd3ff'); snd('ice'); tip('ice', '凍った道！ すべるよ。追っ手をすべらせて かべにぶつけよう'); }
     onIceNow = slick;
     P.vy += clamp(-pSpeed() - P.vy, -380*dt*(slick ? 0.4 : 1), 380*dt*(slick ? 0.4 : 1));
     P.vx += clamp(clamp((targetX - P.x) * 9, -280, 280) - P.vx, -1500*dt*(slick ? 0.22 : 1), 1500*dt*(slick ? 0.22 : 1));
@@ -2923,7 +2925,7 @@ function update(dt){
     if (Math.abs(P.x - campX) > (camping ? LANE : LANE * 0.5)){ campX = P.x; campT = 0; camping = false; }
     else if ((campT += dt) >= CAMP_T && !camping){
       camping = true; pinchNext = Math.min(pinchNext || 1e9, t + 2.5);
-      if (!undercover()){ pop(P.x, P.y - 34, '目立ってる！', '#ff5a36'); snd('warn'); tip('camp', 'じっとしてると目立つ！ 車線を変えよう'); }
+      if (!undercover()){ popMe(P.x, P.y - 34, '目立ってる！', '#ff5a36'); snd('warn'); tip('camp', 'じっとしてると目立つ！ 車線を変えよう'); }
     }
     // pickup: tosses a drum off the bed when a chaser sits right behind
     if (P.key === 'pickup' && P.state === 'drive'){
@@ -2931,7 +2933,7 @@ function update(dt){
       if (P.drumT <= 0 && cars.some(c => c.role === 'chaser' && c.state === 'drive' && c.plan !== 'gone' && c.y - P.y > P.h/2 + 10 && c.y - P.y < 210 && Math.abs(c.x - P.x) < 26 + c.w/2)){
         P.drumT = DRUM_EVERY;
         drums.push({x:P.x + (Math.random() - 0.5)*6, y:P.y + P.h/2 + 14, alive:true, own:true, t0:t});
-        pop(P.x, P.y + P.h/2 + 22, 'ポイッ！', '#38c79a'); burst(P.x, P.y + P.h/2 + 8, 'spark', 4); snd('drum');
+        popMe(P.x, P.y + P.h/2 + 22, 'ポイッ！', '#38c79a'); burst(P.x, P.y + P.h/2 + 8, 'spark', 4); snd('drum');
       }
     }
     const hpR = P.hp / P.maxHp;
@@ -3014,7 +3016,7 @@ function update(dt){
       if (b === P && boosting){ b.trainT = t; burst(b.x, b.y, 'spark', 8); continue; }
       b.trainT = t; b.vx += 520 + Math.random()*120; b.vy += (b.y < r.y ? -1 : 1) * 80;
       burst(b.x, b.y, 'spark', 10); shake = Math.max(shake, 6);
-      if (b === P){ if (state === 'play'){ dmgSrc = 'train'; damage(45); pop(P.x, P.y - 30, 'でんしゃ！', '#ffffff'); } }
+      if (b === P){ if (state === 'play'){ dmgSrc = 'train'; damage(45); popMe(P.x, P.y - 30, 'でんしゃ！', '#ffffff'); } }
       else { b.lastHit = 'player'; b.lastHitT = t; if (b.boss && b.state === 'drive'){ hurtBoss(b, 150); pop(b.x, b.y - 30, 'でんしゃドーン！', '#ffc83d'); } else if (b.state === 'drive') crash(b, 'train'); else b.av += 10; }
     }
   }
@@ -3040,7 +3042,7 @@ function update(dt){
       if (Math.abs(b.y - sp.y) > b.h/2 + 4 || Math.abs(b.x - sp.x) > sp.w/2 + b.w/2 - 3) continue;
       if (b === P && boosting){ sp.gone = true; burst(sp.x, sp.y, 'spark', 14); pop(sp.x, sp.y, 'トゲをふみつぶした！', '#ffc83d'); break; }
       sp.hit.add(b); burst(b.x, sp.y, 'spark', 6);
-      if (b === P){ if (state === 'play'){ P.slowT = Math.max(P.slowT, 2.2); damage(5); pop(P.x, P.y - 26, 'パンク！', '#ffffff'); snd('spike'); } }
+      if (b === P){ if (state === 'play'){ P.slowT = Math.max(P.slowT, 2.2); damage(5); popMe(P.x, P.y - 26, 'パンク！', '#ffffff'); snd('spike'); } }
       else if (b.boss){ hurtBoss(b, 35); b.slowT = 1.6; }
       else if (b.plan !== 'gone'){ if (b.role === 'chaser'){ b.lastHit = 'player'; b.lastHitT = t; } crash(b, 'spike'); }
     }
@@ -3054,7 +3056,7 @@ function update(dt){
     if (playing && !c.cross && c.state === 'drive' && !c.nm && c.prevRel !== null && c.prevRel < 0 && rel >= 0){
       const gap = Math.abs(c.x - P.x) - (c.w + P.w)/2;
       const sports = P.key === 'sports';
-      if (gap > 0 && gap < (sports ? 15 : 12)){ c.nm = true; nearN++; if (c.opp) nearOppN++; nearMoney += 5; snd('near'); addBoost((c.opp ? 16 : 9) * (sports ? 1.5 : 1)); pop(P.x, P.y - 24, (c.opp ? 'すれすれ逆走！' : 'ニアミス！') + (sports ? ' ×1.5' : ''), '#7fd3ff'); if (sports) burst(P.x, P.y, 'spark', 3); }
+      if (gap > 0 && gap < (sports ? 15 : 12)){ c.nm = true; nearN++; if (c.opp) nearOppN++; nearMoney += 5; snd('near'); addBoost((c.opp ? 16 : 9) * (sports ? 1.5 : 1)); popMe(P.x, P.y - 24, (c.opp ? 'すれすれ逆走！' : 'ニアミス！') + (sports ? ' ×1.5' : ''), '#7fd3ff'); if (sports) burst(P.x, P.y, 'spark', 3); }
     }
     c.prevRel = rel;
     const keep = c.role === 'chaser' && c.state === 'drive' && c.plan !== 'gone' && !(c.boss && c.boss.mode === 'leave');
