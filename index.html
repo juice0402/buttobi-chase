@@ -2922,9 +2922,9 @@ function update(dt){
     wrongWay = L.nOn > 0 && P.x > -L.half + (L.n - L.nOn) * L.lw + 4;
     if (wrongWay) addBoost(10 * dt);
     // sitting in one lane gets you noticed: after CAMP_T s within half a lane, the police push harder until you move a whole lane
-    if (Math.abs(P.x - campX) > (camping ? LANE : LANE * 0.5)){ campX = P.x; campT = 0; camping = false; }
+    if (Math.abs(P.x - campX) > LANE * 0.5){ campX = P.x; campT = 0; camping = false; }  // any move of half a lane clears it (anchored where it started)
     else if ((campT += dt) >= CAMP_T && !camping){
-      camping = true; pinchNext = Math.min(pinchNext || 1e9, t + 2.5);
+      camping = true; campX = P.x; pinchNext = Math.min(pinchNext || 1e9, t + 2.5);
       if (!undercover()){ popMe(P.x, P.y - 34, '目立ってる！', '#ff5a36'); snd('warn'); tip('camp', 'じっとしてると目立つ！ 車線を変えよう'); }
     }
     // pickup: tosses a drum off the bed when a chaser sits right behind
@@ -4169,7 +4169,7 @@ function frame(ts){
 }
 /* local test hook (only when the file is opened from disk, never on the published page): an autopilot that dodges traffic, for balance runs */
 if (location.protocol === 'file:') window.__butto = {
-  get: () => ({state, dist:Math.round(dist), townI, star, boss:!!boss, money:save.money, coins:runCoins(), hp:P && Math.round(P.hp), endKind, t:Math.round(t)}),
+  get: () => ({x:P ? Math.round(P.x) : 0, camping, state, dist:Math.round(dist), townI, star, boss:!!boss, money:save.money, coins:runCoins(), hp:P && Math.round(P.hp), endKind, t:Math.round(t)}),
   save: () => save, load: o => { useSave(o); writeSave(); },
   start: i => { save.town = i; startRun(); }, garage: () => openGarage(), pause: () => pauseGame(),
   sim(sec, opt){
