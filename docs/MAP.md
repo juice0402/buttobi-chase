@@ -40,3 +40,4 @@
 - 見た目は「積み木とトイカーのジオラマ」（11/17）。描く道具は drawing の頭：toyGloss（車のつや）・toyUnder（ひっくり返った車の裏）・drawPart（飛ぶ部品と積み木）。建物は block()（木目・光る辺・上に小さい積み木／屋根／丸い積み木／雪）、地面はフェルトの点々（texPat）
 - クラッシュの作りこみは effects の下の「toy look & crash juice」：parts（タイヤ・ドア・ネジ）・blocksFly（道ばたの積み木が崩れる）・ring・stars・rollOver（転がって裏返る）・hitStop・bigCrash（一瞬スロー＋寄る）。時間のゆがみは frame() だけ（update と sim・テストは今までどおり）
 - こわれた建物：broken（`セル番号:左右` → 1 こわれた／2 大爆発）・breakAt（かべドーン・道ばたの爆発で、建物のある街だけ）・rubble（低い土台・道へこぼれた積み木・ほこり）。drawGround が道のすぐ横の建物の代わりに描く。走りだすたびに空にする
+- 軽量化（11/17）：止まっている地面（道・道ばた・建物・氷）は groundStamp が帯（GC_H=224）に1回だけ描いて、毎フレームは帯の絵を置くだけ（drawGround＝帯に描く中身、drawGroundLive＝毎フレーム描く踏切・スタンド・工事・ゴール）。建物がこわれたら gcDirty で帯を描き直す。車は carSprite が種類・色・大きさ・ランプの点滅ごとに絵にしておく（ロケットカーだけ毎回描く）。ニトロの光はぼかしではなく drawNitroGlow の絵

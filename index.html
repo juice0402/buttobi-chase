@@ -2165,7 +2165,7 @@ function resetWorld(){
   const C = car();
   P = mkBody({role:'player', key:C.key, w:C.w, h:C.h, m:C.m, color:C.color, x:-23, y:0, vy:-C.speed});
   P.maxHp = P.hp = Math.round(C.hp * (1 + 0.25 * upLv('body')));
-  cars = []; heli = null; heliCool = 0; fx = []; pops = []; broken.clear();
+  cars = []; heli = null; heliCool = 0; fx = []; pops = []; broken.clear(); gcReset();
   dist = 0; t = 0; star = TOWN.start; heatPts = (star - 1) * 100; nextChaser = 7; comboN = 0; comboT = 0; maxCombo = 0;
   iceN = 0; finalDown = false; maxStar = star; runMis = new Set(); misQueue = []; misT = 0; misCheckT = 0; onIceNow = false;
   dmgBy = {}; takeN = 0; takeMoney = 0; trafN = 0; trafMoney = 0; nearN = 0; nearMoney = 0;
@@ -2648,7 +2648,7 @@ function hasBuildings(y){ return !!BLD_STYLES[AREAS[areaIndexAt(Math.max(0, -y /
 function breakAt(x, y, sg, big){
   if (!hasBuildings(y)) return false;
   const k = Math.floor(y / 56);
-  for (let q = big ? -1 : 0; q <= (big ? 1 : 0); q++){ const key = (k + q) + ':' + sg; if (!broken.has(key)) broken.set(key, big ? 2 : 1); }
+  for (let q = big ? -1 : 0; q <= (big ? 1 : 0); q++){ const key = (k + q) + ':' + sg; if (!broken.has(key)){ broken.set(key, big ? 2 : 1); gcDirty((k + q) * 56); } }
   for (let i = 0; i < (big ? 6 : 3); i++) smoke(x + sg*(10 + Math.random()*40), y + (Math.random() - 0.5)*50, 'rgba(214,200,176,0.9)');
   return true;
 }
@@ -3445,6 +3445,37 @@ function drawHeli(hx, hy){
   ctx.fillStyle = '#ff2d2d'; circle(0, -h*0.12, 2.2);
   ctx.restore();
 }
+/* car sprites (11/17, lightening): each toy car (type, colour, size, light phase) is painted once with its tyres, details and gloss,
+   and every frame only stamps the picture. Flashing lights keep 2 pictures, tank treads 6; the rocket car's flame moves, so it is drawn as before */
+const SPR = new Map(), SPR_MAX = 140, SPR_PAD = 6;
+const SPR_FLASH = {police:6, armor:6, amb:6, fire:6, bike:7};
+let sprPs = 0;
+function carSprite(b){
+  if (b.key === 'rocket'){ drawVehicle(b.key, b.w, b.h, b.color); toyGloss(b.w, b.h); return; }
+  const ps = s * DPR * 1.12;
+  if (ps !== sprPs){ SPR.clear(); sprPs = ps; }
+  const fr = SPR_FLASH[b.key], ph = fr ? ((t*fr)|0) % 2 : (b.key === 'tank' || b.key === 'ptank') ? ((t*60) % 6)|0 : 0;
+  const key = b.key + '|' + b.color + '|' + b.w + '|' + b.h + '|' + ph;
+  let c = SPR.get(key);
+  if (!c){
+    const w = b.w + SPR_PAD*2, h = b.h + SPR_PAD*2;
+    c = document.createElement('canvas'); c.width = Math.ceil(w * ps); c.height = Math.ceil(h * ps);
+    const saved = ctx, tSaved = t;
+    ctx = c.getContext('2d'); ctx.setTransform(ps, 0, 0, ps, w * ps / 2, h * ps / 2);
+    t = fr ? (ph + 0.5) / fr : (b.key === 'tank' || b.key === 'ptank') ? (ph + 0.5) / 60 : t;
+    try { drawVehicle(b.key, b.w, b.h, b.color); if (!NO_GLOSS[b.key]) toyGloss(b.w, b.h); } finally { ctx = saved; t = tSaved; }
+    if (SPR.size >= SPR_MAX) SPR.delete(SPR.keys().next().value);
+  } else SPR.delete(key);
+  SPR.set(key, c);   // newest last, so the oldest picture goes first when the cache is full
+  ctx.drawImage(c, -b.w/2 - SPR_PAD, -b.h/2 - SPR_PAD, b.w + SPR_PAD*2, b.h + SPR_PAD*2);
+}
+// the nitro glow is one soft picture under the car instead of a canvas blur on every shape of it
+let nitroGlow = null;
+function drawNitroGlow(w, h){
+  if (!nitroGlow){ nitroGlow = document.createElement('canvas'); nitroGlow.width = nitroGlow.height = 128; const g = nitroGlow.getContext('2d'), gr = g.createRadialGradient(64, 64, 8, 64, 64, 64);
+    gr.addColorStop(0, 'rgba(255,90,54,0.85)'); gr.addColorStop(0.45, 'rgba(255,90,54,0.4)'); gr.addColorStop(1, 'rgba(255,90,54,0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128); }
+  ctx.drawImage(nitroGlow, -w*1.05, -h*0.85, w*2.1, h*1.7);
+}
 function drawBody(b){
   let sc = 1, so = 1;
   if (b.air > 0 && b.airMax > 0){ const q = Math.sin((1 - b.air / b.airMax) * Math.PI); sc = 1 + 0.4*q; so = 1 + 3*q; }
@@ -3453,14 +3484,13 @@ function drawBody(b){
   if (b === P && boosting){
     const fl = (len, wd, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-b.w*wd, b.h/2 - 2); ctx.lineTo(0, b.h/2 + len); ctx.lineTo(b.w*wd, b.h/2 - 2); ctx.fill(); };
     fl(36 + Math.random()*16, 0.44, '#e3261b'); fl(26 + Math.random()*10, 0.34, '#ff8a3d'); fl(14 + Math.random()*6, 0.2, '#ffe27a');
-    ctx.shadowColor = '#ff5a36'; ctx.shadowBlur = 20;
+    drawNitroGlow(b.w, b.h);
   }
   ctx.scale(sc, sc);
   const roll = b.rollTo ? b.rollTo * (b.airMax > 0 && b.air > 0 ? 1 - b.air / b.airMax : 1) : 0, cr = Math.cos(roll);
   if (roll) ctx.scale(Math.max(0.14, Math.abs(cr)), 1);
   if (cr < 0){ toyUnder(b.w, b.h, b.key === 'police' ? '#f7f7f4' : (b.color || '#cfd6dd')); if (b.fire > 0){ ctx.fillStyle = (t*14|0) % 2 ? '#ff8a3d' : '#ffc83d'; circle((Math.random()-0.5)*4, -b.h*0.15, 3 + Math.random()*3); } ctx.restore(); return; }
-  drawVehicle(b.key, b.w, b.h, b.color);
-  if (!NO_GLOSS[b.key]) toyGloss(b.w, b.h);
+  carSprite(b);
   if (b.brk > 0 && b.state === 'drive'){ ctx.fillStyle = '#ff2d2d'; ctx.fillRect(-b.w*0.42, b.h/2 - 3, b.w*0.22, 3); ctx.fillRect(b.w*0.2, b.h/2 - 3, b.w*0.22, 3); }
   if (b.boss && b.state === 'drive'){
     if (b.boss.mode === 'rev' || b.boss.mode === 'charge'){ ctx.fillStyle = 'rgba(255,246,194,0.45)'; circle(-b.w*0.34, -b.h/2 - 4, 6); circle(b.w*0.34, -b.h/2 - 4, 6); }
@@ -3527,6 +3557,36 @@ function rubble(x, y, w, h, col, sg, seed, big){
     ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fillRect(-bw/2, -bh/2, bw, 1.5); ctx.fillStyle = 'rgba(0,0,0,0.16)'; ctx.fillRect(-bw/2, bh/2 - 1.5, bw, 1.5);
     ctx.restore();
   }
+}
+/* ground cache (11/17 しょーくん「フレームレート落ちた？ 家1軒1軒描写してない？」): the road, the roadside, the buildings and the ice never move,
+   so they are painted once into tall strips (GC_H world units, at up to 2x pixels) and each frame only stamps the strips on screen.
+   A strip is painted again when its building breaks (gcDirty), when the screen size or scale changes, and for a new run */
+const GC_H = 224, GC_PAD = 2, GC = {strips: new Map(), x0: 0, x1: 0, ps: 0};
+function gcReset(){ GC.strips.clear(); GC.ps = 0; }
+function gcDirty(y){ for (const yy of [y - 8, y + 64]){ const c = GC.strips.get(Math.floor(yy / GC_H)); if (c) c.dirty = true; } }
+function gcPaint(i, c){
+  const g = c.getContext('2d'), saved = ctx;
+  ctx = g; ctx.setTransform(GC.ps, 0, 0, GC.ps, -GC.x0 * GC.ps, -(i * GC_H - GC_PAD) * GC.ps);
+  try { drawGround(i * GC_H - GC_PAD, (i + 1) * GC_H + GC_PAD, GC.x0, GC.x1); } finally { ctx = saved; }
+  c.dirty = false;
+}
+function groundStamp(top, bot, left, right){
+  const ps = s * DPR;
+  if (ps !== GC.ps || left < GC.x0 || right > GC.x1){   // a new scale or a wider view: start the strips again, a little wider than needed
+    const m = Math.max(Math.abs(left), Math.abs(right)) + 60; GC.strips.clear(); GC.ps = ps; GC.x0 = -m; GC.x1 = m;
+  }
+  const i0 = Math.floor(top / GC_H), i1 = Math.floor(bot / GC_H);
+  let painted = 0;
+  for (let i = i0; i <= i1; i++){
+    let c = GC.strips.get(i);
+    if (!c){ c = document.createElement('canvas'); c.width = Math.ceil((GC.x1 - GC.x0) * ps); c.height = Math.ceil((GC_H + GC_PAD * 2) * ps); GC.strips.set(i, c); gcPaint(i, c); painted++; }
+    else if (c.dirty){ gcPaint(i, c); painted++; }
+    ctx.drawImage(c, GC.x0, i * GC_H - GC_PAD, GC.x1 - GC.x0, GC_H + GC_PAD * 2);
+  }
+  // paint the next strip ahead on a quiet frame, so a new strip rarely costs a frame of its own
+  if (!painted && !GC.strips.has(i0 - 1)){ const c = document.createElement('canvas'); c.width = Math.ceil((GC.x1 - GC.x0) * ps); c.height = Math.ceil((GC_H + GC_PAD * 2) * ps); GC.strips.set(i0 - 1, c); gcPaint(i0 - 1, c); }
+  // strips left behind (below the screen) are dropped; at most a screen and a half is kept
+  for (const k of GC.strips.keys()) if (k > i1 + 1 || k < i0 - 2) GC.strips.delete(k);
 }
 function drawGround(top, bot, left, right){
   const STEP = 24;
@@ -3631,6 +3691,9 @@ function drawGround(top, bot, left, right){
     ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = 2; ctx.beginPath();
     ctx.moveTo(p.x - p.w*0.3, p.y + p.h*0.2); ctx.lineTo(p.x - p.w*0.05, p.y - p.h*0.15); ctx.moveTo(p.x + p.w*0.05, p.y + p.h*0.3); ctx.lineTo(p.x + p.w*0.3, p.y - p.h*0.05); ctx.stroke();
   }
+}
+/* the moving or changing part of the ground (crossing gates, stations, works lamps, start and goal lines): drawn every frame */
+function drawGroundLive(top, bot, left, right){
   drawFeatures(top, bot, left, right);
   drawWorks(top, bot);
   ctx.fillStyle = '#f2f4f0'; ctx.fillRect(-AREAS[0].half, 24, AREAS[0].half, 5);
@@ -3807,7 +3870,8 @@ function draw(){
   const ca = DPR*s*vZm, ce = DPR*(W/2 - vZx*s*vZm + ox), cf = DPR*(H*ANCHOR - vZy*s*vZm + oy);
   ctx.setTransform(ca, 0, 0, ca, ce, cf);
   const top = worldTop() - 20, bot = worldBottom() + 20, left = camX - W/(2*s) - 20, right = camX + W/(2*s) + 20;
-  drawGround(top, bot, left, right);
+  groundStamp(top, bot, left, right);
+  drawGroundLive(top, bot, left, right);
   veilFar(top, bot, left, right);
   if (heli){ ctx.fillStyle = 'rgba(255,240,170,0.16)'; circle(P.x, P.y, 34); ctx.fillStyle = 'rgba(18,28,38,0.2)'; ellipse(heli.x + 18, heli.y + 26, 14, 18); }
   for (const dr of drums){
