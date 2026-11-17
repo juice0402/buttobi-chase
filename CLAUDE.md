@@ -9,6 +9,8 @@
 - dev/tests/：playwright のテスト（/usr/bin/google-chrome で動かす）。dbg.py＋f1.py（通しの流れ）・m1.py（ミッション）・final.py（街4つを自動運転）・perf.py（重さ）・t2.py（街×車のバランス）・t6.py（最初からの通し）・t7.py（古いセーブ）・t8.py（音のつなぎ）・bal.py（バランス。python3 bal.py ../../index.html ship|lazy|line 6 で、ふつう／なまけ者／真ん中だけの自動運転をくらべる）
 
 ## 決まり
+- 直す前に docs/MAP.md（地図）を見て、検索した所だけ読む
+- 動きは fx… の名前で1回だけ（くり返す・下から出る動きなし）。メニューの文は語りかけなし・「！」なし（docs/MAP.md の決まり）
 - file: で開いたときだけ window.__butto がある（get・save・load・start・sim・garage・pause）。公開ページにはない
 - 試しに遊ぶページ（アーティファクト）https://claude.ai/artifact/9MNEHG5BAX88qBR5FT1h45 にも同じ中身を出している。アーティファクトはスケルトン（doctype・head）なしの中身だけで出す
 - 絵・音・コインのしくみを変えるときは claude/game-art-rule.md（音はコードで作る・運でコインを増やさない）
