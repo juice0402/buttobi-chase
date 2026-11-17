@@ -13,6 +13,7 @@
 | dev/sound.js | 音のもと。直したら index.html の最初の script と sound-test.html も同じにする |
 | dev/tests/ | playwright のテスト（CLAUDE.md） |
 | dev/out/ | テストが作るファイル（読まない・コミットしない） |
+| RELEASES.md・.github/workflows/release.yml・tools/release/ | ゲーム工房に出す版。main に入るとまだタグのない版にタグと Releases を作る |
 
 ## src/index.html
 | 行 | 中身 |
