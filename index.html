@@ -110,6 +110,9 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 @keyframes inR{from{transform:translateX(120vw) skewX(-20deg)}to{transform:none}}
 .ver{margin:0;font-family:var(--display);font-size:14px;letter-spacing:.14em;color:var(--navy);background:var(--on-dark);border-radius:999px;padding:3px 12px;animation:fadeUp .4s .5s both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#title .tap{margin:8px 0 0;font-family:var(--display);font-size:20px;line-height:1;color:var(--navy);background:var(--sun);border:3px solid var(--navy);border-radius:999px;padding:14px 30px;box-shadow:0 5px 0 var(--navy);animation:fxTapIn .45s cubic-bezier(.2,1.5,.4,1) .75s both}
+@keyframes fxTapIn{from{opacity:0;transform:scale(.5) rotate(-6deg)}to{opacity:1;transform:none}}
+@media (min-width:700px) and (min-height:700px){#title .tap{font-size:26px;padding:18px 40px}}
 #title.out{animation:titleOut .3s ease-in forwards}
 @keyframes titleOut{to{opacity:0;transform:scale(1.25)}}
 
@@ -596,7 +599,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
 .fxgo{position:fixed;inset:0;z-index:65;pointer-events:none;overflow:hidden}
 .fxgo i{position:absolute;top:0;width:3px;border-radius:2px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.85));animation:fxGo .4s cubic-bezier(.3,0,.7,1) both}
 @keyframes fxGo{0%{transform:translateY(-40vh);opacity:0}25%{opacity:1}100%{transform:translateY(110vh);opacity:0}}
-@media (prefers-reduced-motion: reduce){.new,#boostBar.ready .bb-wrap,#boostBar .bb i,#nitroFx.on,#flash.go,.logo .a,.logo .b,.ver,#title.out,.sh-finger,.sh-finger .rip,#result .res-rank{animation:none}#boostBar.ready .bb-wrap{box-shadow:0 0 0 3px var(--tomato)}#banner.show{animation:banfade 1.8s linear forwards}@keyframes banfade{0%,80%{opacity:1}100%{opacity:0}}#result .res-rank{transform:rotate(-4deg)}.go:active,.again:active,.to-g:active{transform:none}.res-btns{transition:none}}
+@media (prefers-reduced-motion: reduce){.new,#boostBar.ready .bb-wrap,#boostBar .bb i,#nitroFx.on,#flash.go,.logo .a,.logo .b,.ver,#title .tap,#title.out,.sh-finger,.sh-finger .rip,#result .res-rank{animation:none}#boostBar.ready .bb-wrap{box-shadow:0 0 0 3px var(--tomato)}#banner.show{animation:banfade 1.8s linear forwards}@keyframes banfade{0%,80%{opacity:1}100%{opacity:0}}#result .res-rank{transform:rotate(-4deg)}.go:active,.again:active,.to-g:active{transform:none}.res-btns{transition:none}}
 </style>
 
 <canvas id="game" aria-label="ゲーム画面"></canvas>
@@ -644,6 +647,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
 <div id="title" hidden role="button" tabindex="0" aria-label="ぶっとびチェイス　タップでスタート">
   <h1 class="logo"><span class="a">ぶっとび</span><span class="b">チェイス</span></h1>
   <p class="ver">ver 1.4</p>
+  <p class="tap">タップでスタート</p>
 </div>
 
 <section id="result" hidden aria-label="けっか">
@@ -4523,12 +4527,17 @@ $('tutNext').addEventListener('click', () => { if (performance.now() - tutAt < 4
 $('tutSkip').addEventListener('click', () => { if (performance.now() - tutAt < 400) return; snd('tap'); const go = !tutThen; endTut(); if (go) fxGo(); });
 $('openTut').addEventListener('click', () => { snd('tap'); closeOv('setOv'); showTut(() => {}); });
 
-/* title: the logo stamps on, then the run starts by itself (a tap skips ahead); the very first time, the picture cards come first */
-let titleTimer = 0;
+/* title: the logo stamps on and waits for a tap (11/17 しょーくん「いきなりゲームが始まるとビビる」); the very first time, the picture cards come first */
+let titleTimer = 0, titleGo = false;
 function showTitle(){
-  state = 'title';
+  state = 'title'; titleGo = false;
   const el = $('title'); el.classList.remove('out'); el.hidden = false;
-  titleTimer = setTimeout(() => { el.classList.add('out'); titleTimer = setTimeout(endTitle, 300); }, reduceMotion ? 1000 : 1500);
+}
+function leaveTitle(){
+  if (state !== 'title' || titleGo) return;
+  titleGo = true; snd('tap');
+  if (RM()) return endTitle();
+  $('title').classList.add('out'); titleTimer = setTimeout(endTitle, 300);
 }
 function endTitle(){ if (state !== 'title') return; clearTimeout(titleTimer); if (!save.tutDone){ $('title').hidden = true; showTut(null); return; } startRun(); }
 /* iOS: a quick second tap must not open the text loupe or zoom, a pinch must not zoom, a long press must not open a menu (11/17 しょーくん「ダブルタップしたら虫眼鏡」) */
@@ -4536,7 +4545,7 @@ function endTitle(){ if (state !== 'title') return; clearTimeout(titleTimer); if
   document.addEventListener('touchend', e => { const now = performance.now(); if (now - lastEnd < 400 && e.cancelable && !e.target.closest('button, .panel, .r-gain')) e.preventDefault(); lastEnd = now; }, {passive:false});
   for (const ev of ['dblclick', 'gesturestart', 'gesturechange', 'contextmenu', 'selectstart']) document.addEventListener(ev, e => { if (e.cancelable) e.preventDefault(); }, {passive:false});
 }
-$('title').addEventListener('pointerdown', e => { e.preventDefault(); endTitle(); });
+$('title').addEventListener('pointerdown', e => { e.preventDefault(); leaveTitle(); });
 
 /* ---------- input ---------- */
 cvs.addEventListener('pointerdown', e => {
@@ -4558,7 +4567,7 @@ const endDrag = e => {
 cvs.addEventListener('pointerup', endDrag); cvs.addEventListener('pointercancel', endDrag);
 const keyOf = e => e.key && e.key.length === 1 ? e.key.toLowerCase() : e.key;  // P / A / D work with Shift or Caps Lock too
 window.addEventListener('keydown', e => {
-  if (state === 'title'){ e.preventDefault(); endTitle(); return; }
+  if (state === 'title'){ e.preventDefault(); leaveTitle(); return; }
   if (state === 'tut'){ if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight'){ e.preventDefault(); $('tutNext').click(); } return; }
   const k = keyOf(e);
   if (k === 'Escape' || k === 'p'){ if (state === 'play') pauseGame(); else if (state === 'pause') resumeGame(); return; }
