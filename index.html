@@ -2276,7 +2276,15 @@ const massOf = b => b === P ? (boosting ? b.m * 8 : (b.key === 'muscle' ? b.m * 
    top speed and the speed lines step up at FLOW_T1 and FLOW_T2 seconds (wind, a slight pull-back of the camera). A hit, a slowdown or falling
    under 85% ends it. Pictures and sound only: the speed, the rules and the coins are the same */
 const FLOW_T1 = 3, FLOW_T2 = 7, FLOW_ZOOM = 0.05;
-let flowT = 0, flowLv = 0, flowK = 0, flowPulse = 0, edgeSmashT = 0, flowGlow = null;
+let flowT = 0, flowLv = 0, flowK = 0, flowPulse = 0, edgeSmashT = 0, flowGlow = null, streakImg = null;
+// one tapered streak picture for the flow speed lines: the head (bottom) bright and round, the tail thin and see-through
+function makeStreak(){
+  const w = 24, h = 192, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
+  const shape = (hw, c0, c1) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, c0); gr.addColorStop(0.7, c1); gr.addColorStop(1, c1); g.fillStyle = gr;
+    g.beginPath(); g.moveTo(w/2, 0); g.lineTo(w/2 + hw, h - hw); g.quadraticCurveTo(w/2, h + hw*0.5, w/2 - hw, h - hw); g.closePath(); g.fill(); };
+  shape(11, 'rgba(23,50,77,0)', 'rgba(23,50,77,0.16)'); shape(6, 'rgba(255,255,255,0)', 'rgba(255,255,255,0.7)'); shape(2.5, 'rgba(255,255,255,0)', 'rgba(255,255,255,1)');
+  return c;
+}
 const flowBase = () => car().speed + 16 * upLv('eng');
 const pSpeed = () => (car().speed + 16 * upLv('eng')) * (boosting ? boostPow() : 1) * (P && P.slowT > 0 ? 0.58 : 1);
 
@@ -4078,14 +4086,20 @@ function draw(){
     ctx.fillStyle = `rgba(255,${90 + i*20},40,${0.34 - i*0.048})`; rr(-P.w/2, -P.h/2, P.w, P.h, Math.min(P.w, P.h)*0.3); ctx.fill();
   }
   if (trail.length) ctx.setTransform(ca, 0, 0, ca, ce, cf);
-  if (flowK > 0.05 && !boosting && fxOn && P.state === 'drive'){ // full-speed flow: wind peeling off the back corners of your car
-    ctx.lineCap = 'round';
-    for (const sg of [-1, 1]) for (let k = 0; k < 2; k++){
-      const x = P.x + sg*(P.w/2 - 1 + k*3), y0 = P.y + P.h*0.2 + k*6, len = (18 + 46*flowK) * (0.75 + 0.25*Math.sin(t*23 + sg*2 + k));
-      ctx.strokeStyle = `rgba(255,255,255,${(0.55 - k*0.2) * flowK})`; ctx.lineWidth = 2 - k*0.6;
-      ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x + sg*2, y0 + len); ctx.stroke();
+  if (flowK > 0.05 && !boosting && fxOn && P.state === 'drive'){ // full-speed flow: tapered streaks of light off the back corners of your car (21回目 しょーくん「先細りの光の筋」)
+    const L = 22 + 54*flowK, bend = -P.vx * 0.06, y0 = P.y + P.h*0.34;
+    for (const sg of [-1, 1]){
+      const x0 = P.x + sg*(P.w/2 - 1.5), hw = 1.5 + 1.7*flowK, tx = x0 + sg*2.5 + bend, ty = y0 + L*(0.9 + 0.1*Math.sin(t*17 + sg*1.7));
+      const gr = ctx.createLinearGradient(x0, y0, tx, ty);
+      gr.addColorStop(0, `rgba(255,255,255,${0.2 + 0.7*flowK})`); gr.addColorStop(0.3, `rgba(220,242,255,${0.55*flowK})`); gr.addColorStop(1, 'rgba(220,242,255,0)');
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(x0 - hw, y0);
+      ctx.quadraticCurveTo(x0 - hw*0.5 + bend*0.35, y0 + L*0.5, tx, ty); ctx.quadraticCurveTo(x0 + hw*0.5 + bend*0.35, y0 + L*0.5, x0 + hw, y0); ctx.closePath(); ctx.fill();
     }
-    ctx.lineCap = 'butt';
+    if (flowK > 0.55){ // second stage: a soft wake of air in the middle, wider and fainter
+      const w = P.w*0.34, k = (flowK - 0.55) / 0.45, tx = P.x + bend*1.2, ty = y0 + L*1.15, gr = ctx.createLinearGradient(P.x, y0, tx, ty);
+      gr.addColorStop(0, `rgba(255,255,255,${0.32*k})`); gr.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(P.x - w, y0); ctx.quadraticCurveTo(P.x - w*0.4 + bend*0.4, y0 + L*0.6, tx, ty); ctx.quadraticCurveTo(P.x + w*0.4 + bend*0.4, y0 + L*0.6, P.x + w, y0); ctx.closePath(); ctx.fill();
+    }
   }
   if (state === 'play' && !boosting && boost >= 100){ // full nitro: pulsing aura on your car
     const r = 26 + 4*Math.sin(t*9);
@@ -4136,16 +4150,20 @@ function draw(){
     }
   }
   if (flowK > 0.03 && !boosting && fxOn){ // full-speed flow: speed lines rushing down the sides of the screen (more at the second stage)
-    // each line is white with a faint navy edge beside it, so it reads on the light toy town as well as on the road
-    const n = Math.round(6 + 22*flowK), side = W*(0.22 + 0.16*flowK), a = Math.min(1, 0.3 + 0.5*flowK + (flowPulse > 0 ? flowPulse*1.2 : 0));
-    ctx.lineCap = 'round';
+    // tapered streaks (a bright head fading back to nothing, a soft navy edge so they read on the light town) that rush out from a point
+    // above the screen along the sides — they grow as they come closer, like a real sense of speed
+    if (!streakImg) streakImg = makeStreak();
+    const n = Math.round(6 + 18*flowK), vx0 = W/2, vy0 = -H*0.9, a = Math.min(1, 0.4 + 0.55*flowK + (flowPulse > 0 ? flowPulse*1.2 : 0)), band = W*(0.2 + 0.12*flowK);
     for (let i = 0; i < n; i++){
-      const r = rnd(i*29 + 3), x = i % 2 ? W - r*side : r*side, len = (60 + rnd(i*11)*110) * (0.6 + 0.7*flowK), sp = 1200 + rnd(i*5)*700;
-      const y = ((t*sp + rnd(i*17)*(H + 300)) % (H + 300)) - 150, al = a * (0.55 + 0.45*rnd(i*7)), lw = i % 3 ? 2 : 3.2;
-      ctx.strokeStyle = `rgba(23,50,77,${al*0.28})`; ctx.lineWidth = lw + 1.5; ctx.beginPath(); ctx.moveTo(x + 1.5, y); ctx.lineTo(x + 1.5, y + len); ctx.stroke();
-      ctx.strokeStyle = `rgba(255,255,255,${al})`; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + len); ctx.stroke();
+      // each streak runs on a line from the point above toward a spot along the bottom edge's side band, and crosses the whole screen on it
+      const sg = i % 2 ? 1 : -1, xb = vx0 + sg*(W/2 - rnd(i*29 + 3)*band), dyb = H*1.05 - vy0, ang = Math.atan2(dyb, xb - vx0), sn = Math.sin(ang);
+      const d0 = (-60 - vy0) / sn, d1 = (H + 60 - vy0) / sn, p = (t*(0.9 + rnd(i*5)*0.6) + rnd(i*17)) % 1, d = d0 + (d1 - d0)*p;
+      const x = vx0 + Math.cos(ang)*d, y = vy0 + sn*d;
+      const len = (60 + 130*p) * (0.6 + 0.6*flowK) * (0.7 + 0.6*rnd(i*11)), lw = (5 + 8*p) * (i % 3 ? 0.75 : 1), th = ang - Math.PI/2, co = Math.cos(th), si = Math.sin(th);
+      ctx.globalAlpha = a * Math.min(1, p*6, (1 - p)*8) * (0.6 + 0.4*rnd(i*7));
+      ctx.setTransform(DPR*co, DPR*si, -DPR*si, DPR*co, DPR*x, DPR*y); ctx.drawImage(streakImg, -lw/2, -len, lw, len);
     }
-    ctx.lineCap = 'butt';
+    ctx.globalAlpha = 1; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
     if (flowK > 0.55){ // second stage: the sides of the screen glow like a wind tunnel
       if (!flowGlow || flowGlow.w !== W){ const g = ctx.createLinearGradient(0, 0, W, 0); g.addColorStop(0, 'rgba(255,255,255,0.55)'); g.addColorStop(0.12, 'rgba(255,255,255,0)'); g.addColorStop(0.88, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(255,255,255,0.55)'); flowGlow = {w:W, g}; }
       ctx.globalAlpha = (flowK - 0.55) / 0.45 * (0.75 + 0.25*Math.sin(t*11)); ctx.fillStyle = flowGlow.g; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
