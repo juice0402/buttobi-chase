@@ -529,7 +529,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
 @keyframes fxBg{0%{background-color:transparent}}
 .fxdrive{animation:fxDrive .32s cubic-bezier(.2,1,.3,1) both}
 @keyframes fxDrive{0%{transform:translateX(110vw) skewX(-14deg)}60%{transform:translateX(-12px) skewX(4deg)}82%{transform:translateX(3px) skewX(-1deg)}100%{transform:none}}
-.ov.fxclose{pointer-events:none;z-index:41;animation:fxBgOut .22s ease-in both}
+.ov.fxclose{pointer-events:none;z-index:39;animation:fxBgOut .22s ease-in both}
 .ov.fxclose .sheet{animation:fxDriveOut .22s cubic-bezier(.55,0,.85,.3) both}
 @keyframes fxBgOut{to{background-color:transparent}}
 @keyframes fxDriveOut{0%{transform:none}30%{transform:translateX(10px) skewX(-3deg)}100%{transform:translateX(-110vw) skewX(12deg)}}
@@ -2165,7 +2165,7 @@ function resetWorld(){
   const C = car();
   P = mkBody({role:'player', key:C.key, w:C.w, h:C.h, m:C.m, color:C.color, x:-23, y:0, vy:-C.speed});
   P.maxHp = P.hp = Math.round(C.hp * (1 + 0.25 * upLv('body')));
-  cars = []; heli = null; heliCool = 0; fx = []; pops = [];
+  cars = []; heli = null; heliCool = 0; fx = []; pops = []; broken.clear();
   dist = 0; t = 0; star = TOWN.start; heatPts = (star - 1) * 100; nextChaser = 7; comboN = 0; comboT = 0; maxCombo = 0;
   iceN = 0; finalDown = false; maxStar = star; runMis = new Set(); misQueue = []; misT = 0; misCheckT = 0; onIceNow = false;
   dmgBy = {}; takeN = 0; takeMoney = 0; trafN = 0; trafMoney = 0; nearN = 0; nearMoney = 0;
@@ -2393,7 +2393,7 @@ function spawnCross(q, dir, x){
 }
 function explodeAt(x, y, R, F, credit, dmgP, big){
   burst(x, y, 'boom', big ? 34 : 18); shake = Math.max(shake, big ? 10 : 6); snd('explode', big ? 1 : 0.6);
-  ring(x, y, big ? 70 : 46, '#ffd24a'); { const half = halfAt(Math.max(0, -y / M)), sg = Math.sign(x) || 1; if (Math.abs(x) > half - 40) blocksFly(sg * (half + 10), y, sg, big ? 10 : 6); }
+  ring(x, y, big ? 70 : 46, '#ffd24a'); { const half = halfAt(Math.max(0, -y / M)), sg = Math.sign(x) || 1; if (Math.abs(x) > half - 40 && breakAt(sg * (half + 10), y, sg, big)) blocksFly(sg * (half + 10), y, sg, big ? 12 : 7); }
   for (const o of [P, ...cars]){
     const dx = o.x - x, dy = o.y - y, d = Math.hypot(dx, dy);
     if (d >= R) continue;
@@ -2642,8 +2642,18 @@ function stars(x, y, n){
 }
 // a crashed car rolls over while it is in the air and lands on its roof about half the time
 function rollOver(b){ b.rollTo = (Math.random() < 0.55 ? Math.PI : Math.PI * 2) * (Math.random() < 0.5 ? -1 : 1); }
-// the roadside wall a car is next to: blocks fall from there
-function wallBlocks(b, n){ const half = halfAt(Math.max(0, -b.y / M)), sg = Math.sign(b.x) || 1; if (Math.abs(b.x) > half - b.w) blocksFly(sg * (half + 10), b.y, sg, n); }
+// broken buildings: the roadside building at a wall crash or a blast falls to a pile of blocks for the rest of the run (11/17 しょーくん「周りの建物の破損は？」)
+const broken = new Map(), BLD_STYLES = {town:1, snowtown:1, avenue:1, port:1};
+function hasBuildings(y){ return !!BLD_STYLES[AREAS[areaIndexAt(Math.max(0, -y / M))].style]; }
+function breakAt(x, y, sg, big){
+  if (!hasBuildings(y)) return false;
+  const k = Math.floor(y / 56);
+  for (let q = big ? -1 : 0; q <= (big ? 1 : 0); q++){ const key = (k + q) + ':' + sg; if (!broken.has(key)) broken.set(key, big ? 2 : 1); }
+  for (let i = 0; i < (big ? 6 : 3); i++) smoke(x + sg*(10 + Math.random()*40), y + (Math.random() - 0.5)*50, 'rgba(214,200,176,0.9)');
+  return true;
+}
+// the roadside wall a car is next to: its building breaks and blocks fall from there
+function wallBlocks(b, n){ const half = halfAt(Math.max(0, -b.y / M)), sg = Math.sign(b.x) || 1; if (Math.abs(b.x) > half - b.w && breakAt(sg * (half + 10), b.y, sg, false)) blocksFly(sg * (half + 10), b.y, sg, n); }
 // time: hit-stop freezes the world for a few frames, slow motion runs it at 0.3x, and the camera leans in on the crash (real time, see frame())
 let hitStopT = 0, slowMoT = 0, slowCool = 0, zoomK = 0, vZm = 1, vZx = 0, vZy = 0;
 function hitStop(sec){ if (!reduceMotion && !window.__NOFX) hitStopT = Math.max(hitStopT, sec); }
@@ -3505,6 +3515,19 @@ function block(x, y, w, h, col, top){
   else if (top === 3){ const r = Math.min(w, h)*0.3, cx = x + w/2, cy = y + h/2; ctx.fillStyle = 'rgba(18,28,38,0.2)'; circle(cx + 2.5, cy + 3, r); ctx.fillStyle = shade(col, 0.14); circle(cx, cy, r); ctx.fillStyle = 'rgba(255,255,255,0.35)'; circle(cx - r*0.3, cy - r*0.3, r*0.4); }
   else if (top === 4){ ctx.fillStyle = '#f7fbff'; ctx.fillRect(x, y, w, h*0.45); ctx.fillStyle = 'rgba(160,190,220,0.35)'; ctx.fillRect(x, y + h*0.45 - 1.5, w, 1.5); }
 }
+/* a building knocked down: a low stump, blocks spilled toward the road, dust on the ground (fixed per cell, so it stays the same while you pass) */
+function rubble(x, y, w, h, col, sg, seed, big){
+  ctx.fillStyle = big ? 'rgba(40,34,30,0.28)' : 'rgba(120,100,80,0.2)'; ellipse(x + w/2, y + h/2, w*0.62, h*0.55);
+  block(sg > 0 ? x + w*0.45 : x, y + h*0.45, w*0.55, h*0.55, shade(col, -0.08), 0);
+  for (let i = 0; i < 7; i++){
+    const bw = 6 + rnd(seed + i*3)*8, bh = 6 + rnd(seed + i*5)*6, px = x + rnd(seed + i*7)*w - sg*rnd(seed + i*11)*14, py = y + rnd(seed + i*13)*h, a = rnd(seed + i*17)*Math.PI;
+    const c = i % 3 === 0 ? BLOCK_COL[(rnd(seed + i*19)*BLOCK_COL.length)|0] : col;
+    ctx.save(); ctx.translate(px, py); ctx.rotate(a);
+    ctx.fillStyle = 'rgba(18,28,38,0.22)'; ctx.fillRect(-bw/2 + 2, -bh/2 + 2.5, bw, bh); ctx.fillStyle = c; ctx.fillRect(-bw/2, -bh/2, bw, bh);
+    ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fillRect(-bw/2, -bh/2, bw, 1.5); ctx.fillStyle = 'rgba(0,0,0,0.16)'; ctx.fillRect(-bw/2, bh/2 - 1.5, bw, 1.5);
+    ctx.restore();
+  }
+}
 function drawGround(top, bot, left, right){
   const STEP = 24;
   for (let y = Math.floor(top/STEP)*STEP; y < bot; y += STEP){
@@ -3541,7 +3564,7 @@ function drawGround(top, bot, left, right){
           if (rnd(k*61 + j*3 + sg) < 0.8) block(sg*(xx + ww/2) - ww/2, y + 7, ww, CELL - 14, col, snow ? 4 : (rnd(k*67 + j*5 + sg)*4)|0);
           xx += ww + 10; }
         const x0 = half + 6, hw = 30 + r1*18, hh = CELL - 10, cx = sg*(x0 + hw/2), col = HOUSE[(r2*HOUSE.length)|0];
-        block(cx - hw/2, y + 5, hw, hh, col, snow ? 4 : 2);
+        { const bk = broken.get(k + ':' + sg); if (bk) rubble(cx - hw/2, y + 5, hw, hh, col, sg, k*31 + sg, bk > 1); else block(cx - hw/2, y + 5, hw, hh, col, snow ? 4 : 2); }
         const x1 = x0 + hw + 8 + r3*10, hw2 = 28 + r3*16, cx2 = sg*(x1 + hw2/2), col2 = HOUSE[(r3*HOUSE.length)|0];
         block(cx2 - hw2/2, y + 8, hw2, hh - 6, col2, snow ? 4 : r2 > 0.5 ? 3 : 1);
         if (snow && r1 > 0.6) pine(sg*(x1 + hw2 + 22 + r2*30), y + CELL/2, 9 + r3*5);
@@ -3550,7 +3573,7 @@ function drawGround(top, bot, left, right){
         { const edge = sg > 0 ? right : -left; for (let j = 0, xx = half + 140 + r3*20; xx < edge && j < 6; j++){ const ww = 50 + rnd(k*43 + j*5 + sg)*50, col = BLDG[(rnd(k*57 + j*13 + sg)*BLDG.length)|0];
           block(sg*(xx + ww/2) - ww/2, y + 4, ww, CELL - 8, col, 1); xx += ww + 14; } }
         const x0 = half + 22, bw = 54 + r1*40, bh = CELL - 6, cx = sg*(x0 + bw/2), col = BLDG[(r2*BLDG.length)|0];
-        block(cx - bw/2, y + 3, bw, bh, col, r3 > 0.6 ? 3 : 1);
+        { const bk = broken.get(k + ':' + sg); if (bk) rubble(cx - bw/2, y + 3, bw, bh, col, sg, k*31 + sg, bk > 1); else block(cx - bw/2, y + 3, bw, bh, col, r3 > 0.6 ? 3 : 1); }
         if ((k & 1) === 0){ ctx.fillStyle = '#4f9a5a'; circle(sg*(half + 8), y + CELL/2, 7); }
       } else if (st === 'port'){
         ctx.fillStyle = '#d6dce3'; ctx.fillRect(sg > 0 ? half : -half - 12, y, 12, CELL + 1);
@@ -3558,9 +3581,11 @@ function drawGround(top, bot, left, right){
           ctx.fillStyle = col; ctx.fillRect(sg*(xx + ww/2) - ww/2, y + 2, ww, CELL - 4); ctx.fillStyle = shade(col, -0.12); for (let q = sg*(xx + ww/2) - ww/2 + 6; q < sg*(xx + ww/2) + ww/2 - 4; q += 10) ctx.fillRect(q, y + 2, 3, CELL - 4); xx += ww + 16; } }
         if ((k & 3) !== 0 || r1 > 0.3){
           const x0 = half + 18, bw = 80 + r1*60, bh = CELL - 4, cx = sg*(x0 + bw/2), col = WARE[(r2*WARE.length)|0];
-          block(cx - bw/2, y + 2, bw, bh, col, 0);
-          ctx.fillStyle = shade(col, -0.12); for (let xx = cx - bw/2 + 6; xx < cx + bw/2 - 4; xx += 10) ctx.fillRect(xx, y + 2, 3, bh);
-          ctx.fillStyle = shade(col, -0.35); ctx.fillRect(sg > 0 ? cx - bw/2 : cx + bw/2 - 6, y + 12, 6, 22);
+          const bk = broken.get(k + ':' + sg);
+          if (bk) rubble(cx - bw/2, y + 2, bw, bh, col, sg, k*31 + sg, bk > 1);
+          else { block(cx - bw/2, y + 2, bw, bh, col, 0);
+            ctx.fillStyle = shade(col, -0.12); for (let xx = cx - bw/2 + 6; xx < cx + bw/2 - 4; xx += 10) ctx.fillRect(xx, y + 2, 3, bh);
+            ctx.fillStyle = shade(col, -0.35); ctx.fillRect(sg > 0 ? cx - bw/2 : cx + bw/2 - 6, y + 12, 6, 22); }
         } else { ctx.fillStyle = CONT_COL[(r3*CONT_COL.length)|0]; ctx.fillRect(sg*(half + 30) - 13, y + 4, 26, 48); ctx.fillStyle = 'rgba(0,0,0,0.18)'; for (let yy = y + 8; yy < y + 50; yy += 6) ctx.fillRect(sg*(half + 30) - 13, yy, 26, 2); }
       } else if (st === 'dock'){
         if (sg < 0){
@@ -3840,12 +3865,12 @@ function draw(){
   ctx.setTransform(ca, 0, 0, ca, ce, cf); let bitT = false;
   for (const p of fx){
     ctx.globalAlpha = Math.max(0, p.life / p.max) * (p.type === 'smoke' ? 0.5 : 1);
+    if (bitT && (p.type === 'boom' || p.type === 'smoke' || p.type === 'ring')){ ctx.setTransform(ca, 0, 0, ca, ce, cf); bitT = false; }
     if (p.type === 'boom'){ ctx.fillStyle = p.color; circle(p.x, p.y, p.size * (1.8 - p.life/p.max)); }
     else if (p.type === 'smoke'){ ctx.fillStyle = p.color; circle(p.x, p.y, p.size * (2.2 - p.life/p.max)); }
     else if (p.type === 'ring'){ const q = 1 - p.life/p.max; ctx.strokeStyle = p.color; ctx.lineWidth = 5 * (1 - q) + 1; ctx.beginPath(); ctx.arc(p.x, p.y, p.size * (0.3 + q), 0, Math.PI*2); ctx.stroke(); }
     else if (p.type === 'part' || p.type === 'star'){ drawPart(p, ca, ce, cf); bitT = true; continue; }
     else { const co = Math.cos(p.rot), si = Math.sin(p.rot); ctx.setTransform(ca*co, ca*si, -ca*si, ca*co, ca*p.x + ce, ca*p.y + cf); ctx.fillStyle = p.color; ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size); bitT = true; continue; }
-    if (bitT){ ctx.setTransform(ca, 0, 0, ca, ce, cf); bitT = false; }
   }
   ctx.globalAlpha = 1;
 
