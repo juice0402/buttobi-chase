@@ -179,7 +179,7 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 .iconbtn{flex:none;width:44px;height:44px;border-radius:12px;border:2px solid var(--line);background:var(--card);display:grid;place-items:center;padding:0;cursor:pointer}
 .iconbtn svg{width:24px;height:24px;fill:none;stroke:var(--navy);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:var(--line);padding:4px;border-radius:14px}
-.tabs button{min-height:44px;border:0;border-radius:10px;padding:7px 2px;font-family:var(--display);font-size:14px;line-height:1.15;background:transparent;color:var(--mute);cursor:pointer;display:grid;justify-items:center;gap:1px;min-width:0}
+.tabs button{min-height:44px;border:0;border-radius:10px;padding:7px 2px;font-family:var(--display);font-size:15px;white-space:nowrap;line-height:1.15;background:transparent;color:var(--mute);cursor:pointer;display:grid;justify-items:center;gap:1px;min-width:0}
 .tabs button small{font-family:var(--body);font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
 .tabs button[aria-selected="true"]{background:var(--card);color:var(--navy);box-shadow:0 2px 0 var(--mute)}
 .hero{display:grid;grid-template-columns:minmax(100px,36%) minmax(0,1fr);gap:12px;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:10px}
@@ -230,8 +230,37 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 .ic.eng{background:var(--sun);color:var(--navy)}
 .ic.body{background:var(--mint)}
 .ic.boost{background:var(--tomato)}
+.ic.ram{background:#4f8fc0}
+/* the tuning bay (11/17): the car on a toy lift, the points as dots, ± per stat */
+.bay{position:relative;height:118px;border-radius:14px;overflow:hidden;background:#2f3744;flex:none}
+.bay canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.bay .spk{position:absolute;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:2px;background:#ffd24a;pointer-events:none;animation:fxSpark .5s ease-out both}
+@keyframes fxSpark{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.3) rotate(160deg);opacity:0}}
+.fxrattle{animation:fxRattle .46s steps(9,end) both}
+@keyframes fxRattle{0%{transform:translate(0,0)}12%{transform:translate(-3px,1px) rotate(-1.2deg)}24%{transform:translate(3px,-1px) rotate(1deg)}36%{transform:translate(-2px,0) rotate(-.8deg)}48%{transform:translate(2px,1px) rotate(.6deg)}60%{transform:translate(-1px,-1px)}72%{transform:translate(1px,0)}100%{transform:none}}
+.fxlift{animation:fxLift .4s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes fxLift{0%{transform:translateY(8px) scale(.97)}60%{transform:translateY(-3px)}100%{transform:none}}
+.ptbar{display:flex;align-items:center;gap:8px;flex:none}
+.pts{flex:1;display:flex;gap:5px;align-items:center;min-width:0}
+.pts{gap:4px}
+.pts i{width:14px;height:14px;border-radius:5px;border:2px dashed var(--line);flex:none}
+.pts i.used{background:var(--navy);border:2px solid var(--navy)}
+.pts i.free{background:var(--sun);border:2px solid #e0a92a;box-shadow:0 0 0 3px rgba(255,200,61,.3)}
+.ptbar .act{margin:0;min-height:44px;font-size:14px;padding:0 12px;white-space:nowrap}
+.ptbar .act b{font-size:16px;margin-left:4px}
+.ptbar .respec{width:44px;padding:0;display:grid;place-items:center;background:var(--card);border:2px solid var(--line);box-shadow:none;color:var(--navy)}
+.ptbar .respec svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.ptbar .respec:disabled{opacity:.35}
+@media (min-width:700px){ .pts i{width:20px;height:20px;border-radius:6px} .pts{gap:6px} }
+.up .pm{display:flex;gap:6px;flex:none}
+.up .pm button{width:44px;height:44px;border-radius:12px;border:0;font-family:var(--display);font-size:22px;line-height:1;cursor:pointer;background:var(--sun);color:var(--navy);box-shadow:0 4px 0 #c9971f}
+.up .pm button.sub{background:var(--card);border:2px solid var(--line);box-shadow:none}
+.up .pm button:disabled{opacity:.35;box-shadow:none;cursor:default}
+.up .pm button:active:not(:disabled){transform:translateY(2px);box-shadow:none}
+
 .up-t{flex:1;min-width:0;display:grid;gap:5px}
 .up-t b{font-family:var(--display);font-weight:400;font-size:16px;line-height:1.1}
+.up.full{border-color:var(--sun)}
 .up-t small{font-size:12px;font-weight:700;color:var(--mute)}
 .nw{white-space:nowrap}
 .up .act{margin:0;flex:none;min-width:88px;font-size:15px}
@@ -355,11 +384,12 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   .town button{height:44px}
   .go{padding:11px}
 }
-/* tall phones: the strengthen tab also shows the car being strengthened, and the car tiles grow a little */
+/* tall phones: the car tiles grow a little (the tuning tab shows its car in the bay, not the hero card — 11/17) */
 @media (orientation:portrait) and (min-height:780px){
-  body.gt-up .hero{display:grid}
   .tile canvas{height:clamp(50px,6.5vh,64px)}
+  .bay{height:140px}
 }
+@media (min-width:700px) and (orientation:portrait){ .bay{height:190px} }
 /* mid-tall phones: on the strengthen tab the car card drops its (inert) のってる button so the performance block fits */
 @media (orientation:portrait) and (min-height:780px) and (max-height:879px) and (max-width:699px){
   body.gt-up .hero .act{display:none}
@@ -380,6 +410,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   .g-head{grid-area:head}.tabs{grid-area:tabs}.panel{grid-area:panel}.g-foot{grid-area:foot}
   .hero{grid-area:hero;grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;min-height:0}
   body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:grid}
+  .bay{display:none}
   .pic{min-height:0}
   .info h3{font-size:24px}
   .r-in{max-width:1000px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);align-items:stretch;column-gap:32px}
@@ -428,7 +459,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   .coins b{font-size:24px}
   .coins small{font-size:14px}
   .iconbtn{width:52px;height:52px}
-  .tabs button{font-size:18px;padding:8px 4px}
+  .tabs button{font-size:20px;padding:8px 4px}
   .tabs button small{font-size:14px}
   .hero{padding:14px;gap:18px}
   .info{gap:8px}
@@ -643,10 +674,10 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
       <button type="button" class="iconbtn" id="openSet" aria-label="設定"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/></svg></button>
     </header>
     <div class="tabs" role="tablist" id="gTabs">
-      <button type="button" role="tab" data-tab="car" aria-selected="true">車<small id="tcCar"></small></button>
-      <button type="button" role="tab" data-tab="up" aria-selected="false">強化<small id="tcUp"></small></button>
-      <button type="button" role="tab" data-tab="mis" aria-selected="false">ミッション<small id="tcMis"></small></button>
-      <button type="button" role="tab" data-tab="title" aria-selected="false">称号<small id="tcTitle"></small></button>
+      <button type="button" role="tab" data-tab="car" aria-selected="true">車</button>
+      <button type="button" role="tab" data-tab="up" aria-selected="false">強化</button>
+      <button type="button" role="tab" data-tab="mis" aria-selected="false">ミッション</button>
+      <button type="button" role="tab" data-tab="title" aria-selected="false">称号</button>
     </div>
     <section class="hero" id="hero" aria-live="polite"></section>
     <div class="panel" id="gPanel"></div>
@@ -1366,6 +1397,31 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
       for (i = 0; i < 5; i++) blip(v, t + i * 0.055, fs[i], 0.12, 0.09, 'square');
       blip(v, t, 300, 0.07, 0.35, 'triangle', 1400); bell(v, t + 0.28, 2093, 0.18, 0.5);
     },
+    // tuning bay (11/17): a ratchet's ガチャガチャ when a point goes in, a looser one when it comes out, a ding at a full stat,
+    // a till for a new point, and a tool clatter when all points come back
+    ratchet: function (v) {
+      var t = v.t, i;
+      for (i = 0; i < 6; i++) { var s = t + i * 0.045, k = rnd(0.92, 1.08); nz(v, s, 0.025, 0.32, 'highpass', 3600 * k, 0.9, 0.001); metal(v, s, [1180, 1870, 2650], 0.05, 0.05, 'square', k); }
+      thump(v, t + 0.27, 210, 90, 0.08, 0.3);
+    },
+    unbolt: function (v) {
+      var t = v.t, i;
+      for (i = 0; i < 4; i++) { var s = t + i * 0.06, k = rnd(0.9, 1.1); nz(v, s, 0.03, 0.26, 'bandpass', 2200 * k, 1.1, 0.001); metal(v, s, [780, 1240], 0.04, 0.06, 'square', k); }
+    },
+    statMax: function (v) {
+      var t = v.t; SE.ratchet(v);
+      bell(v, t + 0.3, 1568, 0.2, 0.5); bell(v, t + 0.38, 2349, 0.18, 0.6); blip(v, t + 0.3, 784, 0.1, 0.12, 'square');
+    },
+    ptBuy: function (v) {
+      var t = v.t; thump(v, t, 160, 70, 0.1, 0.32); nz(v, t + 0.02, 0.06, 0.22, 'highpass', 2800, 0.7);
+      bell(v, t + 0.06, 2093, 0.22, 0.45); bell(v, t + 0.06, 2637, 0.14, 0.5); blip(v, t + 0.14, 1047, 0.1, 0.1, 'square');
+    },
+    respec: function (v) {
+      var t = v.t, i;
+      var f = nz(v, t, 0.35, 0.3, 'bandpass', 2600, 1.1); f.frequency.setValueAtTime(2600, t); f.frequency.exponentialRampToValueAtTime(500, t + 0.3);
+      for (i = 0; i < 5; i++) { var s = t + 0.05 + i * 0.05 + rnd(0, 0.02), k = rnd(0.8, 1.2); metal(v, s, [640, 1020, 1530], 0.05, 0.12, 'square', k); }
+      thump(v, t + 0.3, 140, 60, 0.12, 0.34);
+    },
     denied: function (v) {
       for (var i = 0; i < 2; i++) {
         var s = v.t + i * 0.13, g = G(v, v.out), fl = F(v, 'lowpass', 900, 1, g);
@@ -1567,7 +1623,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
     bossIn: 0.6, bossDown: 0.6, nitroGo: 0.2, wall: 0.06, skid: 0.1, ice: 0.08, stamp: 0.1 };
   var MAXV = 14;
   // per-effect output trims (balance the bus: effects peak ~0.4-0.85 before the master)
-  var SEG = { tap: 2.5, buy: 1.7, upgrade: 2.2, denied: 1.9, crash: 0.9, explode: 0.85, train: 1.35, railbell: 1.15, wall: 2.4, near: 2.6,
+  var SEG = { tap: 2.5, buy: 1.7, upgrade: 2.2, denied: 1.9, ratchet: 2.4, unbolt: 2.4, statMax: 2.2, ptBuy: 1.9, respec: 2.2, crash: 0.9, explode: 0.85, train: 1.35, railbell: 1.15, wall: 2.4, near: 2.6,
     nitroReady: 2, nitroGo: 1.4, coin: 3, star: 2.6, warn: 2.1, spike: 0.8, bossIn: 0.85, bossDown: 0.8, bonk: 1.5, heal: 2.8,
     busted: 3.5, gomi: 2.8, container: 0.8, ice: 2.8, skid: 4, mission: 2.3, newTitle: 2.1, goal: 1.5, unlockTown: 2.2 };
   var JT = { clear: 1, wreck: 1.6, unlock: 2, stars: 2.5 };
@@ -2001,16 +2057,22 @@ const TITLES = [
   {id:'rookie', name:'まだまだ見習い', hint:'とちゅうでクラッシュする',        base:true},
 ];
 const kmh = pxs => Math.round(pxs / M * 3.6);
+/* tuning (11/17 しょーくん「ポイントを購入して、ステータスを振り分ける楽しさをメインに」): each car buys up to PT_MAX points and spreads them
+   over four stats of STAT_MAX steps — one stat full plus 2 more, never everything. Points can be moved again any time for free.
+   The 7 prices add up to what the old 13 upgrade levels cost, times the same per-car factor */
+const STAT_MAX = 5, PT_MAX = STAT_MAX + 2, PT_PRICES = [400, 700, 1100, 1500, 2000, 2400, 2950];
 const UPGRADES = [
-  {key:'eng',   name:'エンジン', prices:[150,350,700,1200,1900], desc:lv => lv < 5 ? `速さ +${kmh(16*lv)} → +${kmh(16*(lv+1))}km/h` : `速さ +${kmh(16*lv)}km/h`},
-  {key:'body',  name:'ボディ',   prices:[150,350,700,1200,1900], desc:lv => lv < 5 ? `かたさ +${lv*25}% → +${(lv+1)*25}%` : `かたさ +${lv*25}%`},
-  {key:'boost', name:'ニトロ', prices:[250,700,1500],          desc:lv => lv < 3 ? `たまりやすさ +${lv*30}% → +${(lv+1)*30}%` : `たまりやすさ +${lv*30}%`},
+  {key:'eng',   name:'はやさ',   desc:lv => `+${kmh(16*lv)}km/h`},
+  {key:'body',  name:'かたさ',   desc:lv => `+${lv*25}%`},
+  {key:'boost', name:'ニトロ',   desc:lv => `たまり +${lv*18}%`},
+  {key:'ram',   name:'体当たり', desc:lv => `+${lv*10}%`},
 ];
+const OLD_UP_PRICES = {eng:[150,350,700,1200,1900], body:[150,350,700,1200,1900], boost:[250,700,1500]};
 
 /* ---------- save ---------- */
 const SAVE_KEY = 'butto-chase-v1';
 const freshTown = () => ({clear:false, rank:'', best:0, mis:[false, false, false]});
-const freshSave = () => ({money:0, best:0, car:0, owned:CARS.map((c, i) => i === 0), up:CARS.map(() => ({eng:0, body:0, boost:0})), carBest:CARS.map(() => 0), clears:0, hiScore:0, titles:{}, plays:0, tips:{},
+const freshSave = () => ({money:0, best:0, car:0, owned:CARS.map((c, i) => i === 0), up:CARS.map(() => ({eng:0, body:0, boost:0, ram:0})), pts:CARS.map(() => 0), upV:2, carBest:CARS.map(() => 0), clears:0, hiScore:0, titles:{}, plays:0, tips:{},
   town:0, towns:TOWNS.map(freshTown), daily:{day:'', done:{}}, gold:CARS.map(() => false), carRank:CARS.map(() => ''), se:true, bgm:true, tutDone:false});
 let save = freshSave();
 function loadSave(){
@@ -2034,12 +2096,27 @@ function useSave(s){
     const old = {eng:s.eng || 0, body:s.body || 0, boost:s.boost || 0};
     save.up = CARS.map((c, i) => save.owned[i] ? Object.assign({}, old) : {eng:0, body:0, boost:0});
   }
+  if (!Array.isArray(save.pts)) save.pts = [];
+  const oldUp = s.upV !== 2;   // the stored save is from before 11/17: levels bought per stat (engine 5, body 5, nitro 3)
   for (let i = 0; i < CARS.length; i++){
     if (typeof save.owned[i] !== 'boolean') save.owned[i] = i === 0;
-    const U = obj(save.up[i]) ? save.up[i] : {};
-    save.up[i] = {}; for (const it of UPGRADES) save.up[i][it.key] = Math.min(it.prices.length, Math.floor(num(U[it.key])));
+    const U = obj(save.up[i]) ? save.up[i] : {}, lv = k => Math.max(0, Math.floor(num(U[k])));
+    let A = {eng:Math.min(STAT_MAX, lv('eng')), body:Math.min(STAT_MAX, lv('body')), boost:Math.min(STAT_MAX, lv('boost')), ram:Math.min(STAT_MAX, lv('ram'))};
+    let pts = Math.min(PT_MAX, Math.max(0, Math.floor(num(save.pts[i]))));
+    if (oldUp){
+      const e = Math.min(5, lv('eng')), b = Math.min(5, lv('body')), n = Math.min(3, lv('boost')), f = 1 + i * 0.25;
+      let spent = 0; for (const [k, L] of [['eng', e], ['body', b], ['boost', n]]) for (let q = 0; q < L; q++) spent += Math.round(OLD_UP_PRICES[k][q] * f / 10) * 10;
+      pts = Math.min(PT_MAX, e + b + n);
+      A = {eng:0, body:0, boost:0, ram:0};   // the points come back unspread (yellow), ready to be spread the new way
+      let cost = 0; for (let q = 0; q < pts; q++) cost += ptPrice(q, i);
+      if (spent > cost) save.money = num(save.money) + spent - cost;   // coins back for levels the new cap no longer holds
+    }
+    // the spread never holds more than the points: take from the smallest stat first, so a specialty stays
+    while (UPGRADES.reduce((a, it) => a + A[it.key], 0) > pts){ const k = UPGRADES.map(it => it.key).filter(k => A[k] > 0).sort((x, y) => A[x] - A[y])[0]; A[k]--; }
+    save.up[i] = A; save.pts[i] = pts;
     save.carBest[i] = num(save.carBest[i]);
   }
+  save.upV = 2;
   if (!(Number.isInteger(save.car) && save.car >= 0 && save.car < CARS.length && save.owned[save.car])) save.car = 0;
   delete save.eng; delete save.body; delete save.boost;
   // towns, stars and gold marks arrived in test build 10: a cleared old course opens the harbor town
@@ -2059,7 +2136,9 @@ function useSave(s){
   if (typeof save.bgm !== 'boolean') save.bgm = true;
 }
 const upLv = k => save.up[save.car][k] || 0;  // upgrades belong to the car you ride
-const upPrice = (it, lv, ci) => lv < it.prices.length ? Math.round(it.prices[lv] * (1 + ci * 0.25) / 10) * 10 : null;  // pricier cars, pricier upgrades
+function ptPrice(n, ci){ return n < PT_MAX ? Math.round(PT_PRICES[n] * (1 + ci * 0.25) / 10) * 10 : null; }  // the n-th point of car ci (pricier cars, pricier points)
+const ptUsed = ci => UPGRADES.reduce((a, it) => a + (save.up[ci][it.key] || 0), 0);
+const ramK = () => 1 + 0.1 * upLv('ram');   // 体当たり: how hard your car shoves (mass in collisions)
 /* town missions: 3 per town, each pays once (fixed coins). All 3 done = the town's third star */
 const TOWN_MIS = [
   [{t:'電車で追っ手を1台', v:s => s.ko.train >= 1, c:600}, {t:'ニアミス15回', v:s => s.near >= 15, c:500}, {t:'ボスを1台たおす', v:s => s.boss >= 1, c:1000}],
@@ -2139,8 +2218,8 @@ const car = () => CARS[save.car];
 const runCoins = () => takeMoney + trafMoney + nearMoney + bossMoney + gomiMoney;
 const worldTop = () => camY - H * ANCHOR / s;
 const worldBottom = () => camY + H * (1 - ANCHOR) / s;
-const boostPow = () => 1.5 + 0.05 * upLv('boost');
-const massOf = b => b === P ? (boosting ? b.m * 8 : b.key === 'muscle' ? b.m * 1.4 : b.m) : b.m;
+const boostPow = () => 1.5 + 0.03 * upLv('boost');
+const massOf = b => b === P ? (boosting ? b.m * 8 : (b.key === 'muscle' ? b.m * 1.4 : b.m) * ramK()) : b.m;
 const pSpeed = () => (car().speed + 16 * upLv('eng')) * (boosting ? boostPow() : 1) * (P && P.slowT > 0 ? 0.58 : 1);
 
 const MAX_PX = 3.4e6;
@@ -2413,7 +2492,7 @@ function blowStation(st){ st.alive = false; explodeAt(st.sg*(halfAt(-st.y/M) + 3
 /* ---------- crash logic ---------- */
 function addBoost(v){
   if (boosting || coolT > 0 || state !== 'play') return;
-  const was = boost; boost = Math.min(100, boost + v * NITRO_GAIN * (1 + 0.3 * upLv('boost')));
+  const was = boost; boost = Math.min(100, boost + v * NITRO_GAIN * (1 + 0.18 * upLv('boost')));
   if (was < 100 && boost >= 100){ tip('nitroFull', 'ニトロ満タン！ タップで無敵！'); snd('nitroReady'); }
 }
 function tryBoost(){
@@ -2493,7 +2572,7 @@ function rammer(X, O){ // whichever of the two was driving into the other harder
 }
 function impactOn(X, O, vn){
   if (X.state === 'wreck'){ X.av += (Math.random() - 0.5) * vn * 0.05; return; }
-  const mo = O.m * (O === P ? (boosting ? 2.5 : P.key === 'muscle' ? 1.5 : 1) : 1);
+  const mo = O.m * (O === P ? (boosting ? 2.5 : (P.key === 'muscle' ? 1.5 : 1) * ramK()) : 1);
   const eff = vn * 2 * mo / (X.m + mo);
   if (X === P){
     O.lastHit = 'player'; O.lastHitT = t;
@@ -4003,6 +4082,7 @@ const ICONS = {
   eng:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 2 4.5 13.5h6L9.5 22l9-11.5h-6z"/></svg>',
   body:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5.2v6.1c0 5 3.4 9.3 8 10.7 4.6-1.4 8-5.7 8-10.7V5.2z"/></svg>',
   boost:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.6 2c.6 3.6 5.4 6 5.4 11.3a6 6 0 0 1-12 .3c0-2.6 1.3-4.4 2.7-5.6-.1 2.3.9 3.6 2.2 3.9-.4-3.6-.1-7 1.7-9.9z"/></svg>',
+  ram:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 5.2 5.6-1.4-2.6 5.2 4.6 3.4-5.7.6.3 5.8L12 17.8l-4.6 3 .3-5.8-5.7-.6 4.6-3.4L4 5.8l5.6 1.4z"/></svg>',
 };
 const pipsHtml = (n, max) => Array.from({length:max}, (_, i) => `<i class="${i < n ? 'on' : ''}"></i>`).join('');
 /* the shop's car pictures reuse the game's own toy-car drawing */
@@ -4136,12 +4216,16 @@ function renderPanel(){
     }).join('') + `</ul><p class="gnote">金のしるし ${gold} / ${CARS.length}・Sランクでつく</p>`;
     p.querySelectorAll('.tile').forEach(b => { const i = +b.dataset.i; carPic(b.querySelector('canvas'), CARS[i], isSil(carState(i))); });
   } else if (gTab === 'up'){
-    const U = save.up[save.car];
-    p.innerHTML = `<p class="for"><b>${car().name}</b> の強化</p><ul class="ups">` + UPGRADES.map(it => {
-      const lv = U[it.key] || 0, max = it.prices.length, price = upPrice(it, lv, save.car);
-      const btn = price === null ? '<button type="button" class="act now" data-act="none">さいだい</button>' : `<button type="button" class="act ${save.money >= price ? 'buy' : ''}" data-act="up" data-k="${it.key}">${fmt(price)}</button>`;
-      return `<li class="up"><span class="ic ${it.key}">${ICONS[it.key]}</span><div class="up-t"><b>${it.name}</b><span class="pips" role="img" aria-label="レベル ${lv} / ${max}">${pipsHtml(lv, max)}</span><small>${it.desc(lv).replace(/^(\S+) (.+)$/, '$1 <span class="nw">$2</span>')}</small></div>${btn}</li>`;
-    }).join('') + '</ul>' + nowStats();
+    // the tuning bay: buy points (dots), spread them with ± (one stat full + 2 more at most), move them again for free
+    const ci = save.car, U = save.up[ci], pts = save.pts[ci] || 0, used = ptUsed(ci), free = pts - used, price = ptPrice(pts, ci);
+    const dots = Array.from({length:PT_MAX}, (_, i) => `<i class="${i < used ? 'used' : i < pts ? 'free' : ''}"></i>`).join('');
+    const buy = price === null ? '<button type="button" class="act now" data-act="none" disabled>さいだい</button>' : `<button type="button" class="act ${save.money >= price ? 'buy' : ''}" data-act="pt-buy">ポイント<b>${fmt(price)}</b></button>`;
+    p.innerHTML = `<div class="bay"><canvas id="bayCv" role="img" aria-label="${car().name}"></canvas></div>` +
+      `<div class="ptbar"><span class="pts" role="img" aria-label="ポイント ${used} / ${pts}">${dots}</span>${buy}<button type="button" class="act respec" data-act="respec" aria-label="ふりなおし"${used ? '' : ' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg></button></div>` +
+      '<ul class="ups">' + UPGRADES.map(it => { const lv = U[it.key] || 0;
+        return `<li class="up${lv >= STAT_MAX ? ' full' : ''}" data-k="${it.key}"><span class="ic ${it.key}">${ICONS[it.key]}</span><div class="up-t"><b>${it.name}</b><span class="pips" role="img" aria-label="レベル ${lv} / ${STAT_MAX}">${pipsHtml(lv, STAT_MAX)}</span><small>${it.desc(lv)}</small></div>` +
+          `<span class="pm"><button type="button" class="sub" data-act="st-sub" data-k="${it.key}" aria-label="${it.name}を下げる"${lv ? '' : ' disabled'}>−</button><button type="button" data-act="st-add" data-k="${it.key}" aria-label="${it.name}を上げる"${free > 0 && lv < STAT_MAX ? '' : ' disabled'}>＋</button></span></li>`; }).join('') + '</ul>' + nowStats();
+    drawBay($('bayCv'), car());
   } else if (gTab === 'mis'){
     const T = save.towns[ti], open = townOpen(ti), D = dailyState();
     const row = (done, text, c, lock) => `<li class="${done ? 'done' : lock ? 'lock' : ''}"><i>${done ? '✓' : ''}</i><span>${text}</span><em>${done ? '' : '+' + fmt(c)}</em></li>`;
@@ -4156,12 +4240,49 @@ function renderPanel(){
   }
   fadeMore(p);
 }
+/* the tuning bay picture: a toy garage (pegboard with tools, a tiled floor, hazard stripes, a lift) with the car on it, nose to the right */
+function drawBay(cv, C){
+  if (!cv) return;
+  const dpr = Math.min(3, window.devicePixelRatio || 1), w = cv.clientWidth || 300, h = cv.clientHeight || 118;
+  cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+  const main = ctx; ctx = cv.getContext('2d');
+  try {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = '#3a4352'; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = 'rgba(255,255,255,0.05)'; for (let x = 14; x < w; x += 28) ctx.fillRect(x, 22, 1, h);
+    ctx.fillStyle = '#d9a86c'; ctx.fillRect(0, 0, w, 22); ctx.fillStyle = 'rgba(0,0,0,0.18)'; ctx.fillRect(0, 21, w, 2);
+    ctx.fillStyle = 'rgba(90,55,25,0.35)'; for (let x = 6; x < w; x += 12) circle(x, 6, 1.1);
+    const tool = (x, k) => { ctx.fillStyle = k ? '#c9ced6' : '#9aa3ad';
+      if (k === 0){ rr(x - 2, 6, 4, 13, 2); ctx.fill(); circle(x, 6, 4); ctx.fillStyle = '#d9a86c'; circle(x, 4.5, 1.8); }       // wrench
+      else if (k === 1){ ctx.fillStyle = '#a0522d'; rr(x - 1.5, 8, 3, 12, 1); ctx.fill(); ctx.fillStyle = '#9aa3ad'; rr(x - 6, 5, 12, 4, 1.5); ctx.fill(); }   // hammer
+      else { ctx.fillStyle = '#e8735a'; rr(x - 2.5, 5, 5, 7, 2); ctx.fill(); ctx.fillStyle = '#c9ced6'; ctx.fillRect(x - 0.8, 12, 1.6, 8); } };   // screwdriver
+    [0.1, 0.2, 0.8, 0.9].forEach((f, i) => tool(w * f, i % 3));
+    for (let x = -10, i = 0; x < w + 10; x += 12, i++){ ctx.fillStyle = i % 2 ? '#20242c' : '#ffd24a'; ctx.beginPath(); ctx.moveTo(x, h); ctx.lineTo(x + 6, h - 8); ctx.lineTo(x + 18, h - 8); ctx.lineTo(x + 12, h); ctx.fill(); }
+    const cy = 22 + (h - 30) / 2, k = Math.min((h - 46) / C.w, (w * 0.6) / C.h, 3.4);
+    ctx.fillStyle = '#5c6470'; rr(w/2 - C.h*k*0.42, cy - C.w*k*0.62, C.h*k*0.16, C.w*k*1.24, 3); ctx.fill(); rr(w/2 + C.h*k*0.26, cy - C.w*k*0.62, C.h*k*0.16, C.w*k*1.24, 3); ctx.fill();
+    ctx.setTransform(dpr*k, 0, 0, dpr*k, dpr*w/2, dpr*cy); ctx.rotate(Math.PI / 2);
+    shadowBox(C.w, C.h, 3, 4); drawVehicle(C.key, C.w, C.h, C.color); if (!NO_GLOSS[C.key]) toyGloss(C.w, C.h);
+  } finally { ctx = main; }
+}
+// the car rattles (or bounces on the lift) and a few sparks fly while it is being tuned
+function bayFx(kind){
+  let cv = $('bayCv'); if (RM()) return;
+  if (!cv || !cv.offsetParent) cv = $('hero') && $('hero').querySelector('.pic');   // iPad landscape: the car card stands in for the bay
+  if (!cv) return;
+  fxRestart(cv, kind === 'lift' ? 'fxlift' : 'fxrattle');
+  if (kind === 'lift' || cv.id !== 'bayCv') return;
+  const bay = cv.parentElement, r = bay.getBoundingClientRect();
+  for (let i = 0; i < 6; i++){ const e = document.createElement('i'); e.className = 'spk';
+    const a = Math.random() * Math.PI * 2, d = 26 + Math.random() * 34;
+    e.style.cssText = `left:${r.width/2 + (Math.random() - 0.5) * r.width * 0.4}px;top:${r.height*0.55 + (Math.random() - 0.5) * 30}px;--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d - 10}px;background:${i % 3 ? '#ffd24a' : '#ffffff'}`;
+    bay.appendChild(e); setTimeout(() => e.remove(), 560); }
+}
 /* the riding car as it is now, upgrades included (same numbers the run uses) */
 function nowStats(){
-  const C = car(), spd = C.speed + 16 * upLv('eng');
+  const C = car(), spd = C.speed + 16 * upLv('eng');  // the four tuned stats, as the run uses them
   const st = (k, v, u) => `<li><span>${k}</span><b>${v}${u ? `<small>${u}</small>` : ''}</b></li>`;
   return `<section class="mis-sec now"><h3>いまの性能 <small>強化こみ</small></h3><ul class="stats">` +
-    st('はやさ', kmh(spd), 'km/h') + st('ニトロ中', kmh(spd * boostPow()), 'km/h') + st('ボディ', Math.round(C.hp * (1 + 0.25 * upLv('body')))) + st('たまりやすさ', '+' + 30 * upLv('boost'), '%') + '</ul></section>';
+    st('はやさ', kmh(spd), 'km/h') + st('ボディ', Math.round(C.hp * (1 + 0.25 * upLv('body')))) + st('ニトロ', '+' + 18 * upLv('boost'), '%') + st('体当たり', '+' + 10 * upLv('ram'), '%') + '</ul></section>';
 }
 /* title hints wrap only between phrases (after a particle, before a number), so 「20台」 or 「追っ手」 never split */
 function phrases(t){
@@ -4197,10 +4318,6 @@ function renderTown(){
 }
 function renderGarage(){
   $('gMoney').textContent = fmt(save.money);
-  const have = save.owned.filter(Boolean).length, D = dailyState(), today = todayMis().filter(m => D.done[m.id]).length;
-  const U = save.up[save.car], lv = (U.eng || 0) + (U.body || 0) + (U.boost || 0);
-  $('tcCar').textContent = `${have}/${CARS.length}`; $('tcUp').textContent = `${lv}/13`; $('tcMis').textContent = `今日 ${today}/3`;
-  $('tcTitle').textContent = `${TITLES.filter(T => save.titles[T.id]).length}/${TITLES.length}`;
   for (const b of $('gTabs').children) b.setAttribute('aria-selected', String(b.dataset.tab === gTab));
   document.body.classList.remove('gt-car', 'gt-up', 'gt-mis', 'gt-title'); document.body.classList.add('gt-' + gTab);
   renderHero(); renderPanel(); renderTown(); fadeMore($('gPanel'));
@@ -4491,15 +4608,25 @@ $('garage').addEventListener('click', e => {
   else if (act === 'buy'){ const c = CARS[hi]; if (save.owned[hi] || save.money < c.price) return; save.money -= c.price; save.owned[hi] = true; save.car = hi; writeSave(); snd('buy'); toast(`${c.name}を買った`); renderGarage(); fxGot(hi, true); fxCount($('gMoney'), save.money, m0); }
   else if (act === 'short'){ snd('denied'); toast(`あと ${fmt(CARS[hi].price - save.money)} コイン`); fxRestart(a, 'fxshake'); }
   else if (act === 'need'){ snd('denied'); toast(`称号「${titleName(CARS[hi].need)}」で解禁`); fxRestart(a, 'fxshake'); }
-  else if (act === 'up'){
-    const it = UPGRADES.find(u => u.key === a.dataset.k), U = save.up[save.car], lv = U[it.key] || 0, price = upPrice(it, lv, save.car);
+  else if (act === 'pt-buy'){   // one more point for this car
+    const ci = save.car, n = save.pts[ci] || 0, price = ptPrice(n, ci);
     if (price === null) return;
     if (save.money < price){ snd('denied'); toast(`あと ${fmt(price - save.money)} コイン`); fxRestart(a, 'fxshake'); return; }
-    save.money -= price; U[it.key] = lv + 1; writeSave(); snd('upgrade'); renderGarage();
-    if (!RM()){ const li = $('gPanel').querySelectorAll('.up')[UPGRADES.indexOf(it)];
-      if (li){ fxRestart(li, 'fxbuy'); fxRestart(li.querySelectorAll('.pips i.on')[lv], 'fxpop'); }
-      const st = $('gPanel').querySelectorAll('.stats li'); ({eng:[0, 1], body:[2], boost:[3]})[it.key].forEach(k => fxRestart(st[k], 'fxpick'));
-      fxCount($('gMoney'), save.money, m0); }
+    save.money -= price; save.pts[ci] = n + 1; writeSave(); snd('ptBuy'); renderGarage();
+    if (!RM()){ fxRestart($('gPanel').querySelectorAll('.pts i')[n], 'fxpop'); bayFx('lift'); fxCount($('gMoney'), save.money, m0); }
+  }
+  else if (act === 'st-add' || act === 'st-sub'){   // move one point into or out of a stat
+    const ci = save.car, U = save.up[ci], k = a.dataset.k, lv = U[k] || 0, add = act === 'st-add';
+    if (add ? (lv >= STAT_MAX || ptUsed(ci) >= (save.pts[ci] || 0)) : lv <= 0) return;
+    U[k] = lv + (add ? 1 : -1); writeSave(); snd(!add ? 'unbolt' : U[k] >= STAT_MAX ? 'statMax' : 'ratchet'); renderGarage();
+    const row = $('gPanel').querySelector(`.up[data-k="${k}"]`);
+    if (!RM() && row){ fxRestart(row, add && U[k] >= STAT_MAX ? 'fxbuy' : 'fxpick'); if (add) fxRestart(row.querySelectorAll('.pips i.on')[lv], 'fxpop'); bayFx('rattle');
+      fxRestart($('gPanel').querySelectorAll('.stats li')[{eng:0, body:1, boost:2, ram:3}[k]], 'fxpick'); }
+  }
+  else if (act === 'respec'){   // all points back to the pool (free)
+    const ci = save.car; if (!ptUsed(ci)) return;
+    for (const it of UPGRADES) save.up[ci][it.key] = 0; writeSave(); snd('respec'); renderGarage();
+    if (!RM()){ bayFx('rattle'); tilesIn($('gPanel'), '.pts i'); }
   }
 });
 $('townPrev').addEventListener('click', () => { if (garageFresh()) return; save.town = (save.town + TOWNS.length - 1) % TOWNS.length; writeSave(); snd('tap'); renderTown(); if (gTab === 'mis'){ renderPanel(); fxIn($('gPanel'), -1); } fxIn($('town').children[1], -1, true); });

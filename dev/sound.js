@@ -675,6 +675,31 @@
       for (i = 0; i < 5; i++) blip(v, t + i * 0.055, fs[i], 0.12, 0.09, 'square');
       blip(v, t, 300, 0.07, 0.35, 'triangle', 1400); bell(v, t + 0.28, 2093, 0.18, 0.5);
     },
+    // tuning bay (11/17): a ratchet's ガチャガチャ when a point goes in, a looser one when it comes out, a ding at a full stat,
+    // a till for a new point, and a tool clatter when all points come back
+    ratchet: function (v) {
+      var t = v.t, i;
+      for (i = 0; i < 6; i++) { var s = t + i * 0.045, k = rnd(0.92, 1.08); nz(v, s, 0.025, 0.32, 'highpass', 3600 * k, 0.9, 0.001); metal(v, s, [1180, 1870, 2650], 0.05, 0.05, 'square', k); }
+      thump(v, t + 0.27, 210, 90, 0.08, 0.3);
+    },
+    unbolt: function (v) {
+      var t = v.t, i;
+      for (i = 0; i < 4; i++) { var s = t + i * 0.06, k = rnd(0.9, 1.1); nz(v, s, 0.03, 0.26, 'bandpass', 2200 * k, 1.1, 0.001); metal(v, s, [780, 1240], 0.04, 0.06, 'square', k); }
+    },
+    statMax: function (v) {
+      var t = v.t; SE.ratchet(v);
+      bell(v, t + 0.3, 1568, 0.2, 0.5); bell(v, t + 0.38, 2349, 0.18, 0.6); blip(v, t + 0.3, 784, 0.1, 0.12, 'square');
+    },
+    ptBuy: function (v) {
+      var t = v.t; thump(v, t, 160, 70, 0.1, 0.32); nz(v, t + 0.02, 0.06, 0.22, 'highpass', 2800, 0.7);
+      bell(v, t + 0.06, 2093, 0.22, 0.45); bell(v, t + 0.06, 2637, 0.14, 0.5); blip(v, t + 0.14, 1047, 0.1, 0.1, 'square');
+    },
+    respec: function (v) {
+      var t = v.t, i;
+      var f = nz(v, t, 0.35, 0.3, 'bandpass', 2600, 1.1); f.frequency.setValueAtTime(2600, t); f.frequency.exponentialRampToValueAtTime(500, t + 0.3);
+      for (i = 0; i < 5; i++) { var s = t + 0.05 + i * 0.05 + rnd(0, 0.02), k = rnd(0.8, 1.2); metal(v, s, [640, 1020, 1530], 0.05, 0.12, 'square', k); }
+      thump(v, t + 0.3, 140, 60, 0.12, 0.34);
+    },
     denied: function (v) {
       for (var i = 0; i < 2; i++) {
         var s = v.t + i * 0.13, g = G(v, v.out), fl = F(v, 'lowpass', 900, 1, g);
@@ -876,7 +901,7 @@
     bossIn: 0.6, bossDown: 0.6, nitroGo: 0.2, wall: 0.06, skid: 0.1, ice: 0.08, stamp: 0.1 };
   var MAXV = 14;
   // per-effect output trims (balance the bus: effects peak ~0.4-0.85 before the master)
-  var SEG = { tap: 2.5, buy: 1.7, upgrade: 2.2, denied: 1.9, crash: 0.9, explode: 0.85, train: 1.35, railbell: 1.15, wall: 2.4, near: 2.6,
+  var SEG = { tap: 2.5, buy: 1.7, upgrade: 2.2, denied: 1.9, ratchet: 2.4, unbolt: 2.4, statMax: 2.2, ptBuy: 1.9, respec: 2.2, crash: 0.9, explode: 0.85, train: 1.35, railbell: 1.15, wall: 2.4, near: 2.6,
     nitroReady: 2, nitroGo: 1.4, coin: 3, star: 2.6, warn: 2.1, spike: 0.8, bossIn: 0.85, bossDown: 0.8, bonk: 1.5, heal: 2.8,
     busted: 3.5, gomi: 2.8, container: 0.8, ice: 2.8, skid: 4, mission: 2.3, newTitle: 2.1, goal: 1.5, unlockTown: 2.2 };
   var JT = { clear: 1, wreck: 1.6, unlock: 2, stars: 2.5 };
