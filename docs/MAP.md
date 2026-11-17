@@ -1,17 +1,20 @@
 # ぶっとびチェイス 地図（行は 2026-11-17・ver 1.5 の目安）
 
-読み方：この地図 → `grep -n` で関数名・文字をさがす → その前後だけ読む → Edit で変わる所だけ直す。index.html を丸ごと読む・書き直すことはしない。
+読み方：この地図 → `grep -n` で関数名・文字をさがす（src/index.html）→ その前後だけ読む → Edit で変わる所だけ直す → `node tools/build.mjs`。丸ごと読む・書き直すことはしない。出口の index.html は読まない（絵の base64 が入っている）。
 
 ## ファイル
 | ファイル | 役目 |
 |---|---|
-| index.html | ゲーム本体（1ファイル・4,848行・絵や音のファイルはなし。全部コード）。アーティファクトと同じ中身に、外側の doctype・head（1〜8行）をつけたもの |
+| src/index.html | ゲームの元（直すのはここ・4,848行）。アーティファクトと同じ中身に、外側の doctype・head（1〜8行）をつけたもの。絵は `../assets/<名前>` で指す |
+| assets/ | 絵のファイル（一覧と出どころは docs/ART.md） |
+| tools/build.mjs | src/index.html と assets/ から出口の index.html を作る（`../assets/…` を data: URI に）。`--check` でずれを見る |
+| index.html | 出口（遊ぶ人が開く・ゲーム工房と App Store が取りこむ・アーティファクトもここから）。自動で作る・手で直さない・読まない |
 | sound-test.html | 音の試聴ページ（dev/sound.js と同じ中身） |
 | dev/sound.js | 音のもと。直したら index.html の最初の script と sound-test.html も同じにする |
 | dev/tests/ | playwright のテスト（CLAUDE.md） |
 | dev/out/ | テストが作るファイル（読まない・コミットしない） |
 
-## index.html
+## src/index.html
 | 行 | 中身 |
 |---|---|
 | 16〜300 | CSS：16 道と全体・46 走る画面の上（HUD）・101 タイトル・129 リザルト・169 ガレージ・277 あそびかた |
