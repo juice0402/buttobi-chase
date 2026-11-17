@@ -3944,7 +3944,8 @@ const titleName = id => (TITLES.find(T => T.id === id) || {}).name || '';
 const RM = () => reduceMotion || !!window.__NOFX;
 function fxRestart(e, c){ if (!e || RM()) return; e.classList.remove(c); void e.offsetWidth; e.classList.add(c); }
 // a finished fx class comes off again, so :active presses and later moves work as before
-document.addEventListener('animationend', e => { if (!e.pseudoElement && /^fx/.test(e.animationName)) for (const c of [...e.target.classList]) if (/^fx/.test(c)) e.target.classList.remove(c); });
+// (fxclose stays on: it is the copy of a sheet driving away, and dropping it would flash the sheet back for a frame — 11/17 しょーくん「閉じた瞬間ちらつく」)
+document.addEventListener('animationend', e => { if (!e.pseudoElement && /^fx/.test(e.animationName)) for (const c of [...e.target.classList]) if (/^fx/.test(c) && c !== 'fxclose') e.target.classList.remove(c); });
 // speed lines: thin streaks that shoot once across a box. dir -1 = the thing moves left (it came in from the right)
 const FX_LINES = [[.1, .5, 0], [.24, .8, .04], [.38, .42, .08], [.52, .9, .02], [.66, .55, .06], [.8, .72, .03], [.92, .38, .09]];
 function fxLines(r, dir, dark){
@@ -3991,7 +3992,8 @@ function closeOv(id){
     const g = ov.cloneNode(true); g.removeAttribute('id'); g.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
     g.classList.remove('fxbg'); g.classList.add('fxclose'); g.setAttribute('aria-hidden', 'true');
     g.querySelectorAll('[class*="fx"]').forEach(e => { for (const c of [...e.classList]) if (/^fx/.test(c)) e.classList.remove(c); });
-    document.body.appendChild(g); setTimeout(() => g.remove(), 260);
+    g.addEventListener('animationend', e => { if (e.target === g) g.remove(); });
+    document.body.appendChild(g); setTimeout(() => g.remove(), 400);
   }
   ov.hidden = true;
 }
