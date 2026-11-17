@@ -35,7 +35,7 @@ with sync_playwright() as p:
     # tuning (11/17): buy a point (the button re-renders, so a double tap buys one), spread it, the cap, free re-spread
     r.ev("(()=>{const b=document.querySelector('[data-act=pt-buy]'); b.click(); b.click();})()")
     sv = r.ev('__butto.save()')
-    check('double tap on the point button buys one point', sv['pts'][1] == 1 and m0 - sv['money'] == 500, (sv['pts'][1], m0 - sv['money']))
+    check('double tap on the point button buys one point', sv['pts'][1] == 1 and m0 - sv['money'] == 1500, (sv['pts'][1], m0 - sv['money']))
     r.ev("(()=>{const b=document.querySelector('[data-act=st-add][data-k=eng]'); b.click(); const c=document.querySelector('[data-act=st-add][data-k=eng]'); if (c) c.click();})()")
     sv = r.ev('__butto.save()')
     check('a point goes into one stat, and no further without a free point', sv['up'][1]['eng'] == 1 and r.ev("document.querySelector('[data-act=st-add][data-k=body]').disabled"), sv['up'][1])

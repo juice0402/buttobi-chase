@@ -599,6 +599,28 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
 .fxgo{position:fixed;inset:0;z-index:65;pointer-events:none;overflow:hidden}
 .fxgo i{position:absolute;top:0;width:3px;border-radius:2px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.85));animation:fxGo .4s cubic-bezier(.3,0,.7,1) both}
 @keyframes fxGo{0%{transform:translateY(-40vh);opacity:0}25%{opacity:1}100%{transform:translateY(110vh);opacity:0}}
+/* garage sizes (11/17 21回目 しょーくん「余白や高さなどを揃えて」): one height per kind of row — small buttons 44 (iPad 52), the bottom bar 56 (iPad 64).
+   Tab labels sit in the middle (the counts under them were dropped, which had left a gap below) */
+.tabs button{align-content:center;padding:0 2px}
+.coins{box-sizing:border-box;height:44px;align-items:center;padding:0 14px}
+.coins small{position:relative;top:2px}
+.hero .act{box-sizing:border-box;min-height:44px;height:44px;padding:0 10px}
+.town{grid-template-columns:44px minmax(0,1fr) 44px}
+.town button{height:44px}
+.town div{grid-template-columns:auto minmax(0,auto);justify-content:center;align-items:baseline;column-gap:8px;row-gap:0}
+.town #townName{grid-column:1/-1;grid-row:1}
+.town .tstars{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g-foot .go{box-sizing:border-box;height:56px;padding:0 14px;display:grid;place-items:center}
+@media (min-width:700px) and (min-height:700px){
+  .coins{height:52px;padding:0 16px}
+  .hero .act{min-height:52px;height:52px}
+  .ptbar .act{min-height:52px}
+  .ptbar .respec{width:52px}
+  .up .pm button{width:52px;height:52px}
+  .town{grid-template-columns:52px minmax(0,1fr) 52px}
+  .town button{height:52px}
+  .g-foot .go{height:64px}
+}
 @media (prefers-reduced-motion: reduce){.new,#boostBar.ready .bb-wrap,#boostBar .bb i,#nitroFx.on,#flash.go,.logo .a,.logo .b,.ver,#title .tap,#title.out,.sh-finger,.sh-finger .rip,#result .res-rank{animation:none}#boostBar.ready .bb-wrap{box-shadow:0 0 0 3px var(--tomato)}#banner.show{animation:banfade 1.8s linear forwards}@keyframes banfade{0%,80%{opacity:1}100%{opacity:0}}#result .res-rank{transform:rotate(-4deg)}.go:active,.again:active,.to-g:active{transform:none}.res-btns{transition:none}}
 </style>
 
@@ -646,7 +668,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
 
 <div id="title" hidden role="button" tabindex="0" aria-label="ぶっとびチェイス　タップでスタート">
   <h1 class="logo"><span class="a">ぶっとび</span><span class="b">チェイス</span></h1>
-  <p class="ver">ver 1.4</p>
+  <p class="ver">ver 1.5</p>
   <p class="tap">タップでスタート</p>
 </div>
 
@@ -1500,6 +1522,18 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
       for (i = 0; i < 5; i++) bell(v, t + i * 0.045, fs[i], 0.13, 0.28);
       nz(v, t, 0.45, 0.07, 'highpass', 7000, 0.7, 0.05);
     },
+    // full-speed flow (21回目): an airy "ヒュオッ" each time the speed lines step up a stage (a = the stage, 1 or 2)
+    whoosh: function (v, a) {
+      var t = v.t, k = clamp(Math.round(+a || 1), 1, 2), f = nz(v, t, 0.6, 0.3, 'bandpass', 420, 1.3, 0.14);
+      f.frequency.setValueAtTime(420, t); f.frequency.exponentialRampToValueAtTime(2200 * k, t + 0.45);
+      if (k >= 2) { bell(v, t + 0.16, 1760, 0.045, 0.32); bell(v, t + 0.22, 2637, 0.035, 0.3); }
+    },
+    // nitro shockwave (21回目): a deep ドォン with a crumbling rush, played with the nitro start and when nitro smashes the roadside
+    shock: function (v, a) {
+      var t = v.t, k = clamp(+a || 1, 0.3, 1); thump(v, t, 72, 28, 0.55, 0.8 * k);
+      var f = nz(v, t, 0.65, 0.42 * k, 'lowpass', 2600, 0.8, 0.004); f.frequency.setValueAtTime(2600, t); f.frequency.exponentialRampToValueAtTime(150, t + 0.55);
+      nz(v, t + 0.03, 0.28, 0.16 * k, 'highpass', 3200, 0.7, 0.004);
+    },
     nitroGo: function (v) {
       var t = v.t; thump(v, t, 85, 42, 0.3, 0.5);
       var f = nz(v, t, 0.35, 0.4, 'lowpass', 300, 1, 0.02); f.frequency.setValueAtTime(300, t); f.frequency.exponentialRampToValueAtTime(6000, t + 0.2);
@@ -1624,11 +1658,11 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   };
   // minimum seconds between two plays of the same effect
   var RL = { coin: 0.05, crash: 0.05, near: 0.08, explode: 0.08, bigcrash: 0.1, container: 0.15, train: 0.6, railbell: 0.8,
-    bossIn: 0.6, bossDown: 0.6, nitroGo: 0.2, wall: 0.06, skid: 0.1, ice: 0.08, stamp: 0.1 };
+    bossIn: 0.6, bossDown: 0.6, nitroGo: 0.2, whoosh: 0.3, shock: 0.12, wall: 0.06, skid: 0.1, ice: 0.08, stamp: 0.1 };
   var MAXV = 14;
   // per-effect output trims (balance the bus: effects peak ~0.4-0.85 before the master)
   var SEG = { tap: 2.5, buy: 1.7, upgrade: 2.2, denied: 1.9, ratchet: 2.4, unbolt: 2.4, statMax: 2.2, ptBuy: 1.9, respec: 2.2, crash: 0.9, explode: 0.85, train: 1.35, railbell: 1.15, wall: 2.4, near: 2.6,
-    nitroReady: 2, nitroGo: 1.4, coin: 3, star: 2.6, warn: 2.1, spike: 0.8, bossIn: 0.85, bossDown: 0.8, bonk: 1.5, heal: 2.8,
+    nitroReady: 2, nitroGo: 1.4, whoosh: 2.2, shock: 1.1, coin: 3, star: 2.6, warn: 2.1, spike: 0.8, bossIn: 0.85, bossDown: 0.8, bonk: 1.5, heal: 2.8,
     busted: 3.5, gomi: 2.8, container: 0.8, ice: 2.8, skid: 4, mission: 2.3, newTitle: 2.1, goal: 1.5, unlockTown: 2.2 };
   var JT = { clear: 1, wreck: 1.6, unlock: 2, stars: 2.5 };
 
@@ -1667,16 +1701,24 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
     E.nf = c.createBiquadFilter(); E.nf.type = 'bandpass'; E.nf.frequency.value = 500; E.nf.Q.value = 0.9;
     E.ng = c.createGain(); E.ng.gain.value = 0; E.nf.connect(E.ng); E.ng.connect(E.out);
     E.nz = c.createBufferSource(); E.nz.buffer = g.noise; E.nz.loop = true; E.nz.connect(E.nf);
-    E.o1.start(t); E.o2.start(t); E.lfo.start(t); E.nz.start(t);
+    // wind (21回目): an airy rush that rises while you keep full speed (flow) and roars with nitro, swaying slowly so it breathes
+    E.wf = c.createBiquadFilter(); E.wf.type = 'bandpass'; E.wf.frequency.value = 1200; E.wf.Q.value = 0.7;
+    E.wg = c.createGain(); E.wg.gain.value = 0; E.wf.connect(E.wg); E.wg.connect(E.out);
+    E.wz = c.createBufferSource(); E.wz.buffer = g.noise; E.wz.loop = true; E.wz.connect(E.wf);
+    E.wl = c.createOscillator(); E.wl.frequency.value = 0.4; var wlg = c.createGain(); wlg.gain.value = 380; E.wl.connect(wlg); wlg.connect(E.wf.frequency);
+    E.o1.start(t); E.o2.start(t); E.lfo.start(t); E.nz.start(t); E.wz.start(t, 0.43); E.wl.start(t);
     return E;
   }
-  function engSet(E, sp, bo, now) {
+  function engSet(E, sp, bo, now, fl) {
+    fl = +fl || 0;
     var f = 32 + sp * 50 + (bo ? 16 : 0), tc = 0.07;
     E.o1.frequency.setTargetAtTime(f, now, tc); E.o2.frequency.setTargetAtTime(f * 0.5, now, tc); E.lfo.frequency.setTargetAtTime(f * 0.5, now, tc);
     E.lp.frequency.setTargetAtTime(240 + sp * 650 + (bo ? 1100 : 0), now, 0.08);
     E.out.gain.setTargetAtTime(0.028 + 0.017 * (sp > 1.2 ? 1.2 : sp) + (bo ? 0.02 : 0), now, 0.1);
     E.ng.gain.setTargetAtTime(bo ? 0.55 : 0.05 * sp, now, 0.1);
     E.nf.frequency.setTargetAtTime(bo ? 950 : 420 + sp * 200, now, 0.1);
+    E.wg.gain.setTargetAtTime(bo ? 0.55 : fl * 0.45, now, 0.3);
+    E.wf.frequency.setTargetAtTime(1000 + fl * 1000 + (bo ? 900 : 0), now, 0.3);
   }
   function makeSiren(g) {
     var c = g.ctx, R = { lv: 0, last: -1 }, t = c.currentTime, i;
@@ -1797,15 +1839,15 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
         }, (J.dur + 2) * 1000);
       } catch (e) {}
     },
-    engine: function (speed, boosting) {
+    engine: function (speed, boosting, flow) {
       try {
         if (!ctx || !st.se || st.muffle) return;
-        var E = G0.eng || (G0.eng = makeEngine(G0)), now = ctx.currentTime, bo = !!boosting, sp = +speed || 0;
-        sp = sp < 0 ? 0 : sp > 1.6 ? 1.6 : sp;
+        var E = G0.eng || (G0.eng = makeEngine(G0)), now = ctx.currentTime, bo = !!boosting, sp = +speed || 0, fl = +flow || 0;
+        sp = sp < 0 ? 0 : sp > 1.6 ? 1.6 : sp; fl = fl < 0 ? 0 : fl > 1 ? 1 : fl;
         if (E.on && now - E.last < 0.05 && now >= E.last) return;
-        if (E.on && bo === E.bo && Math.abs(sp - E.sp) < 0.01) return;
-        E.last = now; E.on = true; E.sp = sp; E.bo = bo;
-        engSet(E, sp, bo, now);
+        if (E.on && bo === E.bo && Math.abs(sp - E.sp) < 0.01 && Math.abs(fl - (E.fl || 0)) < 0.02) return;
+        E.last = now; E.on = true; E.sp = sp; E.bo = bo; E.fl = fl;
+        engSet(E, sp, bo, now, fl);
       } catch (e) {}
     },
     engineOff: function () {
@@ -1853,7 +1895,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
             if (s.nitro && SONGS[id].run) riser(P.S, t0);
           } else if (kind === 'se') { if (!SE.hasOwnProperty(id)) { resolve(new Float32Array(0)); return; } fireSe(g, id, t0, opts.amount); }
           else if (kind === 'jingle') { if (!JING[id]) { resolve(new Float32Array(0)); return; } fireJingle(g, id, t0); }
-          else if (kind === 'engine') { var E = makeEngine(g); engSet(E, clamp(+opts.speed || 1, 0, 1.6), !!opts.boost, t0); }
+          else if (kind === 'engine') { var E = makeEngine(g); engSet(E, clamp(+opts.speed || 1, 0, 1.6), !!opts.boost, t0, clamp(+opts.flow || 0, 0, 1)); }
           else if (kind === 'siren') { var R = makeSiren(g); sirSet(R, clamp(opts.level == null ? 1 : +opts.level, 0, 1), t0); }
           else if (kind === 'mix') { // dev: opts.events = [[seName, time, amount], ...] (+ optional music id with boss/heat/nitro)
             if (SONGS[id]) { var MP = new Player(g, id, t0, s); MP.run(pre + seconds, s); }
@@ -1927,11 +1969,11 @@ const AREA_BASE = {
 const area = (base, o) => Object.assign({}, AREA_BASE[base], o);
 /* the four towns. Clear one to open the next. d = metres from the start */
 const TOWNS = [
-  {name:'はじまりの街', goal:3600, heat:0.9, cap:3, start:1, goalBonus:1500, ranks:[11000, 7000, 3500, 1400],
+  {name:'はじまりの街', goal:3600, heat:1.1, cap:3, start:1, goalBonus:1500, ranks:[11000, 7000, 3500, 1400],
    boss:{name:'装甲車', color:'#3b4a5e'}, song:'town0',
    areas:[area('alley', {name:'路地', from:0, style:'town'}), area('avenue', {name:'大通り', from:700, style:'avenue'}), area('highway', {name:'高速', from:1900, style:'highway'})],
    isec:[260, 560, 860, 1120, 1380, 1680], rail:[430, 1500], station:[[1000, 1], [1580, -1], [2600, 1], [3250, -1]], crane:[], ice:false,
-   bosses:[{from:1450, to:1850, hp:260, money:700, rel:85, every:7.6}, {from:3150, to:3600, hp:420, money:1100, rel:105, every:6.2}]},
+   bosses:[{from:1450, to:1850, hp:340, money:700, rel:90, every:6.6}, {from:3150, to:3600, hp:560, money:1100, rel:110, every:5.4}]},  // 21回目: heat 0.9→1.1, bosses tougher (しょーくん「適当に走っても1面ボスまでクリアできてしまう」)
   {name:'港の街', goal:4600, heat:1.15, cap:5, start:1, goalBonus:2500, ranks:[25500, 16000, 8500, 3600],
    boss:{name:'装甲トラック', color:'#2d5f86'}, song:'town1',
    areas:[area('avenue', {name:'倉庫街', from:0, half:70, side:'#c3ccd4', style:'port', same:{car:2,van:3,truck:3}, opp:{car:2,van:2,truck:3}}),
@@ -1990,12 +2032,13 @@ const HEAT = [
   {max:6, every:3.2, pool:['police','bike','tank'], heli:true},
 ];
 /* cars you can own: sp / hd are the shop's 5-step meters; need = a title that has to be earned before it can be bought.
-   The order is the save order (save.owned / save.up / save.carBest are indexed by it), so new cars go at the end. */
+   The order is the save order (save.owned / save.up / save.carBest are indexed by it), so new cars go at the end.
+   (11/17 21回目: the kei car became the free first car and swapped places with the sports car; older saves are swapped in useSave, carV) */
 const CARS = [
-  {name:'スポーツカー',       key:'sports',  w:19, h:34, m:1.0, hp:100, speed:150, color:'#ff5a36', price:0,     sp:4, hd:1, short:'ニアミスで ニトロ1.5倍'},
+  {name:'軽自動車',           key:'pkei',    w:15, h:27, m:0.8, hp:85,  speed:145, color:'#f7a1c4', price:0,     sp:4, hd:1, short:'小さくて すりぬけ上手'},
   {name:'マッスルカー',       key:'muscle',  w:22, h:38, m:1.7, hp:150, speed:140, color:'#ffc83d', price:1000,   sp:3, hd:3, short:'体当たりが 強い'},
   {name:'ピックアップ',       key:'pickup',  w:24, h:44, m:2.6, hp:210, speed:125, color:'#38c79a', price:3000,  sp:2, hd:4, short:'後ろに ドラム缶をポイ'},
-  {name:'軽自動車',           key:'pkei',    w:15, h:27, m:0.8, hp:85,  speed:145, color:'#f7a1c4', price:5000,  sp:4, hd:1, short:'小さくて すりぬけ上手'},
+  {name:'スポーツカー',       key:'sports',  w:19, h:34, m:1.0, hp:100, speed:150, color:'#ff5a36', price:5000,  sp:4, hd:1, short:'ニアミスで ニトロ1.5倍'},
   {name:'タクシー',           key:'taxi',    w:19, h:34, m:1.1, hp:120, speed:144, color:'#ffd23f', price:8000,  sp:4, hd:2, short:'コンボが 切れにくい'},
   {name:'現金輸送車',         key:'cash',    w:21, h:40, m:2.0, hp:190, speed:128, color:'#2f6b5a', price:12000,  sp:2, hd:4, short:'クラッシュの コイン+30%'},
   {name:'救急車',             key:'amb',     w:21, h:42, m:1.8, hp:160, speed:136, color:'#f4f6f8', price:18000,  sp:3, hd:3, short:'ボディが 少しずつ回復'},
@@ -2063,8 +2106,8 @@ const TITLES = [
 const kmh = pxs => Math.round(pxs / M * 3.6);
 /* tuning (11/17 しょーくん「ポイントを購入して、ステータスを振り分ける楽しさをメインに」): each car buys up to PT_MAX points and spreads them
    over four stats of STAT_MAX steps — one stat full plus 2 more, never everything. Points can be moved again any time for free.
-   The 7 prices add up to what the old 13 upgrade levels cost, times the same per-car factor */
-const STAT_MAX = 5, PT_MAX = STAT_MAX + 2, PT_PRICES = [400, 700, 1100, 1500, 2000, 2400, 2950];
+   21回目 (しょーくん「1ゲームでフルカスタムまで到達できてしまう」): 3 times the first prices — 33,150 for the first car, about 4〜5 runs of the first town */
+const STAT_MAX = 5, PT_MAX = STAT_MAX + 2, PT_PRICES = [1200, 2100, 3300, 4500, 6000, 7200, 8850];
 const UPGRADES = [
   {key:'eng',   name:'はやさ',   desc:lv => `+${kmh(16*lv)}km/h`},
   {key:'body',  name:'かたさ',   desc:lv => `+${lv*25}%`},
@@ -2076,7 +2119,7 @@ const OLD_UP_PRICES = {eng:[150,350,700,1200,1900], body:[150,350,700,1200,1900]
 /* ---------- save ---------- */
 const SAVE_KEY = 'butto-chase-v1';
 const freshTown = () => ({clear:false, rank:'', best:0, mis:[false, false, false]});
-const freshSave = () => ({money:0, best:0, car:0, owned:CARS.map((c, i) => i === 0), up:CARS.map(() => ({eng:0, body:0, boost:0, ram:0})), pts:CARS.map(() => 0), upV:2, carBest:CARS.map(() => 0), clears:0, hiScore:0, titles:{}, plays:0, tips:{},
+const freshSave = () => ({money:0, best:0, car:0, owned:CARS.map((c, i) => i === 0), up:CARS.map(() => ({eng:0, body:0, boost:0, ram:0})), pts:CARS.map(() => 0), upV:2, carV:2, carBest:CARS.map(() => 0), clears:0, hiScore:0, titles:{}, plays:0, tips:{},
   town:0, towns:TOWNS.map(freshTown), daily:{day:'', done:{}}, gold:CARS.map(() => false), carRank:CARS.map(() => ''), se:true, bgm:true, tutDone:false});
 let save = freshSave();
 function loadSave(){
@@ -2095,6 +2138,11 @@ function useSave(s){
   if (!obj(save.tips)) save.tips = {};
   if (!Array.isArray(save.owned)) save.owned = [];
   if (!Array.isArray(save.carBest)) save.carBest = [];
+  // saves from before 11/17 (21回目): the sports car (was 0) and the kei car (was 3) swap places, so each car keeps its own levels, records and marks
+  if (s.carV !== 2){
+    for (const k of ['owned', 'up', 'pts', 'carBest', 'gold', 'carRank']) if (Array.isArray(save[k])){ const A = save[k].slice(); while (A.length < 4) A.push(undefined); [A[0], A[3]] = [A[3], A[0]]; save[k] = A; }
+    if (save.car === 0) save.car = 3; else if (save.car === 3) save.car = 0;
+  }
   // older saves: one set of upgrades for every car → each car you already had keeps those levels
   if (!Array.isArray(s.up)){
     const old = {eng:s.eng || 0, body:s.body || 0, boost:s.boost || 0};
@@ -2120,7 +2168,7 @@ function useSave(s){
     save.up[i] = A; save.pts[i] = pts;
     save.carBest[i] = num(save.carBest[i]);
   }
-  save.upV = 2;
+  save.upV = 2; save.carV = 2; save.owned[0] = true;   // the first car is always yours
   if (!(Number.isInteger(save.car) && save.car >= 0 && save.car < CARS.length && save.owned[save.car])) save.car = 0;
   delete save.eng; delete save.body; delete save.boost;
   // towns, stars and gold marks arrived in test build 10: a cleared old course opens the harbor town
@@ -2224,6 +2272,12 @@ const worldTop = () => camY - H * ANCHOR / s;
 const worldBottom = () => camY + H * (1 - ANCHOR) / s;
 const boostPow = () => 1.5 + 0.03 * upLv('boost');
 const massOf = b => b === P ? (boosting ? b.m * 8 : (b.key === 'muscle' ? b.m * 1.4 : b.m) * ramK()) : b.m;
+/* full-speed flow (21回目 しょーくん「しばらく減速せずに進んでたら、スピードエフェクトが出始めて爽快感がほしい」): keep at least 93% of your
+   top speed and the speed lines step up at FLOW_T1 and FLOW_T2 seconds (wind, a slight pull-back of the camera). A hit, a slowdown or falling
+   under 85% ends it. Pictures and sound only: the speed, the rules and the coins are the same */
+const FLOW_T1 = 3, FLOW_T2 = 7, FLOW_ZOOM = 0.05;
+let flowT = 0, flowLv = 0, flowK = 0, flowPulse = 0, edgeSmashT = 0, flowGlow = null;
+const flowBase = () => car().speed + 16 * upLv('eng');
 const pSpeed = () => (car().speed + 16 * upLv('eng')) * (boosting ? boostPow() : 1) * (P && P.slowT > 0 ? 0.58 : 1);
 
 const MAX_PX = 3.4e6;
@@ -2255,7 +2309,7 @@ function resetWorld(){
   ko = {}; for (const k in KO) ko[k] = 0; nearOppN = 0; dmgTaken = 0; ownBlast = false; P.drumT = 1; gomiMoney = 0; noticeT = 0; healT = 0;
   trail = []; spikes = []; boss = null; nextBoss = 0; bossN = 0; bossMoney = 0; bossSeen = 0; spikeNext = 0; pinchNext = 0;
   boost = 0; boosting = false; shake = 0; areaIdx = 0; spawnAcc = 0; endT = 0; endKind = null;
-  camX = 0; camY = 0; targetX = -23; seen = {}; drag = null; wrongWay = false;
+  camX = 0; camY = 0; targetX = -23; seen = {}; drag = null; wrongWay = false; flowT = 0; flowLv = 0; flowK = 0; flowPulse = 0; edgeSmashT = 0;
   coolT = 0; campX = P.x; campT = 0; camping = false;
   booms = []; buildWorld();
   const a = AREAS[0];
@@ -2502,23 +2556,37 @@ function addBoost(v){
 function tryBoost(){
   if (state !== 'play' || boosting) return;
   if (boost < 100){ const bb = $('boostBar'); bb.classList.remove('nope'); void bb.offsetWidth; bb.classList.add('nope'); return; }
-  boosting = true; P.slowT = 0; shake = Math.max(shake, 8); burst(P.x, P.y, 'spark', 24); snd('nitroGo'); sndDo(R => R.nitro(true));
+  boosting = true; P.slowT = 0; shake = Math.max(shake, 12); burst(P.x, P.y, 'spark', 24); snd('nitroGo'); snd('shock'); sndDo(R => R.nitro(true));
   const f = $('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
+  nitroBlast();
+}
+/* the nitro start is a shockwave (21回目 しょーくん「ニトロはさらにその上の破壊的な爽快感！！」): cars right next to you go flying as if you hit them,
+   the ones a little further are shoved away, and the buildings beside you crumble. The cars it wrecks pay like any nitro hit */
+function nitroBlast(){
+  ring(P.x, P.y, 120, '#ffd24a'); ring(P.x, P.y, 80); ring(P.x, P.y, 46, '#ff8a3d'); burst(P.x, P.y, 'boom', 14); stars(P.x, P.y, 8); hitStop(0.06);
+  for (const c of cars){
+    if (c.state !== 'drive' || c.boss || c.fixed) continue;
+    const dx = c.x - P.x, dy = c.y - P.y, d = Math.hypot(dx, dy) || 1;
+    if (d < 64){ c.lastHit = 'player'; c.lastHitT = t; nitroHit(c); }
+    else if (d < 150){ const k = 1 - d / 150; c.vx += (dx / d) * 260 * k; c.vy += (dy / d) * 160 * k; }
+  }
+  const half = halfAt(dist);
+  for (const sg of [-1, 1]) for (const oy of [-40, 20]) if (breakAt(sg * (half + 10), P.y + oy, sg, false)) blocksFly(sg * (half + 10), P.y + oy, sg, 5);
 }
 function nitroHit(X){ // invincible nitro: whatever you touch goes flying
   if (X.state !== 'drive') return;
   const sg = Math.sign(X.x - P.x) || (Math.random() < 0.5 ? -1 : 1);
   X.vx += sg * (170 + Math.random()*130); X.vy += -50 - Math.random()*90;
   crash(X, 'nitro');
-  X.air = X.airMax = 0.9; X.av *= 1.8;
-  burst(X.x, X.y, 'boom', 10); shake = Math.max(shake, 7);
+  X.air = X.airMax = 1.1; X.av *= 2.2; X.nFling = t;
+  burst(X.x, X.y, 'boom', 12); ring(X.x, X.y, 34, '#ffd24a'); stars(X.x, X.y, 4); parts(X, 4); shake = Math.max(shake, 9);   // no hit-stop while nitro runs (it keeps flowing)
 }
 
 let dmgSrc = '?', dmgBy = {};
 function damage(d){
   if (d <= 0 || state !== 'play' || boosting) return;
   dmgBy[dmgSrc] = (dmgBy[dmgSrc] || 0) + d; dmgSrc = '?';
-  P.hp -= d; dmgTaken += d; shake = Math.max(shake, Math.min(8, 2 + d*0.3)); if (d >= 3) hurtT = 0.25;
+  P.hp -= d; dmgTaken += d; shake = Math.max(shake, Math.min(8, 2 + d*0.3)); if (d >= 3){ hurtT = 0.25; flowT = 0; }
   if (d >= 4){ popMe(P.x, P.y + 12, `-${Math.round(d)}`, '#ffffff'); snd('hit', Math.min(1, d / 30)); }
   if (P.hp <= 0){ P.hp = 0; playerWreck(); }
 }
@@ -2570,6 +2638,7 @@ function crash(b, how){
   else if (byPlayer && state === 'play'){ const g = Math.round(10 * CASH_K() * (how === 'nitro' ? NITRO_PAY : 1)); trafN++; trafMoney += g; pop(b.x, b.y, (how === 'nitro' ? 'ドーン！ ' : how === 'crush' ? 'ペシャンコ！ ' : '') + '+' + g, '#ffc83d'); }
   if (b.key === 'tanker'){ pop(b.x, b.y - 20, 'ドッカーン！', '#ffc83d'); explodeAt(b.x, b.y, 90, 420, byPlayer, 25); }
 }
+const RAM_SELF = 0.2, RAM_GRACE = 1.5;   // your damage when you are the one ramming (side or from behind), and how long the wreck you made stays harmless
 function rammer(X, O){ // whichever of the two was driving into the other harder
   const dx = O.x - X.x, dy = O.y - X.y, d = Math.hypot(dx, dy) || 1;
   return (X.vx*dx + X.vy*dy) / d > -(O.vx*dx + O.vy*dy) / d ? X : O;
@@ -2603,8 +2672,13 @@ function impactOn(X, O, vn){
     const tough = P.key === 'muscle' && rammer(P, O) === P ? 0.5 : 1;
     // tank: a police tackle does nothing at all
     const tankT = tackled && P.key === 'ptank' ? 0 : 1;
+    // 21回目 (しょーくん「一般車に綺麗に横から体当たりした時」): driving into a car yourself — a side swipe or from behind — barely hurts you.
+    // Head-ons with oncoming cars, crossing cars, wrecks, bosses, police tackles and pincers hurt as before
+    // (the wreck you just rammed off the road doesn't hurt you either while it tumbles away, RAM_GRACE s)
+    const ramIn = (rammer(P, O) === P && !O.boss && !O.opp && !O.cross && O.state !== 'wreck' && !tackled && !(O.plan === 'pin' && O.phase === 'slam')) ||
+      (O.state === 'wreck' && O.ramT && t - O.ramT < RAM_GRACE) ? RAM_SELF : 1;
     dmgSrc = O.boss ? 'boss' : O.role === 'chaser' ? (tackled ? 'tackle' : O.plan === 'pin' ? 'pin' : 'chaser-' + O.key) : O.state === 'wreck' ? 'wreck' : O.cross ? 'cross' : O.opp ? 'oncoming' : 'traffic';
-    damage(Math.max(0, eff - 60) * 0.08 * (O.state === 'wreck' ? 0.8 : 1) * bossRam * tough * tankT * (tackled ? TK.dmg : 1));
+    damage(Math.max(0, eff - 60) * 0.08 * (O.state === 'wreck' ? 0.8 : 1) * bossRam * tough * tankT * ramIn * (tackled ? TK.dmg : 1));
     if (tackled){ O.tkHit = true; if (!boosting){ popMe(P.x, P.y - 30, tankT ? 'タックル！' : 'びくともしない！', tankT ? '#ffffff' : '#ffc83d'); shake = Math.max(shake, tankT ? 5 : 2); snd('tackle'); } }
     if (eff > 60) burst((X.x + O.x)/2, (X.y + O.y)/2, 'spark', 5);
     if (!boosting && O.plan === 'pin' && O.phase === 'slam'){
@@ -2633,7 +2707,16 @@ function impactOn(X, O, vn){
   }
   // police on a job (overtaking to drop spikes, lining up a pincer) shrug off light bumps with traffic
   const th = X.role === 'chaser' ? (O === P ? CHASERS[X.key].tough : CHASERS[X.key].env * (X.plan === 'spike' || X.plan === 'pin' ? 2.2 : 1)) : X.tough;
-  if (eff > th) crash(X, 'hit');
+  if (eff > th){
+    crash(X, 'hit');
+    // your own ram sends it tumbling away: a shove sideways, a fast spin and a hop (pictures and the shove only; the coins are the same)
+    if (O === P && !X.fixed && !X.boss && rammer(P, X) === P){
+      const sg = Math.sign(X.x - P.x) || (Math.random() < 0.5 ? -1 : 1);
+      X.vx += sg * (110 + Math.min(eff, 400) * 0.45) * ramK(); X.vy += P.vy * 0.12;
+      X.av = sg * (10 + Math.random() * 6); X.air = X.airMax = 0.8; X.ramT = t;
+      ring(X.x, X.y, 30); burst(X.x, X.y, 'debris', 5, X.color || '#cfd6dd'); shake = Math.max(shake, 5);
+    }
+  }
 }
 
 function circlesOf(b){
@@ -2656,12 +2739,16 @@ function collide(A, B){
   if (vn >= 0) return;
   const j = -(1 + 0.25) * vn / (im + jm);
   A.vx += j*im*nx; A.vy += j*im*ny; B.vx -= j*jm*nx; B.vy -= j*jm*ny;
-  if (-vn > 20){ impactOn(A, B, -vn); impactOn(B, A, -vn); }
+  // your car's side is worked out first, while the other car is still driving (its crash must not turn your hit into "ran into a wreck")
+  if (-vn > 20){ if (B === P){ impactOn(B, A, -vn); impactOn(A, B, -vn); } else { impactOn(A, B, -vn); impactOn(B, A, -vn); } }
 }
 function hitWall(b, imp){
   if (imp > 50) for (const st of stations) if (st.alive && Math.abs(b.y - st.y) < 60 && Math.sign(b.x) === st.sg){ blowStation(st); break; }
   if (b === P){ if (imp > 110){ dmgSrc = 'wall'; damage((imp - 110) * 0.08); burst(b.x, b.y, 'spark', 4); snd('wall'); } return; }
-  if (b.state === 'wreck'){ b.av += (Math.random() - 0.5) * imp * 0.04; return; }
+  if (b.state === 'wreck'){ b.av += (Math.random() - 0.5) * imp * 0.04;
+    // a car sent flying by nitro smashes into the roadside: the building there crumbles (pictures only)
+    if (b.nFling && t - b.nFling < 1.6 && imp > 50){ b.nFling = 0; wallBlocks(b, 8); burst(b.x, b.y, 'boom', 8); snd('shock', 0.55); }
+    return; }
   if (b.boss){ if (imp > 80) hurtBoss(b, (imp - 80) * 0.15); return; }
   if (b.role === 'chaser'){ if (imp > CHASERS[b.key].wall * (ice.length && onIce(b) ? 0.5 : 1) && b.lastHit === 'player' && t - b.lastHitT < 1.5) crash(b, 'wall'); }
   else if (imp > 150) crash(b, 'wall');
@@ -3118,6 +3205,14 @@ function update(dt){
     P.a = clamp(P.vx / 700, -0.3, 0.3);
     wrongWay = L.nOn > 0 && P.x > -L.half + (L.n - L.nOn) * L.lw + 4;
     if (wrongWay) addBoost(10 * dt);
+    { const v = -P.vy, top = flowBase();
+      if (P.slowT > 0 || v < top * 0.85) flowT = 0; else if (v >= top * 0.93) flowT += dt;
+      const lv = flowT >= FLOW_T2 ? 2 : flowT >= FLOW_T1 ? 1 : 0;
+      if (lv > flowLv){ snd('whoosh', lv); flowPulse = 0.4; if (!boosting) ring(P.x, P.y, lv > 1 ? 56 : 40, 'rgba(255,255,255,0.9)'); }
+      flowLv = lv; flowK += ((lv > 1 ? 1 : lv ? 0.5 : 0) - flowK) * Math.min(1, dt * (lv ? 2.5 : 6)); if (flowPulse > 0) flowPulse -= dt; }
+    // nitro smashes the roadside: hugging the edge knocks the buildings there into blocks (pictures only)
+    if (boosting){ shake = Math.max(shake, 2.5); if ((edgeSmashT -= dt) <= 0 && Math.abs(P.x) > L.half - P.w/2 - 8){ const sg = Math.sign(P.x) || 1;
+      if (breakAt(sg * (L.half + 10), P.y, sg, false)){ blocksFly(sg * (L.half + 10), P.y, sg, 5); burst(sg * L.half, P.y, 'spark', 5); snd('shock', 0.45); } edgeSmashT = 0.18; } }
     // sitting in one lane gets you noticed: after CAMP_T s within half a lane, the police push harder until you move half a lane or more
     if (Math.abs(P.x - campX) > LANE * 0.5){ campX = P.x; campT = 0; camping = false; }  // any move of half a lane clears it (anchored where it started)
     else if ((campT += dt) >= CAMP_T && !camping){
@@ -3949,10 +4044,11 @@ function draw(){
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   if (!P || !W){ ctx.fillStyle = '#17324d'; ctx.fillRect(0, 0, W, H); return; }
   const k = reduceMotion ? 0 : shake, ox = (Math.random() - 0.5) * k, oy = (Math.random() - 0.5) * k;
-  vZm = 1 + 0.12 * zoomK; vZx = camX; vZy = camY;  // lean in around your own car: the view never pans toward the crash, which looked like a swipe
+  const fxOn = !reduceMotion && !window.__NOFX;
+  vZm = (1 + 0.12 * zoomK) * (fxOn ? 1 - FLOW_ZOOM * flowK : 1); vZx = camX; vZy = camY;  // lean in around your own car on a big crash (the view never pans toward it); pull back a little in full-speed flow
   const ca = DPR*s*vZm, ce = DPR*(W/2 - vZx*s*vZm + ox), cf = DPR*(H*ANCHOR - vZy*s*vZm + oy);
   ctx.setTransform(ca, 0, 0, ca, ce, cf);
-  const top = worldTop() - 20, bot = worldBottom() + 20, left = camX - W/(2*s) - 20, right = camX + W/(2*s) + 20;
+  const sz = s*vZm, top = camY - H*ANCHOR/sz - 20, bot = camY + H*(1 - ANCHOR)/sz + 20, left = camX - W/(2*sz) - 20, right = camX + W/(2*sz) + 20;
   groundStamp(top, bot, left, right);
   drawGroundLive(top, bot, left, right);
   veilFar(top, bot, left, right);
@@ -3982,6 +4078,15 @@ function draw(){
     ctx.fillStyle = `rgba(255,${90 + i*20},40,${0.34 - i*0.048})`; rr(-P.w/2, -P.h/2, P.w, P.h, Math.min(P.w, P.h)*0.3); ctx.fill();
   }
   if (trail.length) ctx.setTransform(ca, 0, 0, ca, ce, cf);
+  if (flowK > 0.05 && !boosting && fxOn && P.state === 'drive'){ // full-speed flow: wind peeling off the back corners of your car
+    ctx.lineCap = 'round';
+    for (const sg of [-1, 1]) for (let k = 0; k < 2; k++){
+      const x = P.x + sg*(P.w/2 - 1 + k*3), y0 = P.y + P.h*0.2 + k*6, len = (18 + 46*flowK) * (0.75 + 0.25*Math.sin(t*23 + sg*2 + k));
+      ctx.strokeStyle = `rgba(255,255,255,${(0.55 - k*0.2) * flowK})`; ctx.lineWidth = 2 - k*0.6;
+      ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x + sg*2, y0 + len); ctx.stroke();
+    }
+    ctx.lineCap = 'butt';
+  }
   if (state === 'play' && !boosting && boost >= 100){ // full nitro: pulsing aura on your car
     const r = 26 + 4*Math.sin(t*9);
     ctx.fillStyle = 'rgba(255,90,54,0.18)'; circle(P.x, P.y, r);
@@ -4030,9 +4135,25 @@ function draw(){
       if (snow) circle(x, y, 1.5 + rnd(i*3)*2); else ctx.fillRect(x, y, 14 + rnd(i*5)*16, 2);
     }
   }
+  if (flowK > 0.03 && !boosting && fxOn){ // full-speed flow: speed lines rushing down the sides of the screen (more at the second stage)
+    // each line is white with a faint navy edge beside it, so it reads on the light toy town as well as on the road
+    const n = Math.round(6 + 22*flowK), side = W*(0.22 + 0.16*flowK), a = Math.min(1, 0.3 + 0.5*flowK + (flowPulse > 0 ? flowPulse*1.2 : 0));
+    ctx.lineCap = 'round';
+    for (let i = 0; i < n; i++){
+      const r = rnd(i*29 + 3), x = i % 2 ? W - r*side : r*side, len = (60 + rnd(i*11)*110) * (0.6 + 0.7*flowK), sp = 1200 + rnd(i*5)*700;
+      const y = ((t*sp + rnd(i*17)*(H + 300)) % (H + 300)) - 150, al = a * (0.55 + 0.45*rnd(i*7)), lw = i % 3 ? 2 : 3.2;
+      ctx.strokeStyle = `rgba(23,50,77,${al*0.28})`; ctx.lineWidth = lw + 1.5; ctx.beginPath(); ctx.moveTo(x + 1.5, y); ctx.lineTo(x + 1.5, y + len); ctx.stroke();
+      ctx.strokeStyle = `rgba(255,255,255,${al})`; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + len); ctx.stroke();
+    }
+    ctx.lineCap = 'butt';
+    if (flowK > 0.55){ // second stage: the sides of the screen glow like a wind tunnel
+      if (!flowGlow || flowGlow.w !== W){ const g = ctx.createLinearGradient(0, 0, W, 0); g.addColorStop(0, 'rgba(255,255,255,0.55)'); g.addColorStop(0.12, 'rgba(255,255,255,0)'); g.addColorStop(0.88, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(255,255,255,0.55)'); flowGlow = {w:W, g}; }
+      ctx.globalAlpha = (flowK - 0.55) / 0.45 * (0.75 + 0.25*Math.sin(t*11)); ctx.fillStyle = flowGlow.g; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
+    }
+  }
   if (boosting && !reduceMotion){
-    for (let i = 0; i < 18; i++){
-      const x = rnd(i*31 + 7)*W, len = 60 + rnd(i*13)*90, y = ((t*1500 + rnd(i*17)*(H + 300)) % (H + 300)) - 150;
+    for (let i = 0; i < 28; i++){   // 21回目: more and longer than the flow lines — nitro is the top of the scale
+      const x = rnd(i*31 + 7)*W, len = 80 + rnd(i*13)*140, y = ((t*(1700 + rnd(i*3)*700) + rnd(i*17)*(H + 340)) % (H + 340)) - 170;
       ctx.strokeStyle = i % 3 ? 'rgba(255,255,255,0.45)' : 'rgba(255,138,61,0.75)'; ctx.lineWidth = i % 4 ? 2 : 3.5;
       ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + len); ctx.stroke();
     }
@@ -4675,7 +4796,7 @@ function frame(ts){
   if (slowCool > 0) slowCool -= dt;
   // the close-up rises during the hit-stop, holds, and is back to normal by the end of the slow motion, so nothing slides when full speed returns (11/17)
   zoomK += ((hitStopT > 0 ? 1 : slowMoT > 0 ? Math.min(1, slowMoT / 0.2) : 0) - zoomK) * Math.min(1, dt * 16);
-  if (state === 'play' || state === 'ending'){ if (gdt > 0) update(gdt); draw(); if (state === 'play'){ hud(dt); tickHint(dt); sndDo(R => R.engine(Math.min(1.6, -P.vy / 150), boosting)); } }
+  if (state === 'play' || state === 'ending'){ if (gdt > 0) update(gdt); draw(); if (state === 'play'){ hud(dt); tickHint(dt); sndDo(R => R.engine(Math.min(1.6, -P.vy / 150), boosting, flowK)); } }
   requestAnimationFrame(frame);
 }
 /* local test hook (only when the file is opened from disk, never on the published page): an autopilot that dodges traffic, for balance runs */
