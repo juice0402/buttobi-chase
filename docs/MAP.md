@@ -27,7 +27,7 @@
 | 4110 | 作りこみの動きの道具：RM（動きを止めるか）・fxRestart・fxLines（スピード線）・fxIn（横から入る）・tilesIn（タイルを左上から敷く）・fxCount（数字のかぞえ上げ）・openOv / closeOv（板が横から入って左へ出ていく）・fxGo（走りだしの線） |
 | 4176 | ガレージ：renderHero・renderPanel（強化タブ＝整備室・ポイント・振り分け）・drawBay（整備室の絵）・bayFx（揺れ・持ち上がり・火花）・renderTown・renderGarage・openGarage・fxGot・fxHero |
 | 4356 | 走りの終わり：finishRun（リザルトの中身と動き） |
-| 4477 | あそびかた：4484 TUT（カード3枚の絵と文）・showTut・drawTut・タイトル |
+| 4477 | あそびかた：4484 TUT（カード3枚の絵と文）・showTut・drawTut・タイトル（showTitle・leaveTitle。タップかキーを待ってからスタート） |
 | 4541 | 入力：指・キー・ボタン（ガレージのタップは $('garage') の click にまとまっている。強化は pt-buy・st-add・st-sub・respec） |
 | 4656 | ループと起動。4673 window.__butto（file: で開いたときだけ）・4700 boot |
 
