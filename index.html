@@ -110,6 +110,9 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 @keyframes inR{from{transform:translateX(120vw) skewX(-20deg)}to{transform:none}}
 .ver{margin:0;font-family:var(--display);font-size:14px;letter-spacing:.14em;color:var(--navy);background:var(--on-dark);border-radius:999px;padding:3px 12px;animation:fadeUp .4s .5s both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#title .tap{margin:8px 0 0;font-family:var(--display);font-size:20px;line-height:1;color:var(--navy);background:var(--sun);border:3px solid var(--navy);border-radius:999px;padding:14px 30px;box-shadow:0 5px 0 var(--navy);animation:fxTapIn .45s cubic-bezier(.2,1.5,.4,1) .75s both}
+@keyframes fxTapIn{from{opacity:0;transform:scale(.5) rotate(-6deg)}to{opacity:1;transform:none}}
+@media (min-width:700px) and (min-height:700px){#title .tap{font-size:26px;padding:18px 40px}}
 #title.out{animation:titleOut .3s ease-in forwards}
 @keyframes titleOut{to{opacity:0;transform:scale(1.25)}}
 
@@ -179,7 +182,7 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 .iconbtn{flex:none;width:44px;height:44px;border-radius:12px;border:2px solid var(--line);background:var(--card);display:grid;place-items:center;padding:0;cursor:pointer}
 .iconbtn svg{width:24px;height:24px;fill:none;stroke:var(--navy);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;background:var(--line);padding:4px;border-radius:14px}
-.tabs button{min-height:44px;border:0;border-radius:10px;padding:7px 2px;font-family:var(--display);font-size:14px;line-height:1.15;background:transparent;color:var(--mute);cursor:pointer;display:grid;justify-items:center;gap:1px;min-width:0}
+.tabs button{min-height:44px;border:0;border-radius:10px;padding:7px 2px;font-family:var(--display);font-size:15px;white-space:nowrap;line-height:1.15;background:transparent;color:var(--mute);cursor:pointer;display:grid;justify-items:center;gap:1px;min-width:0}
 .tabs button small{font-family:var(--body);font-size:11px;font-weight:700;font-variant-numeric:tabular-nums}
 .tabs button[aria-selected="true"]{background:var(--card);color:var(--navy);box-shadow:0 2px 0 var(--mute)}
 .hero{display:grid;grid-template-columns:minmax(100px,36%) minmax(0,1fr);gap:12px;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:10px}
@@ -230,8 +233,37 @@ body.bossing:has(#combo:not([hidden])) #toast:not(.low){top:calc(env(safe-area-i
 .ic.eng{background:var(--sun);color:var(--navy)}
 .ic.body{background:var(--mint)}
 .ic.boost{background:var(--tomato)}
+.ic.ram{background:#4f8fc0}
+/* the tuning bay (11/17): the car on a toy lift, the points as dots, ± per stat */
+.bay{position:relative;height:118px;border-radius:14px;overflow:hidden;background:#2f3744;flex:none}
+.bay canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.bay .spk{position:absolute;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:2px;background:#ffd24a;pointer-events:none;animation:fxSpark .5s ease-out both}
+@keyframes fxSpark{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.3) rotate(160deg);opacity:0}}
+.fxrattle{animation:fxRattle .46s steps(9,end) both}
+@keyframes fxRattle{0%{transform:translate(0,0)}12%{transform:translate(-3px,1px) rotate(-1.2deg)}24%{transform:translate(3px,-1px) rotate(1deg)}36%{transform:translate(-2px,0) rotate(-.8deg)}48%{transform:translate(2px,1px) rotate(.6deg)}60%{transform:translate(-1px,-1px)}72%{transform:translate(1px,0)}100%{transform:none}}
+.fxlift{animation:fxLift .4s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes fxLift{0%{transform:translateY(8px) scale(.97)}60%{transform:translateY(-3px)}100%{transform:none}}
+.ptbar{display:flex;align-items:center;gap:8px;flex:none}
+.pts{flex:1;display:flex;gap:5px;align-items:center;min-width:0}
+.pts{gap:4px}
+.pts i{width:14px;height:14px;border-radius:5px;border:2px dashed var(--line);flex:none}
+.pts i.used{background:var(--navy);border:2px solid var(--navy)}
+.pts i.free{background:var(--sun);border:2px solid #e0a92a;box-shadow:0 0 0 3px rgba(255,200,61,.3)}
+.ptbar .act{margin:0;min-height:44px;font-size:14px;padding:0 12px;white-space:nowrap}
+.ptbar .act b{font-size:16px;margin-left:4px}
+.ptbar .respec{width:44px;padding:0;display:grid;place-items:center;background:var(--card);border:2px solid var(--line);box-shadow:none;color:var(--navy)}
+.ptbar .respec svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.ptbar .respec:disabled{opacity:.35}
+@media (min-width:700px){ .pts i{width:20px;height:20px;border-radius:6px} .pts{gap:6px} }
+.up .pm{display:flex;gap:6px;flex:none}
+.up .pm button{width:44px;height:44px;border-radius:12px;border:0;font-family:var(--display);font-size:22px;line-height:1;cursor:pointer;background:var(--sun);color:var(--navy);box-shadow:0 4px 0 #c9971f}
+.up .pm button.sub{background:var(--card);border:2px solid var(--line);box-shadow:none}
+.up .pm button:disabled{opacity:.35;box-shadow:none;cursor:default}
+.up .pm button:active:not(:disabled){transform:translateY(2px);box-shadow:none}
+
 .up-t{flex:1;min-width:0;display:grid;gap:5px}
 .up-t b{font-family:var(--display);font-weight:400;font-size:16px;line-height:1.1}
+.up.full{border-color:var(--sun)}
 .up-t small{font-size:12px;font-weight:700;color:var(--mute)}
 .nw{white-space:nowrap}
 .up .act{margin:0;flex:none;min-width:88px;font-size:15px}
@@ -355,11 +387,12 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   .town button{height:44px}
   .go{padding:11px}
 }
-/* tall phones: the strengthen tab also shows the car being strengthened, and the car tiles grow a little */
+/* tall phones: the car tiles grow a little (the tuning tab shows its car in the bay, not the hero card — 11/17) */
 @media (orientation:portrait) and (min-height:780px){
-  body.gt-up .hero{display:grid}
   .tile canvas{height:clamp(50px,6.5vh,64px)}
+  .bay{height:140px}
 }
+@media (min-width:700px) and (orientation:portrait){ .bay{height:190px} }
 /* mid-tall phones: on the strengthen tab the car card drops its (inert) のってる button so the performance block fits */
 @media (orientation:portrait) and (min-height:780px) and (max-height:879px) and (max-width:699px){
   body.gt-up .hero .act{display:none}
@@ -380,6 +413,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   .g-head{grid-area:head}.tabs{grid-area:tabs}.panel{grid-area:panel}.g-foot{grid-area:foot}
   .hero{grid-area:hero;grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;min-height:0}
   body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:grid}
+  .bay{display:none}
   .pic{min-height:0}
   .info h3{font-size:24px}
   .r-in{max-width:1000px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);align-items:stretch;column-gap:32px}
@@ -428,7 +462,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   .coins b{font-size:24px}
   .coins small{font-size:14px}
   .iconbtn{width:52px;height:52px}
-  .tabs button{font-size:18px;padding:8px 4px}
+  .tabs button{font-size:20px;padding:8px 4px}
   .tabs button small{font-size:14px}
   .hero{padding:14px;gap:18px}
   .info{gap:8px}
@@ -565,7 +599,29 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
 .fxgo{position:fixed;inset:0;z-index:65;pointer-events:none;overflow:hidden}
 .fxgo i{position:absolute;top:0;width:3px;border-radius:2px;background:linear-gradient(180deg,transparent,rgba(255,255,255,.85));animation:fxGo .4s cubic-bezier(.3,0,.7,1) both}
 @keyframes fxGo{0%{transform:translateY(-40vh);opacity:0}25%{opacity:1}100%{transform:translateY(110vh);opacity:0}}
-@media (prefers-reduced-motion: reduce){.new,#boostBar.ready .bb-wrap,#boostBar .bb i,#nitroFx.on,#flash.go,.logo .a,.logo .b,.ver,#title.out,.sh-finger,.sh-finger .rip,#result .res-rank{animation:none}#boostBar.ready .bb-wrap{box-shadow:0 0 0 3px var(--tomato)}#banner.show{animation:banfade 1.8s linear forwards}@keyframes banfade{0%,80%{opacity:1}100%{opacity:0}}#result .res-rank{transform:rotate(-4deg)}.go:active,.again:active,.to-g:active{transform:none}.res-btns{transition:none}}
+/* garage sizes (11/17 21回目 しょーくん「余白や高さなどを揃えて」): one height per kind of row — small buttons 44 (iPad 52), the bottom bar 56 (iPad 64).
+   Tab labels sit in the middle (the counts under them were dropped, which had left a gap below) */
+.tabs button{align-content:center;padding:0 2px}
+.coins{box-sizing:border-box;height:44px;align-items:center;padding:0 14px}
+.coins small{position:relative;top:2px}
+.hero .act{box-sizing:border-box;min-height:44px;height:44px;padding:0 10px}
+.town{grid-template-columns:44px minmax(0,1fr) 44px}
+.town button{height:44px}
+.town div{grid-template-columns:auto minmax(0,auto);justify-content:center;align-items:baseline;column-gap:8px;row-gap:0}
+.town #townName{grid-column:1/-1;grid-row:1}
+.town .tstars{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g-foot .go{box-sizing:border-box;height:56px;padding:0 14px;display:grid;place-items:center}
+@media (min-width:700px) and (min-height:700px){
+  .coins{height:52px;padding:0 16px}
+  .hero .act{min-height:52px;height:52px}
+  .ptbar .act{min-height:52px}
+  .ptbar .respec{width:52px}
+  .up .pm button{width:52px;height:52px}
+  .town{grid-template-columns:52px minmax(0,1fr) 52px}
+  .town button{height:52px}
+  .g-foot .go{height:64px}
+}
+@media (prefers-reduced-motion: reduce){.new,#boostBar.ready .bb-wrap,#boostBar .bb i,#nitroFx.on,#flash.go,.logo .a,.logo .b,.ver,#title .tap,#title.out,.sh-finger,.sh-finger .rip,#result .res-rank{animation:none}#boostBar.ready .bb-wrap{box-shadow:0 0 0 3px var(--tomato)}#banner.show{animation:banfade 1.8s linear forwards}@keyframes banfade{0%,80%{opacity:1}100%{opacity:0}}#result .res-rank{transform:rotate(-4deg)}.go:active,.again:active,.to-g:active{transform:none}.res-btns{transition:none}}
 </style>
 
 <canvas id="game" aria-label="ゲーム画面"></canvas>
@@ -612,7 +668,8 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
 
 <div id="title" hidden role="button" tabindex="0" aria-label="ぶっとびチェイス　タップでスタート">
   <h1 class="logo"><span class="a">ぶっとび</span><span class="b">チェイス</span></h1>
-  <p class="ver">ver 1.3</p>
+  <p class="ver">ver 1.5</p>
+  <p class="tap">タップでスタート</p>
 </div>
 
 <section id="result" hidden aria-label="けっか">
@@ -643,10 +700,10 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
       <button type="button" class="iconbtn" id="openSet" aria-label="設定"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/></svg></button>
     </header>
     <div class="tabs" role="tablist" id="gTabs">
-      <button type="button" role="tab" data-tab="car" aria-selected="true">車<small id="tcCar"></small></button>
-      <button type="button" role="tab" data-tab="up" aria-selected="false">強化<small id="tcUp"></small></button>
-      <button type="button" role="tab" data-tab="mis" aria-selected="false">ミッション<small id="tcMis"></small></button>
-      <button type="button" role="tab" data-tab="title" aria-selected="false">称号<small id="tcTitle"></small></button>
+      <button type="button" role="tab" data-tab="car" aria-selected="true">車</button>
+      <button type="button" role="tab" data-tab="up" aria-selected="false">強化</button>
+      <button type="button" role="tab" data-tab="mis" aria-selected="false">ミッション</button>
+      <button type="button" role="tab" data-tab="title" aria-selected="false">称号</button>
     </div>
     <section class="hero" id="hero" aria-live="polite"></section>
     <div class="panel" id="gPanel"></div>
@@ -1366,6 +1423,31 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
       for (i = 0; i < 5; i++) blip(v, t + i * 0.055, fs[i], 0.12, 0.09, 'square');
       blip(v, t, 300, 0.07, 0.35, 'triangle', 1400); bell(v, t + 0.28, 2093, 0.18, 0.5);
     },
+    // tuning bay (11/17): a ratchet's ガチャガチャ when a point goes in, a looser one when it comes out, a ding at a full stat,
+    // a till for a new point, and a tool clatter when all points come back
+    ratchet: function (v) {
+      var t = v.t, i;
+      for (i = 0; i < 6; i++) { var s = t + i * 0.045, k = rnd(0.92, 1.08); nz(v, s, 0.025, 0.32, 'highpass', 3600 * k, 0.9, 0.001); metal(v, s, [1180, 1870, 2650], 0.05, 0.05, 'square', k); }
+      thump(v, t + 0.27, 210, 90, 0.08, 0.3);
+    },
+    unbolt: function (v) {
+      var t = v.t, i;
+      for (i = 0; i < 4; i++) { var s = t + i * 0.06, k = rnd(0.9, 1.1); nz(v, s, 0.03, 0.26, 'bandpass', 2200 * k, 1.1, 0.001); metal(v, s, [780, 1240], 0.04, 0.06, 'square', k); }
+    },
+    statMax: function (v) {
+      var t = v.t; SE.ratchet(v);
+      bell(v, t + 0.3, 1568, 0.2, 0.5); bell(v, t + 0.38, 2349, 0.18, 0.6); blip(v, t + 0.3, 784, 0.1, 0.12, 'square');
+    },
+    ptBuy: function (v) {
+      var t = v.t; thump(v, t, 160, 70, 0.1, 0.32); nz(v, t + 0.02, 0.06, 0.22, 'highpass', 2800, 0.7);
+      bell(v, t + 0.06, 2093, 0.22, 0.45); bell(v, t + 0.06, 2637, 0.14, 0.5); blip(v, t + 0.14, 1047, 0.1, 0.1, 'square');
+    },
+    respec: function (v) {
+      var t = v.t, i;
+      var f = nz(v, t, 0.35, 0.3, 'bandpass', 2600, 1.1); f.frequency.setValueAtTime(2600, t); f.frequency.exponentialRampToValueAtTime(500, t + 0.3);
+      for (i = 0; i < 5; i++) { var s = t + 0.05 + i * 0.05 + rnd(0, 0.02), k = rnd(0.8, 1.2); metal(v, s, [640, 1020, 1530], 0.05, 0.12, 'square', k); }
+      thump(v, t + 0.3, 140, 60, 0.12, 0.34);
+    },
     denied: function (v) {
       for (var i = 0; i < 2; i++) {
         var s = v.t + i * 0.13, g = G(v, v.out), fl = F(v, 'lowpass', 900, 1, g);
@@ -1439,6 +1521,18 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
       var t = v.t, fs = [1319, 1661, 1976, 2637, 3322], i;
       for (i = 0; i < 5; i++) bell(v, t + i * 0.045, fs[i], 0.13, 0.28);
       nz(v, t, 0.45, 0.07, 'highpass', 7000, 0.7, 0.05);
+    },
+    // full-speed flow (21回目): an airy "ヒュオッ" each time the speed lines step up a stage (a = the stage, 1 or 2)
+    whoosh: function (v, a) {
+      var t = v.t, k = clamp(Math.round(+a || 1), 1, 2), f = nz(v, t, 0.6, 0.3, 'bandpass', 420, 1.3, 0.14);
+      f.frequency.setValueAtTime(420, t); f.frequency.exponentialRampToValueAtTime(2200 * k, t + 0.45);
+      if (k >= 2) { bell(v, t + 0.16, 1760, 0.045, 0.32); bell(v, t + 0.22, 2637, 0.035, 0.3); }
+    },
+    // nitro shockwave (21回目): a deep ドォン with a crumbling rush, played with the nitro start and when nitro smashes the roadside
+    shock: function (v, a) {
+      var t = v.t, k = clamp(+a || 1, 0.3, 1); thump(v, t, 72, 28, 0.55, 0.8 * k);
+      var f = nz(v, t, 0.65, 0.42 * k, 'lowpass', 2600, 0.8, 0.004); f.frequency.setValueAtTime(2600, t); f.frequency.exponentialRampToValueAtTime(150, t + 0.55);
+      nz(v, t + 0.03, 0.28, 0.16 * k, 'highpass', 3200, 0.7, 0.004);
     },
     nitroGo: function (v) {
       var t = v.t; thump(v, t, 85, 42, 0.3, 0.5);
@@ -1564,11 +1658,11 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
   };
   // minimum seconds between two plays of the same effect
   var RL = { coin: 0.05, crash: 0.05, near: 0.08, explode: 0.08, bigcrash: 0.1, container: 0.15, train: 0.6, railbell: 0.8,
-    bossIn: 0.6, bossDown: 0.6, nitroGo: 0.2, wall: 0.06, skid: 0.1, ice: 0.08, stamp: 0.1 };
+    bossIn: 0.6, bossDown: 0.6, nitroGo: 0.2, whoosh: 0.3, shock: 0.12, wall: 0.06, skid: 0.1, ice: 0.08, stamp: 0.1 };
   var MAXV = 14;
   // per-effect output trims (balance the bus: effects peak ~0.4-0.85 before the master)
-  var SEG = { tap: 2.5, buy: 1.7, upgrade: 2.2, denied: 1.9, crash: 0.9, explode: 0.85, train: 1.35, railbell: 1.15, wall: 2.4, near: 2.6,
-    nitroReady: 2, nitroGo: 1.4, coin: 3, star: 2.6, warn: 2.1, spike: 0.8, bossIn: 0.85, bossDown: 0.8, bonk: 1.5, heal: 2.8,
+  var SEG = { tap: 2.5, buy: 1.7, upgrade: 2.2, denied: 1.9, ratchet: 2.4, unbolt: 2.4, statMax: 2.2, ptBuy: 1.9, respec: 2.2, crash: 0.9, explode: 0.85, train: 1.35, railbell: 1.15, wall: 2.4, near: 2.6,
+    nitroReady: 2, nitroGo: 1.4, whoosh: 2.2, shock: 1.1, coin: 3, star: 2.6, warn: 2.1, spike: 0.8, bossIn: 0.85, bossDown: 0.8, bonk: 1.5, heal: 2.8,
     busted: 3.5, gomi: 2.8, container: 0.8, ice: 2.8, skid: 4, mission: 2.3, newTitle: 2.1, goal: 1.5, unlockTown: 2.2 };
   var JT = { clear: 1, wreck: 1.6, unlock: 2, stars: 2.5 };
 
@@ -1607,16 +1701,24 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
     E.nf = c.createBiquadFilter(); E.nf.type = 'bandpass'; E.nf.frequency.value = 500; E.nf.Q.value = 0.9;
     E.ng = c.createGain(); E.ng.gain.value = 0; E.nf.connect(E.ng); E.ng.connect(E.out);
     E.nz = c.createBufferSource(); E.nz.buffer = g.noise; E.nz.loop = true; E.nz.connect(E.nf);
-    E.o1.start(t); E.o2.start(t); E.lfo.start(t); E.nz.start(t);
+    // wind (21回目): an airy rush that rises while you keep full speed (flow) and roars with nitro, swaying slowly so it breathes
+    E.wf = c.createBiquadFilter(); E.wf.type = 'bandpass'; E.wf.frequency.value = 1200; E.wf.Q.value = 0.7;
+    E.wg = c.createGain(); E.wg.gain.value = 0; E.wf.connect(E.wg); E.wg.connect(E.out);
+    E.wz = c.createBufferSource(); E.wz.buffer = g.noise; E.wz.loop = true; E.wz.connect(E.wf);
+    E.wl = c.createOscillator(); E.wl.frequency.value = 0.4; var wlg = c.createGain(); wlg.gain.value = 380; E.wl.connect(wlg); wlg.connect(E.wf.frequency);
+    E.o1.start(t); E.o2.start(t); E.lfo.start(t); E.nz.start(t); E.wz.start(t, 0.43); E.wl.start(t);
     return E;
   }
-  function engSet(E, sp, bo, now) {
+  function engSet(E, sp, bo, now, fl) {
+    fl = +fl || 0;
     var f = 32 + sp * 50 + (bo ? 16 : 0), tc = 0.07;
     E.o1.frequency.setTargetAtTime(f, now, tc); E.o2.frequency.setTargetAtTime(f * 0.5, now, tc); E.lfo.frequency.setTargetAtTime(f * 0.5, now, tc);
     E.lp.frequency.setTargetAtTime(240 + sp * 650 + (bo ? 1100 : 0), now, 0.08);
     E.out.gain.setTargetAtTime(0.028 + 0.017 * (sp > 1.2 ? 1.2 : sp) + (bo ? 0.02 : 0), now, 0.1);
     E.ng.gain.setTargetAtTime(bo ? 0.55 : 0.05 * sp, now, 0.1);
     E.nf.frequency.setTargetAtTime(bo ? 950 : 420 + sp * 200, now, 0.1);
+    E.wg.gain.setTargetAtTime(bo ? 0.55 : fl * 0.45, now, 0.3);
+    E.wf.frequency.setTargetAtTime(1000 + fl * 1000 + (bo ? 900 : 0), now, 0.3);
   }
   function makeSiren(g) {
     var c = g.ctx, R = { lv: 0, last: -1 }, t = c.currentTime, i;
@@ -1737,15 +1839,15 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
         }, (J.dur + 2) * 1000);
       } catch (e) {}
     },
-    engine: function (speed, boosting) {
+    engine: function (speed, boosting, flow) {
       try {
         if (!ctx || !st.se || st.muffle) return;
-        var E = G0.eng || (G0.eng = makeEngine(G0)), now = ctx.currentTime, bo = !!boosting, sp = +speed || 0;
-        sp = sp < 0 ? 0 : sp > 1.6 ? 1.6 : sp;
+        var E = G0.eng || (G0.eng = makeEngine(G0)), now = ctx.currentTime, bo = !!boosting, sp = +speed || 0, fl = +flow || 0;
+        sp = sp < 0 ? 0 : sp > 1.6 ? 1.6 : sp; fl = fl < 0 ? 0 : fl > 1 ? 1 : fl;
         if (E.on && now - E.last < 0.05 && now >= E.last) return;
-        if (E.on && bo === E.bo && Math.abs(sp - E.sp) < 0.01) return;
-        E.last = now; E.on = true; E.sp = sp; E.bo = bo;
-        engSet(E, sp, bo, now);
+        if (E.on && bo === E.bo && Math.abs(sp - E.sp) < 0.01 && Math.abs(fl - (E.fl || 0)) < 0.02) return;
+        E.last = now; E.on = true; E.sp = sp; E.bo = bo; E.fl = fl;
+        engSet(E, sp, bo, now, fl);
       } catch (e) {}
     },
     engineOff: function () {
@@ -1793,7 +1895,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
             if (s.nitro && SONGS[id].run) riser(P.S, t0);
           } else if (kind === 'se') { if (!SE.hasOwnProperty(id)) { resolve(new Float32Array(0)); return; } fireSe(g, id, t0, opts.amount); }
           else if (kind === 'jingle') { if (!JING[id]) { resolve(new Float32Array(0)); return; } fireJingle(g, id, t0); }
-          else if (kind === 'engine') { var E = makeEngine(g); engSet(E, clamp(+opts.speed || 1, 0, 1.6), !!opts.boost, t0); }
+          else if (kind === 'engine') { var E = makeEngine(g); engSet(E, clamp(+opts.speed || 1, 0, 1.6), !!opts.boost, t0, clamp(+opts.flow || 0, 0, 1)); }
           else if (kind === 'siren') { var R = makeSiren(g); sirSet(R, clamp(opts.level == null ? 1 : +opts.level, 0, 1), t0); }
           else if (kind === 'mix') { // dev: opts.events = [[seName, time, amount], ...] (+ optional music id with boss/heat/nitro)
             if (SONGS[id]) { var MP = new Player(g, id, t0, s); MP.run(pre + seconds, s); }
@@ -1867,11 +1969,11 @@ const AREA_BASE = {
 const area = (base, o) => Object.assign({}, AREA_BASE[base], o);
 /* the four towns. Clear one to open the next. d = metres from the start */
 const TOWNS = [
-  {name:'はじまりの街', goal:3600, heat:0.9, cap:3, start:1, goalBonus:1500, ranks:[11000, 7000, 3500, 1400],
+  {name:'はじまりの街', goal:3600, heat:1.1, cap:3, start:1, goalBonus:1500, ranks:[11000, 7000, 3500, 1400],
    boss:{name:'装甲車', color:'#3b4a5e'}, song:'town0',
    areas:[area('alley', {name:'路地', from:0, style:'town'}), area('avenue', {name:'大通り', from:700, style:'avenue'}), area('highway', {name:'高速', from:1900, style:'highway'})],
    isec:[260, 560, 860, 1120, 1380, 1680], rail:[430, 1500], station:[[1000, 1], [1580, -1], [2600, 1], [3250, -1]], crane:[], ice:false,
-   bosses:[{from:1450, to:1850, hp:260, money:700, rel:85, every:7.6}, {from:3150, to:3600, hp:420, money:1100, rel:105, every:6.2}]},
+   bosses:[{from:1450, to:1850, hp:340, money:700, rel:90, every:6.6}, {from:3150, to:3600, hp:560, money:1100, rel:110, every:5.4}]},  // 21回目: heat 0.9→1.1, bosses tougher (しょーくん「適当に走っても1面ボスまでクリアできてしまう」)
   {name:'港の街', goal:4600, heat:1.15, cap:5, start:1, goalBonus:2500, ranks:[25500, 16000, 8500, 3600],
    boss:{name:'装甲トラック', color:'#2d5f86'}, song:'town1',
    areas:[area('avenue', {name:'倉庫街', from:0, half:70, side:'#c3ccd4', style:'port', same:{car:2,van:3,truck:3}, opp:{car:2,van:2,truck:3}}),
@@ -1930,12 +2032,13 @@ const HEAT = [
   {max:6, every:3.2, pool:['police','bike','tank'], heli:true},
 ];
 /* cars you can own: sp / hd are the shop's 5-step meters; need = a title that has to be earned before it can be bought.
-   The order is the save order (save.owned / save.up / save.carBest are indexed by it), so new cars go at the end. */
+   The order is the save order (save.owned / save.up / save.carBest are indexed by it), so new cars go at the end.
+   (11/17 21回目: the kei car became the free first car and swapped places with the sports car; older saves are swapped in useSave, carV) */
 const CARS = [
-  {name:'スポーツカー',       key:'sports',  w:19, h:34, m:1.0, hp:100, speed:150, color:'#ff5a36', price:0,     sp:4, hd:1, short:'ニアミスで ニトロ1.5倍'},
+  {name:'軽自動車',           key:'pkei',    w:15, h:27, m:0.8, hp:85,  speed:145, color:'#f7a1c4', price:0,     sp:4, hd:1, short:'小さくて すりぬけ上手'},
   {name:'マッスルカー',       key:'muscle',  w:22, h:38, m:1.7, hp:150, speed:140, color:'#ffc83d', price:1000,   sp:3, hd:3, short:'体当たりが 強い'},
   {name:'ピックアップ',       key:'pickup',  w:24, h:44, m:2.6, hp:210, speed:125, color:'#38c79a', price:3000,  sp:2, hd:4, short:'後ろに ドラム缶をポイ'},
-  {name:'軽自動車',           key:'pkei',    w:15, h:27, m:0.8, hp:85,  speed:145, color:'#f7a1c4', price:5000,  sp:4, hd:1, short:'小さくて すりぬけ上手'},
+  {name:'スポーツカー',       key:'sports',  w:19, h:34, m:1.0, hp:100, speed:150, color:'#ff5a36', price:5000,  sp:4, hd:1, short:'ニアミスで ニトロ1.5倍'},
   {name:'タクシー',           key:'taxi',    w:19, h:34, m:1.1, hp:120, speed:144, color:'#ffd23f', price:8000,  sp:4, hd:2, short:'コンボが 切れにくい'},
   {name:'現金輸送車',         key:'cash',    w:21, h:40, m:2.0, hp:190, speed:128, color:'#2f6b5a', price:12000,  sp:2, hd:4, short:'クラッシュの コイン+30%'},
   {name:'救急車',             key:'amb',     w:21, h:42, m:1.8, hp:160, speed:136, color:'#f4f6f8', price:18000,  sp:3, hd:3, short:'ボディが 少しずつ回復'},
@@ -2001,16 +2104,22 @@ const TITLES = [
   {id:'rookie', name:'まだまだ見習い', hint:'とちゅうでクラッシュする',        base:true},
 ];
 const kmh = pxs => Math.round(pxs / M * 3.6);
+/* tuning (11/17 しょーくん「ポイントを購入して、ステータスを振り分ける楽しさをメインに」): each car buys up to PT_MAX points and spreads them
+   over four stats of STAT_MAX steps — one stat full plus 2 more, never everything. Points can be moved again any time for free.
+   21回目 (しょーくん「1ゲームでフルカスタムまで到達できてしまう」): 3 times the first prices — 33,150 for the first car, about 4〜5 runs of the first town */
+const STAT_MAX = 5, PT_MAX = STAT_MAX + 2, PT_PRICES = [1200, 2100, 3300, 4500, 6000, 7200, 8850];
 const UPGRADES = [
-  {key:'eng',   name:'エンジン', prices:[150,350,700,1200,1900], desc:lv => lv < 5 ? `速さ +${kmh(16*lv)} → +${kmh(16*(lv+1))}km/h` : `速さ +${kmh(16*lv)}km/h`},
-  {key:'body',  name:'ボディ',   prices:[150,350,700,1200,1900], desc:lv => lv < 5 ? `かたさ +${lv*25}% → +${(lv+1)*25}%` : `かたさ +${lv*25}%`},
-  {key:'boost', name:'ニトロ', prices:[250,700,1500],          desc:lv => lv < 3 ? `たまりやすさ +${lv*30}% → +${(lv+1)*30}%` : `たまりやすさ +${lv*30}%`},
+  {key:'eng',   name:'はやさ',   desc:lv => `+${kmh(16*lv)}km/h`},
+  {key:'body',  name:'かたさ',   desc:lv => `+${lv*25}%`},
+  {key:'boost', name:'ニトロ',   desc:lv => `たまり +${lv*18}%`},
+  {key:'ram',   name:'体当たり', desc:lv => `+${lv*10}%`},
 ];
+const OLD_UP_PRICES = {eng:[150,350,700,1200,1900], body:[150,350,700,1200,1900], boost:[250,700,1500]};
 
 /* ---------- save ---------- */
 const SAVE_KEY = 'butto-chase-v1';
 const freshTown = () => ({clear:false, rank:'', best:0, mis:[false, false, false]});
-const freshSave = () => ({money:0, best:0, car:0, owned:CARS.map((c, i) => i === 0), up:CARS.map(() => ({eng:0, body:0, boost:0})), carBest:CARS.map(() => 0), clears:0, hiScore:0, titles:{}, plays:0, tips:{},
+const freshSave = () => ({money:0, best:0, car:0, owned:CARS.map((c, i) => i === 0), up:CARS.map(() => ({eng:0, body:0, boost:0, ram:0})), pts:CARS.map(() => 0), upV:2, carV:2, carBest:CARS.map(() => 0), clears:0, hiScore:0, titles:{}, plays:0, tips:{},
   town:0, towns:TOWNS.map(freshTown), daily:{day:'', done:{}}, gold:CARS.map(() => false), carRank:CARS.map(() => ''), se:true, bgm:true, tutDone:false});
 let save = freshSave();
 function loadSave(){
@@ -2029,17 +2138,37 @@ function useSave(s){
   if (!obj(save.tips)) save.tips = {};
   if (!Array.isArray(save.owned)) save.owned = [];
   if (!Array.isArray(save.carBest)) save.carBest = [];
+  // saves from before 11/17 (21回目): the sports car (was 0) and the kei car (was 3) swap places, so each car keeps its own levels, records and marks
+  if (s.carV !== 2){
+    for (const k of ['owned', 'up', 'pts', 'carBest', 'gold', 'carRank']) if (Array.isArray(save[k])){ const A = save[k].slice(); while (A.length < 4) A.push(undefined); [A[0], A[3]] = [A[3], A[0]]; save[k] = A; }
+    if (save.car === 0) save.car = 3; else if (save.car === 3) save.car = 0;
+  }
   // older saves: one set of upgrades for every car → each car you already had keeps those levels
   if (!Array.isArray(s.up)){
     const old = {eng:s.eng || 0, body:s.body || 0, boost:s.boost || 0};
     save.up = CARS.map((c, i) => save.owned[i] ? Object.assign({}, old) : {eng:0, body:0, boost:0});
   }
+  if (!Array.isArray(save.pts)) save.pts = [];
+  const oldUp = s.upV !== 2;   // the stored save is from before 11/17: levels bought per stat (engine 5, body 5, nitro 3)
   for (let i = 0; i < CARS.length; i++){
     if (typeof save.owned[i] !== 'boolean') save.owned[i] = i === 0;
-    const U = obj(save.up[i]) ? save.up[i] : {};
-    save.up[i] = {}; for (const it of UPGRADES) save.up[i][it.key] = Math.min(it.prices.length, Math.floor(num(U[it.key])));
+    const U = obj(save.up[i]) ? save.up[i] : {}, lv = k => Math.max(0, Math.floor(num(U[k])));
+    let A = {eng:Math.min(STAT_MAX, lv('eng')), body:Math.min(STAT_MAX, lv('body')), boost:Math.min(STAT_MAX, lv('boost')), ram:Math.min(STAT_MAX, lv('ram'))};
+    let pts = Math.min(PT_MAX, Math.max(0, Math.floor(num(save.pts[i]))));
+    if (oldUp){
+      const e = Math.min(5, lv('eng')), b = Math.min(5, lv('body')), n = Math.min(3, lv('boost')), f = 1 + i * 0.25;
+      let spent = 0; for (const [k, L] of [['eng', e], ['body', b], ['boost', n]]) for (let q = 0; q < L; q++) spent += Math.round(OLD_UP_PRICES[k][q] * f / 10) * 10;
+      pts = Math.min(PT_MAX, e + b + n);
+      A = {eng:0, body:0, boost:0, ram:0};   // the points come back unspread (yellow), ready to be spread the new way
+      let cost = 0; for (let q = 0; q < pts; q++) cost += ptPrice(q, i);
+      if (spent > cost) save.money = num(save.money) + spent - cost;   // coins back for levels the new cap no longer holds
+    }
+    // the spread never holds more than the points: take from the smallest stat first, so a specialty stays
+    while (UPGRADES.reduce((a, it) => a + A[it.key], 0) > pts){ const k = UPGRADES.map(it => it.key).filter(k => A[k] > 0).sort((x, y) => A[x] - A[y])[0]; A[k]--; }
+    save.up[i] = A; save.pts[i] = pts;
     save.carBest[i] = num(save.carBest[i]);
   }
+  save.upV = 2; save.carV = 2; save.owned[0] = true;   // the first car is always yours
   if (!(Number.isInteger(save.car) && save.car >= 0 && save.car < CARS.length && save.owned[save.car])) save.car = 0;
   delete save.eng; delete save.body; delete save.boost;
   // towns, stars and gold marks arrived in test build 10: a cleared old course opens the harbor town
@@ -2059,7 +2188,9 @@ function useSave(s){
   if (typeof save.bgm !== 'boolean') save.bgm = true;
 }
 const upLv = k => save.up[save.car][k] || 0;  // upgrades belong to the car you ride
-const upPrice = (it, lv, ci) => lv < it.prices.length ? Math.round(it.prices[lv] * (1 + ci * 0.25) / 10) * 10 : null;  // pricier cars, pricier upgrades
+function ptPrice(n, ci){ return n < PT_MAX ? Math.round(PT_PRICES[n] * (1 + ci * 0.25) / 10) * 10 : null; }  // the n-th point of car ci (pricier cars, pricier points)
+const ptUsed = ci => UPGRADES.reduce((a, it) => a + (save.up[ci][it.key] || 0), 0);
+const ramK = () => 1 + 0.1 * upLv('ram');   // 体当たり: how hard your car shoves (mass in collisions)
 /* town missions: 3 per town, each pays once (fixed coins). All 3 done = the town's third star */
 const TOWN_MIS = [
   [{t:'電車で追っ手を1台', v:s => s.ko.train >= 1, c:600}, {t:'ニアミス15回', v:s => s.near >= 15, c:500}, {t:'ボスを1台たおす', v:s => s.boss >= 1, c:1000}],
@@ -2139,8 +2270,22 @@ const car = () => CARS[save.car];
 const runCoins = () => takeMoney + trafMoney + nearMoney + bossMoney + gomiMoney;
 const worldTop = () => camY - H * ANCHOR / s;
 const worldBottom = () => camY + H * (1 - ANCHOR) / s;
-const boostPow = () => 1.5 + 0.05 * upLv('boost');
-const massOf = b => b === P ? (boosting ? b.m * 8 : b.key === 'muscle' ? b.m * 1.4 : b.m) : b.m;
+const boostPow = () => 1.5 + 0.03 * upLv('boost');
+const massOf = b => b === P ? (boosting ? b.m * 8 : (b.key === 'muscle' ? b.m * 1.4 : b.m) * ramK()) : b.m;
+/* full-speed flow (21回目 しょーくん「しばらく減速せずに進んでたら、スピードエフェクトが出始めて爽快感がほしい」): keep at least 93% of your
+   top speed and the speed lines step up at FLOW_T1 and FLOW_T2 seconds (wind, a slight pull-back of the camera). A hit, a slowdown or falling
+   under 85% ends it. Pictures and sound only: the speed, the rules and the coins are the same */
+const FLOW_T1 = 3, FLOW_T2 = 7, FLOW_ZOOM = 0.05;
+let flowT = 0, flowLv = 0, flowK = 0, flowPulse = 0, edgeSmashT = 0, flowGlow = null, streakImg = null;
+// one tapered streak picture for the flow speed lines: the head (bottom) bright and round, the tail thin and see-through
+function makeStreak(){
+  const w = 24, h = 192, c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
+  const shape = (hw, c0, c1) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, c0); gr.addColorStop(0.7, c1); gr.addColorStop(1, c1); g.fillStyle = gr;
+    g.beginPath(); g.moveTo(w/2, 0); g.lineTo(w/2 + hw, h - hw); g.quadraticCurveTo(w/2, h + hw*0.5, w/2 - hw, h - hw); g.closePath(); g.fill(); };
+  shape(11, 'rgba(23,50,77,0)', 'rgba(23,50,77,0.16)'); shape(6, 'rgba(255,255,255,0)', 'rgba(255,255,255,0.7)'); shape(2.5, 'rgba(255,255,255,0)', 'rgba(255,255,255,1)');
+  return c;
+}
+const flowBase = () => car().speed + 16 * upLv('eng');
 const pSpeed = () => (car().speed + 16 * upLv('eng')) * (boosting ? boostPow() : 1) * (P && P.slowT > 0 ? 0.58 : 1);
 
 const MAX_PX = 3.4e6;
@@ -2165,14 +2310,14 @@ function resetWorld(){
   const C = car();
   P = mkBody({role:'player', key:C.key, w:C.w, h:C.h, m:C.m, color:C.color, x:-23, y:0, vy:-C.speed});
   P.maxHp = P.hp = Math.round(C.hp * (1 + 0.25 * upLv('body')));
-  cars = []; heli = null; heliCool = 0; fx = []; pops = []; broken.clear();
+  cars = []; heli = null; heliCool = 0; fx = []; pops = []; broken.clear(); gcReset();
   dist = 0; t = 0; star = TOWN.start; heatPts = (star - 1) * 100; nextChaser = 7; comboN = 0; comboT = 0; maxCombo = 0;
   iceN = 0; finalDown = false; maxStar = star; runMis = new Set(); misQueue = []; misT = 0; misCheckT = 0; onIceNow = false;
   dmgBy = {}; takeN = 0; takeMoney = 0; trafN = 0; trafMoney = 0; nearN = 0; nearMoney = 0;
   ko = {}; for (const k in KO) ko[k] = 0; nearOppN = 0; dmgTaken = 0; ownBlast = false; P.drumT = 1; gomiMoney = 0; noticeT = 0; healT = 0;
   trail = []; spikes = []; boss = null; nextBoss = 0; bossN = 0; bossMoney = 0; bossSeen = 0; spikeNext = 0; pinchNext = 0;
   boost = 0; boosting = false; shake = 0; areaIdx = 0; spawnAcc = 0; endT = 0; endKind = null;
-  camX = 0; camY = 0; targetX = -23; seen = {}; drag = null; wrongWay = false;
+  camX = 0; camY = 0; targetX = -23; seen = {}; drag = null; wrongWay = false; flowT = 0; flowLv = 0; flowK = 0; flowPulse = 0; edgeSmashT = 0;
   coolT = 0; campX = P.x; campT = 0; camping = false;
   booms = []; buildWorld();
   const a = AREAS[0];
@@ -2413,29 +2558,43 @@ function blowStation(st){ st.alive = false; explodeAt(st.sg*(halfAt(-st.y/M) + 3
 /* ---------- crash logic ---------- */
 function addBoost(v){
   if (boosting || coolT > 0 || state !== 'play') return;
-  const was = boost; boost = Math.min(100, boost + v * NITRO_GAIN * (1 + 0.3 * upLv('boost')));
+  const was = boost; boost = Math.min(100, boost + v * NITRO_GAIN * (1 + 0.18 * upLv('boost')));
   if (was < 100 && boost >= 100){ tip('nitroFull', 'ニトロ満タン！ タップで無敵！'); snd('nitroReady'); }
 }
 function tryBoost(){
   if (state !== 'play' || boosting) return;
   if (boost < 100){ const bb = $('boostBar'); bb.classList.remove('nope'); void bb.offsetWidth; bb.classList.add('nope'); return; }
-  boosting = true; P.slowT = 0; shake = Math.max(shake, 8); burst(P.x, P.y, 'spark', 24); snd('nitroGo'); sndDo(R => R.nitro(true));
+  boosting = true; P.slowT = 0; shake = Math.max(shake, 12); burst(P.x, P.y, 'spark', 24); snd('nitroGo'); snd('shock'); sndDo(R => R.nitro(true));
   const f = $('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
+  nitroBlast();
+}
+/* the nitro start is a shockwave (21回目 しょーくん「ニトロはさらにその上の破壊的な爽快感！！」): cars right next to you go flying as if you hit them,
+   the ones a little further are shoved away, and the buildings beside you crumble. The cars it wrecks pay like any nitro hit */
+function nitroBlast(){
+  ring(P.x, P.y, 120, '#ffd24a'); ring(P.x, P.y, 80); ring(P.x, P.y, 46, '#ff8a3d'); burst(P.x, P.y, 'boom', 14); stars(P.x, P.y, 8); hitStop(0.06);
+  for (const c of cars){
+    if (c.state !== 'drive' || c.boss || c.fixed) continue;
+    const dx = c.x - P.x, dy = c.y - P.y, d = Math.hypot(dx, dy) || 1;
+    if (d < 64){ c.lastHit = 'player'; c.lastHitT = t; nitroHit(c); }
+    else if (d < 150){ const k = 1 - d / 150; c.vx += (dx / d) * 260 * k; c.vy += (dy / d) * 160 * k; }
+  }
+  const half = halfAt(dist);
+  for (const sg of [-1, 1]) for (const oy of [-40, 20]) if (breakAt(sg * (half + 10), P.y + oy, sg, false)) blocksFly(sg * (half + 10), P.y + oy, sg, 5);
 }
 function nitroHit(X){ // invincible nitro: whatever you touch goes flying
   if (X.state !== 'drive') return;
   const sg = Math.sign(X.x - P.x) || (Math.random() < 0.5 ? -1 : 1);
   X.vx += sg * (170 + Math.random()*130); X.vy += -50 - Math.random()*90;
   crash(X, 'nitro');
-  X.air = X.airMax = 0.9; X.av *= 1.8;
-  burst(X.x, X.y, 'boom', 10); shake = Math.max(shake, 7);
+  X.air = X.airMax = 1.1; X.av *= 2.2; X.nFling = t;
+  burst(X.x, X.y, 'boom', 12); ring(X.x, X.y, 34, '#ffd24a'); stars(X.x, X.y, 4); parts(X, 4); shake = Math.max(shake, 9);   // no hit-stop while nitro runs (it keeps flowing)
 }
 
 let dmgSrc = '?', dmgBy = {};
 function damage(d){
   if (d <= 0 || state !== 'play' || boosting) return;
   dmgBy[dmgSrc] = (dmgBy[dmgSrc] || 0) + d; dmgSrc = '?';
-  P.hp -= d; dmgTaken += d; shake = Math.max(shake, Math.min(8, 2 + d*0.3)); if (d >= 3) hurtT = 0.25;
+  P.hp -= d; dmgTaken += d; shake = Math.max(shake, Math.min(8, 2 + d*0.3)); if (d >= 3){ hurtT = 0.25; flowT = 0; }
   if (d >= 4){ popMe(P.x, P.y + 12, `-${Math.round(d)}`, '#ffffff'); snd('hit', Math.min(1, d / 30)); }
   if (P.hp <= 0){ P.hp = 0; playerWreck(); }
 }
@@ -2487,13 +2646,14 @@ function crash(b, how){
   else if (byPlayer && state === 'play'){ const g = Math.round(10 * CASH_K() * (how === 'nitro' ? NITRO_PAY : 1)); trafN++; trafMoney += g; pop(b.x, b.y, (how === 'nitro' ? 'ドーン！ ' : how === 'crush' ? 'ペシャンコ！ ' : '') + '+' + g, '#ffc83d'); }
   if (b.key === 'tanker'){ pop(b.x, b.y - 20, 'ドッカーン！', '#ffc83d'); explodeAt(b.x, b.y, 90, 420, byPlayer, 25); }
 }
+const RAM_SELF = 0.2, RAM_GRACE = 1.5;   // your damage when you are the one ramming (side or from behind), and how long the wreck you made stays harmless
 function rammer(X, O){ // whichever of the two was driving into the other harder
   const dx = O.x - X.x, dy = O.y - X.y, d = Math.hypot(dx, dy) || 1;
   return (X.vx*dx + X.vy*dy) / d > -(O.vx*dx + O.vy*dy) / d ? X : O;
 }
 function impactOn(X, O, vn){
   if (X.state === 'wreck'){ X.av += (Math.random() - 0.5) * vn * 0.05; return; }
-  const mo = O.m * (O === P ? (boosting ? 2.5 : P.key === 'muscle' ? 1.5 : 1) : 1);
+  const mo = O.m * (O === P ? (boosting ? 2.5 : (P.key === 'muscle' ? 1.5 : 1) * ramK()) : 1);
   const eff = vn * 2 * mo / (X.m + mo);
   if (X === P){
     O.lastHit = 'player'; O.lastHitT = t;
@@ -2520,8 +2680,13 @@ function impactOn(X, O, vn){
     const tough = P.key === 'muscle' && rammer(P, O) === P ? 0.5 : 1;
     // tank: a police tackle does nothing at all
     const tankT = tackled && P.key === 'ptank' ? 0 : 1;
+    // 21回目 (しょーくん「一般車に綺麗に横から体当たりした時」): driving into a car yourself — a side swipe or from behind — barely hurts you.
+    // Head-ons with oncoming cars, crossing cars, wrecks, bosses, police tackles and pincers hurt as before
+    // (the wreck you just rammed off the road doesn't hurt you either while it tumbles away, RAM_GRACE s)
+    const ramIn = (rammer(P, O) === P && !O.boss && !O.opp && !O.cross && O.state !== 'wreck' && !tackled && !(O.plan === 'pin' && O.phase === 'slam')) ||
+      (O.state === 'wreck' && O.ramT && t - O.ramT < RAM_GRACE) ? RAM_SELF : 1;
     dmgSrc = O.boss ? 'boss' : O.role === 'chaser' ? (tackled ? 'tackle' : O.plan === 'pin' ? 'pin' : 'chaser-' + O.key) : O.state === 'wreck' ? 'wreck' : O.cross ? 'cross' : O.opp ? 'oncoming' : 'traffic';
-    damage(Math.max(0, eff - 60) * 0.08 * (O.state === 'wreck' ? 0.8 : 1) * bossRam * tough * tankT * (tackled ? TK.dmg : 1));
+    damage(Math.max(0, eff - 60) * 0.08 * (O.state === 'wreck' ? 0.8 : 1) * bossRam * tough * tankT * ramIn * (tackled ? TK.dmg : 1));
     if (tackled){ O.tkHit = true; if (!boosting){ popMe(P.x, P.y - 30, tankT ? 'タックル！' : 'びくともしない！', tankT ? '#ffffff' : '#ffc83d'); shake = Math.max(shake, tankT ? 5 : 2); snd('tackle'); } }
     if (eff > 60) burst((X.x + O.x)/2, (X.y + O.y)/2, 'spark', 5);
     if (!boosting && O.plan === 'pin' && O.phase === 'slam'){
@@ -2550,7 +2715,16 @@ function impactOn(X, O, vn){
   }
   // police on a job (overtaking to drop spikes, lining up a pincer) shrug off light bumps with traffic
   const th = X.role === 'chaser' ? (O === P ? CHASERS[X.key].tough : CHASERS[X.key].env * (X.plan === 'spike' || X.plan === 'pin' ? 2.2 : 1)) : X.tough;
-  if (eff > th) crash(X, 'hit');
+  if (eff > th){
+    crash(X, 'hit');
+    // your own ram sends it tumbling away: a shove sideways, a fast spin and a hop (pictures and the shove only; the coins are the same)
+    if (O === P && !X.fixed && !X.boss && rammer(P, X) === P){
+      const sg = Math.sign(X.x - P.x) || (Math.random() < 0.5 ? -1 : 1);
+      X.vx += sg * (110 + Math.min(eff, 400) * 0.45) * ramK(); X.vy += P.vy * 0.12;
+      X.av = sg * (10 + Math.random() * 6); X.air = X.airMax = 0.8; X.ramT = t;
+      ring(X.x, X.y, 30); burst(X.x, X.y, 'debris', 5, X.color || '#cfd6dd'); shake = Math.max(shake, 5);
+    }
+  }
 }
 
 function circlesOf(b){
@@ -2573,12 +2747,16 @@ function collide(A, B){
   if (vn >= 0) return;
   const j = -(1 + 0.25) * vn / (im + jm);
   A.vx += j*im*nx; A.vy += j*im*ny; B.vx -= j*jm*nx; B.vy -= j*jm*ny;
-  if (-vn > 20){ impactOn(A, B, -vn); impactOn(B, A, -vn); }
+  // your car's side is worked out first, while the other car is still driving (its crash must not turn your hit into "ran into a wreck")
+  if (-vn > 20){ if (B === P){ impactOn(B, A, -vn); impactOn(A, B, -vn); } else { impactOn(A, B, -vn); impactOn(B, A, -vn); } }
 }
 function hitWall(b, imp){
   if (imp > 50) for (const st of stations) if (st.alive && Math.abs(b.y - st.y) < 60 && Math.sign(b.x) === st.sg){ blowStation(st); break; }
   if (b === P){ if (imp > 110){ dmgSrc = 'wall'; damage((imp - 110) * 0.08); burst(b.x, b.y, 'spark', 4); snd('wall'); } return; }
-  if (b.state === 'wreck'){ b.av += (Math.random() - 0.5) * imp * 0.04; return; }
+  if (b.state === 'wreck'){ b.av += (Math.random() - 0.5) * imp * 0.04;
+    // a car sent flying by nitro smashes into the roadside: the building there crumbles (pictures only)
+    if (b.nFling && t - b.nFling < 1.6 && imp > 50){ b.nFling = 0; wallBlocks(b, 8); burst(b.x, b.y, 'boom', 8); snd('shock', 0.55); }
+    return; }
   if (b.boss){ if (imp > 80) hurtBoss(b, (imp - 80) * 0.15); return; }
   if (b.role === 'chaser'){ if (imp > CHASERS[b.key].wall * (ice.length && onIce(b) ? 0.5 : 1) && b.lastHit === 'player' && t - b.lastHitT < 1.5) crash(b, 'wall'); }
   else if (imp > 150) crash(b, 'wall');
@@ -2648,7 +2826,7 @@ function hasBuildings(y){ return !!BLD_STYLES[AREAS[areaIndexAt(Math.max(0, -y /
 function breakAt(x, y, sg, big){
   if (!hasBuildings(y)) return false;
   const k = Math.floor(y / 56);
-  for (let q = big ? -1 : 0; q <= (big ? 1 : 0); q++){ const key = (k + q) + ':' + sg; if (!broken.has(key)) broken.set(key, big ? 2 : 1); }
+  for (let q = big ? -1 : 0; q <= (big ? 1 : 0); q++){ const key = (k + q) + ':' + sg; if (!broken.has(key)){ broken.set(key, big ? 2 : 1); gcDirty((k + q) * 56); } }
   for (let i = 0; i < (big ? 6 : 3); i++) smoke(x + sg*(10 + Math.random()*40), y + (Math.random() - 0.5)*50, 'rgba(214,200,176,0.9)');
   return true;
 }
@@ -3035,6 +3213,14 @@ function update(dt){
     P.a = clamp(P.vx / 700, -0.3, 0.3);
     wrongWay = L.nOn > 0 && P.x > -L.half + (L.n - L.nOn) * L.lw + 4;
     if (wrongWay) addBoost(10 * dt);
+    { const v = -P.vy, top = flowBase();
+      if (P.slowT > 0 || v < top * 0.85) flowT = 0; else if (v >= top * 0.93) flowT += dt;
+      const lv = flowT >= FLOW_T2 ? 2 : flowT >= FLOW_T1 ? 1 : 0;
+      if (lv > flowLv){ snd('whoosh', lv); flowPulse = 0.4; if (!boosting) ring(P.x, P.y, lv > 1 ? 56 : 40, 'rgba(255,255,255,0.9)'); }
+      flowLv = lv; flowK += ((lv > 1 ? 1 : lv ? 0.5 : 0) - flowK) * Math.min(1, dt * (lv ? 2.5 : 6)); if (flowPulse > 0) flowPulse -= dt; }
+    // nitro smashes the roadside: hugging the edge knocks the buildings there into blocks (pictures only)
+    if (boosting){ shake = Math.max(shake, 2.5); if ((edgeSmashT -= dt) <= 0 && Math.abs(P.x) > L.half - P.w/2 - 8){ const sg = Math.sign(P.x) || 1;
+      if (breakAt(sg * (L.half + 10), P.y, sg, false)){ blocksFly(sg * (L.half + 10), P.y, sg, 5); burst(sg * L.half, P.y, 'spark', 5); snd('shock', 0.45); } edgeSmashT = 0.18; } }
     // sitting in one lane gets you noticed: after CAMP_T s within half a lane, the police push harder until you move half a lane or more
     if (Math.abs(P.x - campX) > LANE * 0.5){ campX = P.x; campT = 0; camping = false; }  // any move of half a lane clears it (anchored where it started)
     else if ((campT += dt) >= CAMP_T && !camping){
@@ -3445,6 +3631,37 @@ function drawHeli(hx, hy){
   ctx.fillStyle = '#ff2d2d'; circle(0, -h*0.12, 2.2);
   ctx.restore();
 }
+/* car sprites (11/17, lightening): each toy car (type, colour, size, light phase) is painted once with its tyres, details and gloss,
+   and every frame only stamps the picture. Flashing lights keep 2 pictures, tank treads 6; the rocket car's flame moves, so it is drawn as before */
+const SPR = new Map(), SPR_MAX = 140, SPR_PAD = 6;
+const SPR_FLASH = {police:6, armor:6, amb:6, fire:6, bike:7};
+let sprPs = 0;
+function carSprite(b){
+  if (b.key === 'rocket'){ drawVehicle(b.key, b.w, b.h, b.color); toyGloss(b.w, b.h); return; }
+  const ps = s * DPR * 1.12;
+  if (ps !== sprPs){ SPR.clear(); sprPs = ps; }
+  const fr = SPR_FLASH[b.key], ph = fr ? ((t*fr)|0) % 2 : (b.key === 'tank' || b.key === 'ptank') ? ((t*60) % 6)|0 : 0;
+  const key = b.key + '|' + b.color + '|' + b.w + '|' + b.h + '|' + ph;
+  let c = SPR.get(key);
+  if (!c){
+    const w = b.w + SPR_PAD*2, h = b.h + SPR_PAD*2;
+    c = document.createElement('canvas'); c.width = Math.ceil(w * ps); c.height = Math.ceil(h * ps);
+    const saved = ctx, tSaved = t;
+    ctx = c.getContext('2d'); ctx.setTransform(ps, 0, 0, ps, w * ps / 2, h * ps / 2);
+    t = fr ? (ph + 0.5) / fr : (b.key === 'tank' || b.key === 'ptank') ? (ph + 0.5) / 60 : t;
+    try { drawVehicle(b.key, b.w, b.h, b.color); if (!NO_GLOSS[b.key]) toyGloss(b.w, b.h); } finally { ctx = saved; t = tSaved; }
+    if (SPR.size >= SPR_MAX) SPR.delete(SPR.keys().next().value);
+  } else SPR.delete(key);
+  SPR.set(key, c);   // newest last, so the oldest picture goes first when the cache is full
+  ctx.drawImage(c, -b.w/2 - SPR_PAD, -b.h/2 - SPR_PAD, b.w + SPR_PAD*2, b.h + SPR_PAD*2);
+}
+// the nitro glow is one soft picture under the car instead of a canvas blur on every shape of it
+let nitroGlow = null;
+function drawNitroGlow(w, h){
+  if (!nitroGlow){ nitroGlow = document.createElement('canvas'); nitroGlow.width = nitroGlow.height = 128; const g = nitroGlow.getContext('2d'), gr = g.createRadialGradient(64, 64, 8, 64, 64, 64);
+    gr.addColorStop(0, 'rgba(255,90,54,0.85)'); gr.addColorStop(0.45, 'rgba(255,90,54,0.4)'); gr.addColorStop(1, 'rgba(255,90,54,0)'); g.fillStyle = gr; g.fillRect(0, 0, 128, 128); }
+  ctx.drawImage(nitroGlow, -w*1.05, -h*0.85, w*2.1, h*1.7);
+}
 function drawBody(b){
   let sc = 1, so = 1;
   if (b.air > 0 && b.airMax > 0){ const q = Math.sin((1 - b.air / b.airMax) * Math.PI); sc = 1 + 0.4*q; so = 1 + 3*q; }
@@ -3453,14 +3670,13 @@ function drawBody(b){
   if (b === P && boosting){
     const fl = (len, wd, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(-b.w*wd, b.h/2 - 2); ctx.lineTo(0, b.h/2 + len); ctx.lineTo(b.w*wd, b.h/2 - 2); ctx.fill(); };
     fl(36 + Math.random()*16, 0.44, '#e3261b'); fl(26 + Math.random()*10, 0.34, '#ff8a3d'); fl(14 + Math.random()*6, 0.2, '#ffe27a');
-    ctx.shadowColor = '#ff5a36'; ctx.shadowBlur = 20;
+    drawNitroGlow(b.w, b.h);
   }
   ctx.scale(sc, sc);
   const roll = b.rollTo ? b.rollTo * (b.airMax > 0 && b.air > 0 ? 1 - b.air / b.airMax : 1) : 0, cr = Math.cos(roll);
   if (roll) ctx.scale(Math.max(0.14, Math.abs(cr)), 1);
   if (cr < 0){ toyUnder(b.w, b.h, b.key === 'police' ? '#f7f7f4' : (b.color || '#cfd6dd')); if (b.fire > 0){ ctx.fillStyle = (t*14|0) % 2 ? '#ff8a3d' : '#ffc83d'; circle((Math.random()-0.5)*4, -b.h*0.15, 3 + Math.random()*3); } ctx.restore(); return; }
-  drawVehicle(b.key, b.w, b.h, b.color);
-  if (!NO_GLOSS[b.key]) toyGloss(b.w, b.h);
+  carSprite(b);
   if (b.brk > 0 && b.state === 'drive'){ ctx.fillStyle = '#ff2d2d'; ctx.fillRect(-b.w*0.42, b.h/2 - 3, b.w*0.22, 3); ctx.fillRect(b.w*0.2, b.h/2 - 3, b.w*0.22, 3); }
   if (b.boss && b.state === 'drive'){
     if (b.boss.mode === 'rev' || b.boss.mode === 'charge'){ ctx.fillStyle = 'rgba(255,246,194,0.45)'; circle(-b.w*0.34, -b.h/2 - 4, 6); circle(b.w*0.34, -b.h/2 - 4, 6); }
@@ -3527,6 +3743,36 @@ function rubble(x, y, w, h, col, sg, seed, big){
     ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fillRect(-bw/2, -bh/2, bw, 1.5); ctx.fillStyle = 'rgba(0,0,0,0.16)'; ctx.fillRect(-bw/2, bh/2 - 1.5, bw, 1.5);
     ctx.restore();
   }
+}
+/* ground cache (11/17 しょーくん「フレームレート落ちた？ 家1軒1軒描写してない？」): the road, the roadside, the buildings and the ice never move,
+   so they are painted once into tall strips (GC_H world units, at up to 2x pixels) and each frame only stamps the strips on screen.
+   A strip is painted again when its building breaks (gcDirty), when the screen size or scale changes, and for a new run */
+const GC_H = 224, GC_PAD = 2, GC = {strips: new Map(), x0: 0, x1: 0, ps: 0};
+function gcReset(){ GC.strips.clear(); GC.ps = 0; }
+function gcDirty(y){ for (const yy of [y - 8, y + 64]){ const c = GC.strips.get(Math.floor(yy / GC_H)); if (c) c.dirty = true; } }
+function gcPaint(i, c){
+  const g = c.getContext('2d'), saved = ctx;
+  ctx = g; ctx.setTransform(GC.ps, 0, 0, GC.ps, -GC.x0 * GC.ps, -(i * GC_H - GC_PAD) * GC.ps);
+  try { drawGround(i * GC_H - GC_PAD, (i + 1) * GC_H + GC_PAD, GC.x0, GC.x1); } finally { ctx = saved; }
+  c.dirty = false;
+}
+function groundStamp(top, bot, left, right){
+  const ps = s * DPR;
+  if (ps !== GC.ps || left < GC.x0 || right > GC.x1){   // a new scale or a wider view: start the strips again, a little wider than needed
+    const m = Math.max(Math.abs(left), Math.abs(right)) + 60; GC.strips.clear(); GC.ps = ps; GC.x0 = -m; GC.x1 = m;
+  }
+  const i0 = Math.floor(top / GC_H), i1 = Math.floor(bot / GC_H);
+  let painted = 0;
+  for (let i = i0; i <= i1; i++){
+    let c = GC.strips.get(i);
+    if (!c){ c = document.createElement('canvas'); c.width = Math.ceil((GC.x1 - GC.x0) * ps); c.height = Math.ceil((GC_H + GC_PAD * 2) * ps); GC.strips.set(i, c); gcPaint(i, c); painted++; }
+    else if (c.dirty){ gcPaint(i, c); painted++; }
+    ctx.drawImage(c, GC.x0, i * GC_H - GC_PAD, GC.x1 - GC.x0, GC_H + GC_PAD * 2);
+  }
+  // paint the next strip ahead on a quiet frame, so a new strip rarely costs a frame of its own
+  if (!painted && !GC.strips.has(i0 - 1)){ const c = document.createElement('canvas'); c.width = Math.ceil((GC.x1 - GC.x0) * ps); c.height = Math.ceil((GC_H + GC_PAD * 2) * ps); GC.strips.set(i0 - 1, c); gcPaint(i0 - 1, c); }
+  // strips left behind (below the screen) are dropped; at most a screen and a half is kept
+  for (const k of GC.strips.keys()) if (k > i1 + 1 || k < i0 - 2) GC.strips.delete(k);
 }
 function drawGround(top, bot, left, right){
   const STEP = 24;
@@ -3631,6 +3877,9 @@ function drawGround(top, bot, left, right){
     ctx.strokeStyle = 'rgba(255,255,255,0.9)'; ctx.lineWidth = 2; ctx.beginPath();
     ctx.moveTo(p.x - p.w*0.3, p.y + p.h*0.2); ctx.lineTo(p.x - p.w*0.05, p.y - p.h*0.15); ctx.moveTo(p.x + p.w*0.05, p.y + p.h*0.3); ctx.lineTo(p.x + p.w*0.3, p.y - p.h*0.05); ctx.stroke();
   }
+}
+/* the moving or changing part of the ground (crossing gates, stations, works lamps, start and goal lines): drawn every frame */
+function drawGroundLive(top, bot, left, right){
   drawFeatures(top, bot, left, right);
   drawWorks(top, bot);
   ctx.fillStyle = '#f2f4f0'; ctx.fillRect(-AREAS[0].half, 24, AREAS[0].half, 5);
@@ -3803,11 +4052,13 @@ function draw(){
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   if (!P || !W){ ctx.fillStyle = '#17324d'; ctx.fillRect(0, 0, W, H); return; }
   const k = reduceMotion ? 0 : shake, ox = (Math.random() - 0.5) * k, oy = (Math.random() - 0.5) * k;
-  vZm = 1 + 0.12 * zoomK; vZx = camX; vZy = camY;  // lean in around your own car: the view never pans toward the crash, which looked like a swipe
+  const fxOn = !reduceMotion && !window.__NOFX;
+  vZm = (1 + 0.12 * zoomK) * (fxOn ? 1 - FLOW_ZOOM * flowK : 1); vZx = camX; vZy = camY;  // lean in around your own car on a big crash (the view never pans toward it); pull back a little in full-speed flow
   const ca = DPR*s*vZm, ce = DPR*(W/2 - vZx*s*vZm + ox), cf = DPR*(H*ANCHOR - vZy*s*vZm + oy);
   ctx.setTransform(ca, 0, 0, ca, ce, cf);
-  const top = worldTop() - 20, bot = worldBottom() + 20, left = camX - W/(2*s) - 20, right = camX + W/(2*s) + 20;
-  drawGround(top, bot, left, right);
+  const sz = s*vZm, top = camY - H*ANCHOR/sz - 20, bot = camY + H*(1 - ANCHOR)/sz + 20, left = camX - W/(2*sz) - 20, right = camX + W/(2*sz) + 20;
+  groundStamp(top, bot, left, right);
+  drawGroundLive(top, bot, left, right);
   veilFar(top, bot, left, right);
   if (heli){ ctx.fillStyle = 'rgba(255,240,170,0.16)'; circle(P.x, P.y, 34); ctx.fillStyle = 'rgba(18,28,38,0.2)'; ellipse(heli.x + 18, heli.y + 26, 14, 18); }
   for (const dr of drums){
@@ -3835,6 +4086,21 @@ function draw(){
     ctx.fillStyle = `rgba(255,${90 + i*20},40,${0.34 - i*0.048})`; rr(-P.w/2, -P.h/2, P.w, P.h, Math.min(P.w, P.h)*0.3); ctx.fill();
   }
   if (trail.length) ctx.setTransform(ca, 0, 0, ca, ce, cf);
+  if (flowK > 0.05 && !boosting && fxOn && P.state === 'drive'){ // full-speed flow: tapered streaks of light off the back corners of your car (21回目 しょーくん「先細りの光の筋」)
+    const L = 22 + 54*flowK, bend = -P.vx * 0.06, y0 = P.y + P.h*0.34;
+    for (const sg of [-1, 1]){
+      const x0 = P.x + sg*(P.w/2 - 1.5), hw = 1.5 + 1.7*flowK, tx = x0 + sg*2.5 + bend, ty = y0 + L*(0.9 + 0.1*Math.sin(t*17 + sg*1.7));
+      const gr = ctx.createLinearGradient(x0, y0, tx, ty);
+      gr.addColorStop(0, `rgba(255,255,255,${0.2 + 0.7*flowK})`); gr.addColorStop(0.3, `rgba(220,242,255,${0.55*flowK})`); gr.addColorStop(1, 'rgba(220,242,255,0)');
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(x0 - hw, y0);
+      ctx.quadraticCurveTo(x0 - hw*0.5 + bend*0.35, y0 + L*0.5, tx, ty); ctx.quadraticCurveTo(x0 + hw*0.5 + bend*0.35, y0 + L*0.5, x0 + hw, y0); ctx.closePath(); ctx.fill();
+    }
+    if (flowK > 0.55){ // second stage: a soft wake of air in the middle, wider and fainter
+      const w = P.w*0.34, k = (flowK - 0.55) / 0.45, tx = P.x + bend*1.2, ty = y0 + L*1.15, gr = ctx.createLinearGradient(P.x, y0, tx, ty);
+      gr.addColorStop(0, `rgba(255,255,255,${0.32*k})`); gr.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.moveTo(P.x - w, y0); ctx.quadraticCurveTo(P.x - w*0.4 + bend*0.4, y0 + L*0.6, tx, ty); ctx.quadraticCurveTo(P.x + w*0.4 + bend*0.4, y0 + L*0.6, P.x + w, y0); ctx.closePath(); ctx.fill();
+    }
+  }
   if (state === 'play' && !boosting && boost >= 100){ // full nitro: pulsing aura on your car
     const r = 26 + 4*Math.sin(t*9);
     ctx.fillStyle = 'rgba(255,90,54,0.18)'; circle(P.x, P.y, r);
@@ -3883,9 +4149,29 @@ function draw(){
       if (snow) circle(x, y, 1.5 + rnd(i*3)*2); else ctx.fillRect(x, y, 14 + rnd(i*5)*16, 2);
     }
   }
+  if (flowK > 0.03 && !boosting && fxOn){ // full-speed flow: speed lines rushing down the sides of the screen (more at the second stage)
+    // tapered streaks (a bright head fading back to nothing, a soft navy edge so they read on the light town) that rush out from a point
+    // above the screen along the sides — they grow as they come closer, like a real sense of speed
+    if (!streakImg) streakImg = makeStreak();
+    const n = Math.round(6 + 18*flowK), vx0 = W/2, vy0 = -H*0.9, a = Math.min(1, 0.4 + 0.55*flowK + (flowPulse > 0 ? flowPulse*1.2 : 0)), band = W*(0.2 + 0.12*flowK);
+    for (let i = 0; i < n; i++){
+      // each streak runs on a line from the point above toward a spot along the bottom edge's side band, and crosses the whole screen on it
+      const sg = i % 2 ? 1 : -1, xb = vx0 + sg*(W/2 - rnd(i*29 + 3)*band), dyb = H*1.05 - vy0, ang = Math.atan2(dyb, xb - vx0), sn = Math.sin(ang);
+      const d0 = (-60 - vy0) / sn, d1 = (H + 60 - vy0) / sn, p = (t*(0.9 + rnd(i*5)*0.6) + rnd(i*17)) % 1, d = d0 + (d1 - d0)*p;
+      const x = vx0 + Math.cos(ang)*d, y = vy0 + sn*d;
+      const len = (60 + 130*p) * (0.6 + 0.6*flowK) * (0.7 + 0.6*rnd(i*11)), lw = (5 + 8*p) * (i % 3 ? 0.75 : 1), th = ang - Math.PI/2, co = Math.cos(th), si = Math.sin(th);
+      ctx.globalAlpha = a * Math.min(1, p*6, (1 - p)*8) * (0.6 + 0.4*rnd(i*7));
+      ctx.setTransform(DPR*co, DPR*si, -DPR*si, DPR*co, DPR*x, DPR*y); ctx.drawImage(streakImg, -lw/2, -len, lw, len);
+    }
+    ctx.globalAlpha = 1; ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    if (flowK > 0.55){ // second stage: the sides of the screen glow like a wind tunnel
+      if (!flowGlow || flowGlow.w !== W){ const g = ctx.createLinearGradient(0, 0, W, 0); g.addColorStop(0, 'rgba(255,255,255,0.55)'); g.addColorStop(0.12, 'rgba(255,255,255,0)'); g.addColorStop(0.88, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(255,255,255,0.55)'); flowGlow = {w:W, g}; }
+      ctx.globalAlpha = (flowK - 0.55) / 0.45 * (0.75 + 0.25*Math.sin(t*11)); ctx.fillStyle = flowGlow.g; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1;
+    }
+  }
   if (boosting && !reduceMotion){
-    for (let i = 0; i < 18; i++){
-      const x = rnd(i*31 + 7)*W, len = 60 + rnd(i*13)*90, y = ((t*1500 + rnd(i*17)*(H + 300)) % (H + 300)) - 150;
+    for (let i = 0; i < 28; i++){   // 21回目: more and longer than the flow lines — nitro is the top of the scale
+      const x = rnd(i*31 + 7)*W, len = 80 + rnd(i*13)*140, y = ((t*(1700 + rnd(i*3)*700) + rnd(i*17)*(H + 340)) % (H + 340)) - 170;
       ctx.strokeStyle = i % 3 ? 'rgba(255,255,255,0.45)' : 'rgba(255,138,61,0.75)'; ctx.lineWidth = i % 4 ? 2 : 3.5;
       ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y + len); ctx.stroke();
     }
@@ -3939,6 +4225,7 @@ const ICONS = {
   eng:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 2 4.5 13.5h6L9.5 22l9-11.5h-6z"/></svg>',
   body:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 4 5.2v6.1c0 5 3.4 9.3 8 10.7 4.6-1.4 8-5.7 8-10.7V5.2z"/></svg>',
   boost:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.6 2c.6 3.6 5.4 6 5.4 11.3a6 6 0 0 1-12 .3c0-2.6 1.3-4.4 2.7-5.6-.1 2.3.9 3.6 2.2 3.9-.4-3.6-.1-7 1.7-9.9z"/></svg>',
+  ram:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.4 5.2 5.6-1.4-2.6 5.2 4.6 3.4-5.7.6.3 5.8L12 17.8l-4.6 3 .3-5.8-5.7-.6 4.6-3.4L4 5.8l5.6 1.4z"/></svg>',
 };
 const pipsHtml = (n, max) => Array.from({length:max}, (_, i) => `<i class="${i < n ? 'on' : ''}"></i>`).join('');
 /* the shop's car pictures reuse the game's own toy-car drawing */
@@ -4072,12 +4359,16 @@ function renderPanel(){
     }).join('') + `</ul><p class="gnote">金のしるし ${gold} / ${CARS.length}・Sランクでつく</p>`;
     p.querySelectorAll('.tile').forEach(b => { const i = +b.dataset.i; carPic(b.querySelector('canvas'), CARS[i], isSil(carState(i))); });
   } else if (gTab === 'up'){
-    const U = save.up[save.car];
-    p.innerHTML = `<p class="for"><b>${car().name}</b> の強化</p><ul class="ups">` + UPGRADES.map(it => {
-      const lv = U[it.key] || 0, max = it.prices.length, price = upPrice(it, lv, save.car);
-      const btn = price === null ? '<button type="button" class="act now" data-act="none">さいだい</button>' : `<button type="button" class="act ${save.money >= price ? 'buy' : ''}" data-act="up" data-k="${it.key}">${fmt(price)}</button>`;
-      return `<li class="up"><span class="ic ${it.key}">${ICONS[it.key]}</span><div class="up-t"><b>${it.name}</b><span class="pips" role="img" aria-label="レベル ${lv} / ${max}">${pipsHtml(lv, max)}</span><small>${it.desc(lv).replace(/^(\S+) (.+)$/, '$1 <span class="nw">$2</span>')}</small></div>${btn}</li>`;
-    }).join('') + '</ul>' + nowStats();
+    // the tuning bay: buy points (dots), spread them with ± (one stat full + 2 more at most), move them again for free
+    const ci = save.car, U = save.up[ci], pts = save.pts[ci] || 0, used = ptUsed(ci), free = pts - used, price = ptPrice(pts, ci);
+    const dots = Array.from({length:PT_MAX}, (_, i) => `<i class="${i < used ? 'used' : i < pts ? 'free' : ''}"></i>`).join('');
+    const buy = price === null ? '<button type="button" class="act now" data-act="none" disabled>さいだい</button>' : `<button type="button" class="act ${save.money >= price ? 'buy' : ''}" data-act="pt-buy">ポイント<b>${fmt(price)}</b></button>`;
+    p.innerHTML = `<div class="bay"><canvas id="bayCv" role="img" aria-label="${car().name}"></canvas></div>` +
+      `<div class="ptbar"><span class="pts" role="img" aria-label="ポイント ${used} / ${pts}">${dots}</span>${buy}<button type="button" class="act respec" data-act="respec" aria-label="ふりなおし"${used ? '' : ' disabled'}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v4.5h4.5"/></svg></button></div>` +
+      '<ul class="ups">' + UPGRADES.map(it => { const lv = U[it.key] || 0;
+        return `<li class="up${lv >= STAT_MAX ? ' full' : ''}" data-k="${it.key}"><span class="ic ${it.key}">${ICONS[it.key]}</span><div class="up-t"><b>${it.name}</b><span class="pips" role="img" aria-label="レベル ${lv} / ${STAT_MAX}">${pipsHtml(lv, STAT_MAX)}</span><small>${it.desc(lv)}</small></div>` +
+          `<span class="pm"><button type="button" class="sub" data-act="st-sub" data-k="${it.key}" aria-label="${it.name}を下げる"${lv ? '' : ' disabled'}>−</button><button type="button" data-act="st-add" data-k="${it.key}" aria-label="${it.name}を上げる"${free > 0 && lv < STAT_MAX ? '' : ' disabled'}>＋</button></span></li>`; }).join('') + '</ul>' + nowStats();
+    drawBay($('bayCv'), car());
   } else if (gTab === 'mis'){
     const T = save.towns[ti], open = townOpen(ti), D = dailyState();
     const row = (done, text, c, lock) => `<li class="${done ? 'done' : lock ? 'lock' : ''}"><i>${done ? '✓' : ''}</i><span>${text}</span><em>${done ? '' : '+' + fmt(c)}</em></li>`;
@@ -4092,12 +4383,49 @@ function renderPanel(){
   }
   fadeMore(p);
 }
+/* the tuning bay picture: a toy garage (pegboard with tools, a tiled floor, hazard stripes, a lift) with the car on it, nose to the right */
+function drawBay(cv, C){
+  if (!cv) return;
+  const dpr = Math.min(3, window.devicePixelRatio || 1), w = cv.clientWidth || 300, h = cv.clientHeight || 118;
+  cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+  const main = ctx; ctx = cv.getContext('2d');
+  try {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = '#3a4352'; ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = 'rgba(255,255,255,0.05)'; for (let x = 14; x < w; x += 28) ctx.fillRect(x, 22, 1, h);
+    ctx.fillStyle = '#d9a86c'; ctx.fillRect(0, 0, w, 22); ctx.fillStyle = 'rgba(0,0,0,0.18)'; ctx.fillRect(0, 21, w, 2);
+    ctx.fillStyle = 'rgba(90,55,25,0.35)'; for (let x = 6; x < w; x += 12) circle(x, 6, 1.1);
+    const tool = (x, k) => { ctx.fillStyle = k ? '#c9ced6' : '#9aa3ad';
+      if (k === 0){ rr(x - 2, 6, 4, 13, 2); ctx.fill(); circle(x, 6, 4); ctx.fillStyle = '#d9a86c'; circle(x, 4.5, 1.8); }       // wrench
+      else if (k === 1){ ctx.fillStyle = '#a0522d'; rr(x - 1.5, 8, 3, 12, 1); ctx.fill(); ctx.fillStyle = '#9aa3ad'; rr(x - 6, 5, 12, 4, 1.5); ctx.fill(); }   // hammer
+      else { ctx.fillStyle = '#e8735a'; rr(x - 2.5, 5, 5, 7, 2); ctx.fill(); ctx.fillStyle = '#c9ced6'; ctx.fillRect(x - 0.8, 12, 1.6, 8); } };   // screwdriver
+    [0.1, 0.2, 0.8, 0.9].forEach((f, i) => tool(w * f, i % 3));
+    for (let x = -10, i = 0; x < w + 10; x += 12, i++){ ctx.fillStyle = i % 2 ? '#20242c' : '#ffd24a'; ctx.beginPath(); ctx.moveTo(x, h); ctx.lineTo(x + 6, h - 8); ctx.lineTo(x + 18, h - 8); ctx.lineTo(x + 12, h); ctx.fill(); }
+    const cy = 22 + (h - 30) / 2, k = Math.min((h - 46) / C.w, (w * 0.6) / C.h, 3.4);
+    ctx.fillStyle = '#5c6470'; rr(w/2 - C.h*k*0.42, cy - C.w*k*0.62, C.h*k*0.16, C.w*k*1.24, 3); ctx.fill(); rr(w/2 + C.h*k*0.26, cy - C.w*k*0.62, C.h*k*0.16, C.w*k*1.24, 3); ctx.fill();
+    ctx.setTransform(dpr*k, 0, 0, dpr*k, dpr*w/2, dpr*cy); ctx.rotate(Math.PI / 2);
+    shadowBox(C.w, C.h, 3, 4); drawVehicle(C.key, C.w, C.h, C.color); if (!NO_GLOSS[C.key]) toyGloss(C.w, C.h);
+  } finally { ctx = main; }
+}
+// the car rattles (or bounces on the lift) and a few sparks fly while it is being tuned
+function bayFx(kind){
+  let cv = $('bayCv'); if (RM()) return;
+  if (!cv || !cv.offsetParent) cv = $('hero') && $('hero').querySelector('.pic');   // iPad landscape: the car card stands in for the bay
+  if (!cv) return;
+  fxRestart(cv, kind === 'lift' ? 'fxlift' : 'fxrattle');
+  if (kind === 'lift' || cv.id !== 'bayCv') return;
+  const bay = cv.parentElement, r = bay.getBoundingClientRect();
+  for (let i = 0; i < 6; i++){ const e = document.createElement('i'); e.className = 'spk';
+    const a = Math.random() * Math.PI * 2, d = 26 + Math.random() * 34;
+    e.style.cssText = `left:${r.width/2 + (Math.random() - 0.5) * r.width * 0.4}px;top:${r.height*0.55 + (Math.random() - 0.5) * 30}px;--dx:${Math.cos(a)*d}px;--dy:${Math.sin(a)*d - 10}px;background:${i % 3 ? '#ffd24a' : '#ffffff'}`;
+    bay.appendChild(e); setTimeout(() => e.remove(), 560); }
+}
 /* the riding car as it is now, upgrades included (same numbers the run uses) */
 function nowStats(){
-  const C = car(), spd = C.speed + 16 * upLv('eng');
+  const C = car(), spd = C.speed + 16 * upLv('eng');  // the four tuned stats, as the run uses them
   const st = (k, v, u) => `<li><span>${k}</span><b>${v}${u ? `<small>${u}</small>` : ''}</b></li>`;
   return `<section class="mis-sec now"><h3>いまの性能 <small>強化こみ</small></h3><ul class="stats">` +
-    st('はやさ', kmh(spd), 'km/h') + st('ニトロ中', kmh(spd * boostPow()), 'km/h') + st('ボディ', Math.round(C.hp * (1 + 0.25 * upLv('body')))) + st('たまりやすさ', '+' + 30 * upLv('boost'), '%') + '</ul></section>';
+    st('はやさ', kmh(spd), 'km/h') + st('ボディ', Math.round(C.hp * (1 + 0.25 * upLv('body')))) + st('ニトロ', '+' + 18 * upLv('boost'), '%') + st('体当たり', '+' + 10 * upLv('ram'), '%') + '</ul></section>';
 }
 /* title hints wrap only between phrases (after a particle, before a number), so 「20台」 or 「追っ手」 never split */
 function phrases(t){
@@ -4133,10 +4461,6 @@ function renderTown(){
 }
 function renderGarage(){
   $('gMoney').textContent = fmt(save.money);
-  const have = save.owned.filter(Boolean).length, D = dailyState(), today = todayMis().filter(m => D.done[m.id]).length;
-  const U = save.up[save.car], lv = (U.eng || 0) + (U.body || 0) + (U.boost || 0);
-  $('tcCar').textContent = `${have}/${CARS.length}`; $('tcUp').textContent = `${lv}/13`; $('tcMis').textContent = `今日 ${today}/3`;
-  $('tcTitle').textContent = `${TITLES.filter(T => save.titles[T.id]).length}/${TITLES.length}`;
   for (const b of $('gTabs').children) b.setAttribute('aria-selected', String(b.dataset.tab === gTab));
   document.body.classList.remove('gt-car', 'gt-up', 'gt-mis', 'gt-title'); document.body.classList.add('gt-' + gTab);
   renderHero(); renderPanel(); renderTown(); fadeMore($('gPanel'));
@@ -4342,12 +4666,17 @@ $('tutNext').addEventListener('click', () => { if (performance.now() - tutAt < 4
 $('tutSkip').addEventListener('click', () => { if (performance.now() - tutAt < 400) return; snd('tap'); const go = !tutThen; endTut(); if (go) fxGo(); });
 $('openTut').addEventListener('click', () => { snd('tap'); closeOv('setOv'); showTut(() => {}); });
 
-/* title: the logo stamps on, then the run starts by itself (a tap skips ahead); the very first time, the picture cards come first */
-let titleTimer = 0;
+/* title: the logo stamps on and waits for a tap (11/17 しょーくん「いきなりゲームが始まるとビビる」); the very first time, the picture cards come first */
+let titleTimer = 0, titleGo = false;
 function showTitle(){
-  state = 'title';
+  state = 'title'; titleGo = false;
   const el = $('title'); el.classList.remove('out'); el.hidden = false;
-  titleTimer = setTimeout(() => { el.classList.add('out'); titleTimer = setTimeout(endTitle, 300); }, reduceMotion ? 1000 : 1500);
+}
+function leaveTitle(){
+  if (state !== 'title' || titleGo) return;
+  titleGo = true; snd('tap');
+  if (RM()) return endTitle();
+  $('title').classList.add('out'); titleTimer = setTimeout(endTitle, 300);
 }
 function endTitle(){ if (state !== 'title') return; clearTimeout(titleTimer); if (!save.tutDone){ $('title').hidden = true; showTut(null); return; } startRun(); }
 /* iOS: a quick second tap must not open the text loupe or zoom, a pinch must not zoom, a long press must not open a menu (11/17 しょーくん「ダブルタップしたら虫眼鏡」) */
@@ -4355,7 +4684,7 @@ function endTitle(){ if (state !== 'title') return; clearTimeout(titleTimer); if
   document.addEventListener('touchend', e => { const now = performance.now(); if (now - lastEnd < 400 && e.cancelable && !e.target.closest('button, .panel, .r-gain')) e.preventDefault(); lastEnd = now; }, {passive:false});
   for (const ev of ['dblclick', 'gesturestart', 'gesturechange', 'contextmenu', 'selectstart']) document.addEventListener(ev, e => { if (e.cancelable) e.preventDefault(); }, {passive:false});
 }
-$('title').addEventListener('pointerdown', e => { e.preventDefault(); endTitle(); });
+$('title').addEventListener('pointerdown', e => { e.preventDefault(); leaveTitle(); });
 
 /* ---------- input ---------- */
 cvs.addEventListener('pointerdown', e => {
@@ -4377,7 +4706,7 @@ const endDrag = e => {
 cvs.addEventListener('pointerup', endDrag); cvs.addEventListener('pointercancel', endDrag);
 const keyOf = e => e.key && e.key.length === 1 ? e.key.toLowerCase() : e.key;  // P / A / D work with Shift or Caps Lock too
 window.addEventListener('keydown', e => {
-  if (state === 'title'){ e.preventDefault(); endTitle(); return; }
+  if (state === 'title'){ e.preventDefault(); leaveTitle(); return; }
   if (state === 'tut'){ if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight'){ e.preventDefault(); $('tutNext').click(); } return; }
   const k = keyOf(e);
   if (k === 'Escape' || k === 'p'){ if (state === 'play') pauseGame(); else if (state === 'pause') resumeGame(); return; }
@@ -4427,15 +4756,25 @@ $('garage').addEventListener('click', e => {
   else if (act === 'buy'){ const c = CARS[hi]; if (save.owned[hi] || save.money < c.price) return; save.money -= c.price; save.owned[hi] = true; save.car = hi; writeSave(); snd('buy'); toast(`${c.name}を買った`); renderGarage(); fxGot(hi, true); fxCount($('gMoney'), save.money, m0); }
   else if (act === 'short'){ snd('denied'); toast(`あと ${fmt(CARS[hi].price - save.money)} コイン`); fxRestart(a, 'fxshake'); }
   else if (act === 'need'){ snd('denied'); toast(`称号「${titleName(CARS[hi].need)}」で解禁`); fxRestart(a, 'fxshake'); }
-  else if (act === 'up'){
-    const it = UPGRADES.find(u => u.key === a.dataset.k), U = save.up[save.car], lv = U[it.key] || 0, price = upPrice(it, lv, save.car);
+  else if (act === 'pt-buy'){   // one more point for this car
+    const ci = save.car, n = save.pts[ci] || 0, price = ptPrice(n, ci);
     if (price === null) return;
     if (save.money < price){ snd('denied'); toast(`あと ${fmt(price - save.money)} コイン`); fxRestart(a, 'fxshake'); return; }
-    save.money -= price; U[it.key] = lv + 1; writeSave(); snd('upgrade'); renderGarage();
-    if (!RM()){ const li = $('gPanel').querySelectorAll('.up')[UPGRADES.indexOf(it)];
-      if (li){ fxRestart(li, 'fxbuy'); fxRestart(li.querySelectorAll('.pips i.on')[lv], 'fxpop'); }
-      const st = $('gPanel').querySelectorAll('.stats li'); ({eng:[0, 1], body:[2], boost:[3]})[it.key].forEach(k => fxRestart(st[k], 'fxpick'));
-      fxCount($('gMoney'), save.money, m0); }
+    save.money -= price; save.pts[ci] = n + 1; writeSave(); snd('ptBuy'); renderGarage();
+    if (!RM()){ fxRestart($('gPanel').querySelectorAll('.pts i')[n], 'fxpop'); bayFx('lift'); fxCount($('gMoney'), save.money, m0); }
+  }
+  else if (act === 'st-add' || act === 'st-sub'){   // move one point into or out of a stat
+    const ci = save.car, U = save.up[ci], k = a.dataset.k, lv = U[k] || 0, add = act === 'st-add';
+    if (add ? (lv >= STAT_MAX || ptUsed(ci) >= (save.pts[ci] || 0)) : lv <= 0) return;
+    U[k] = lv + (add ? 1 : -1); writeSave(); snd(!add ? 'unbolt' : U[k] >= STAT_MAX ? 'statMax' : 'ratchet'); renderGarage();
+    const row = $('gPanel').querySelector(`.up[data-k="${k}"]`);
+    if (!RM() && row){ fxRestart(row, add && U[k] >= STAT_MAX ? 'fxbuy' : 'fxpick'); if (add) fxRestart(row.querySelectorAll('.pips i.on')[lv], 'fxpop'); bayFx('rattle');
+      fxRestart($('gPanel').querySelectorAll('.stats li')[{eng:0, body:1, boost:2, ram:3}[k]], 'fxpick'); }
+  }
+  else if (act === 'respec'){   // all points back to the pool (free)
+    const ci = save.car; if (!ptUsed(ci)) return;
+    for (const it of UPGRADES) save.up[ci][it.key] = 0; writeSave(); snd('respec'); renderGarage();
+    if (!RM()){ bayFx('rattle'); tilesIn($('gPanel'), '.pts i'); }
   }
 });
 $('townPrev').addEventListener('click', () => { if (garageFresh()) return; save.town = (save.town + TOWNS.length - 1) % TOWNS.length; writeSave(); snd('tap'); renderTown(); if (gTab === 'mis'){ renderPanel(); fxIn($('gPanel'), -1); } fxIn($('town').children[1], -1, true); });
@@ -4475,7 +4814,7 @@ function frame(ts){
   if (slowCool > 0) slowCool -= dt;
   // the close-up rises during the hit-stop, holds, and is back to normal by the end of the slow motion, so nothing slides when full speed returns (11/17)
   zoomK += ((hitStopT > 0 ? 1 : slowMoT > 0 ? Math.min(1, slowMoT / 0.2) : 0) - zoomK) * Math.min(1, dt * 16);
-  if (state === 'play' || state === 'ending'){ if (gdt > 0) update(gdt); draw(); if (state === 'play'){ hud(dt); tickHint(dt); sndDo(R => R.engine(Math.min(1.6, -P.vy / 150), boosting)); } }
+  if (state === 'play' || state === 'ending'){ if (gdt > 0) update(gdt); draw(); if (state === 'play'){ hud(dt); tickHint(dt); sndDo(R => R.engine(Math.min(1.6, -P.vy / 150), boosting, flowK)); } }
   requestAnimationFrame(frame);
 }
 /* local test hook (only when the file is opened from disk, never on the published page): an autopilot that dodges traffic, for balance runs */

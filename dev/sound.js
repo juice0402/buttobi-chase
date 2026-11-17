@@ -675,6 +675,31 @@
       for (i = 0; i < 5; i++) blip(v, t + i * 0.055, fs[i], 0.12, 0.09, 'square');
       blip(v, t, 300, 0.07, 0.35, 'triangle', 1400); bell(v, t + 0.28, 2093, 0.18, 0.5);
     },
+    // tuning bay (11/17): a ratchet's ガチャガチャ when a point goes in, a looser one when it comes out, a ding at a full stat,
+    // a till for a new point, and a tool clatter when all points come back
+    ratchet: function (v) {
+      var t = v.t, i;
+      for (i = 0; i < 6; i++) { var s = t + i * 0.045, k = rnd(0.92, 1.08); nz(v, s, 0.025, 0.32, 'highpass', 3600 * k, 0.9, 0.001); metal(v, s, [1180, 1870, 2650], 0.05, 0.05, 'square', k); }
+      thump(v, t + 0.27, 210, 90, 0.08, 0.3);
+    },
+    unbolt: function (v) {
+      var t = v.t, i;
+      for (i = 0; i < 4; i++) { var s = t + i * 0.06, k = rnd(0.9, 1.1); nz(v, s, 0.03, 0.26, 'bandpass', 2200 * k, 1.1, 0.001); metal(v, s, [780, 1240], 0.04, 0.06, 'square', k); }
+    },
+    statMax: function (v) {
+      var t = v.t; SE.ratchet(v);
+      bell(v, t + 0.3, 1568, 0.2, 0.5); bell(v, t + 0.38, 2349, 0.18, 0.6); blip(v, t + 0.3, 784, 0.1, 0.12, 'square');
+    },
+    ptBuy: function (v) {
+      var t = v.t; thump(v, t, 160, 70, 0.1, 0.32); nz(v, t + 0.02, 0.06, 0.22, 'highpass', 2800, 0.7);
+      bell(v, t + 0.06, 2093, 0.22, 0.45); bell(v, t + 0.06, 2637, 0.14, 0.5); blip(v, t + 0.14, 1047, 0.1, 0.1, 'square');
+    },
+    respec: function (v) {
+      var t = v.t, i;
+      var f = nz(v, t, 0.35, 0.3, 'bandpass', 2600, 1.1); f.frequency.setValueAtTime(2600, t); f.frequency.exponentialRampToValueAtTime(500, t + 0.3);
+      for (i = 0; i < 5; i++) { var s = t + 0.05 + i * 0.05 + rnd(0, 0.02), k = rnd(0.8, 1.2); metal(v, s, [640, 1020, 1530], 0.05, 0.12, 'square', k); }
+      thump(v, t + 0.3, 140, 60, 0.12, 0.34);
+    },
     denied: function (v) {
       for (var i = 0; i < 2; i++) {
         var s = v.t + i * 0.13, g = G(v, v.out), fl = F(v, 'lowpass', 900, 1, g);
@@ -748,6 +773,18 @@
       var t = v.t, fs = [1319, 1661, 1976, 2637, 3322], i;
       for (i = 0; i < 5; i++) bell(v, t + i * 0.045, fs[i], 0.13, 0.28);
       nz(v, t, 0.45, 0.07, 'highpass', 7000, 0.7, 0.05);
+    },
+    // full-speed flow (21回目): an airy "ヒュオッ" each time the speed lines step up a stage (a = the stage, 1 or 2)
+    whoosh: function (v, a) {
+      var t = v.t, k = clamp(Math.round(+a || 1), 1, 2), f = nz(v, t, 0.6, 0.3, 'bandpass', 420, 1.3, 0.14);
+      f.frequency.setValueAtTime(420, t); f.frequency.exponentialRampToValueAtTime(2200 * k, t + 0.45);
+      if (k >= 2) { bell(v, t + 0.16, 1760, 0.045, 0.32); bell(v, t + 0.22, 2637, 0.035, 0.3); }
+    },
+    // nitro shockwave (21回目): a deep ドォン with a crumbling rush, played with the nitro start and when nitro smashes the roadside
+    shock: function (v, a) {
+      var t = v.t, k = clamp(+a || 1, 0.3, 1); thump(v, t, 72, 28, 0.55, 0.8 * k);
+      var f = nz(v, t, 0.65, 0.42 * k, 'lowpass', 2600, 0.8, 0.004); f.frequency.setValueAtTime(2600, t); f.frequency.exponentialRampToValueAtTime(150, t + 0.55);
+      nz(v, t + 0.03, 0.28, 0.16 * k, 'highpass', 3200, 0.7, 0.004);
     },
     nitroGo: function (v) {
       var t = v.t; thump(v, t, 85, 42, 0.3, 0.5);
@@ -873,11 +910,11 @@
   };
   // minimum seconds between two plays of the same effect
   var RL = { coin: 0.05, crash: 0.05, near: 0.08, explode: 0.08, bigcrash: 0.1, container: 0.15, train: 0.6, railbell: 0.8,
-    bossIn: 0.6, bossDown: 0.6, nitroGo: 0.2, wall: 0.06, skid: 0.1, ice: 0.08, stamp: 0.1 };
+    bossIn: 0.6, bossDown: 0.6, nitroGo: 0.2, whoosh: 0.3, shock: 0.12, wall: 0.06, skid: 0.1, ice: 0.08, stamp: 0.1 };
   var MAXV = 14;
   // per-effect output trims (balance the bus: effects peak ~0.4-0.85 before the master)
-  var SEG = { tap: 2.5, buy: 1.7, upgrade: 2.2, denied: 1.9, crash: 0.9, explode: 0.85, train: 1.35, railbell: 1.15, wall: 2.4, near: 2.6,
-    nitroReady: 2, nitroGo: 1.4, coin: 3, star: 2.6, warn: 2.1, spike: 0.8, bossIn: 0.85, bossDown: 0.8, bonk: 1.5, heal: 2.8,
+  var SEG = { tap: 2.5, buy: 1.7, upgrade: 2.2, denied: 1.9, ratchet: 2.4, unbolt: 2.4, statMax: 2.2, ptBuy: 1.9, respec: 2.2, crash: 0.9, explode: 0.85, train: 1.35, railbell: 1.15, wall: 2.4, near: 2.6,
+    nitroReady: 2, nitroGo: 1.4, whoosh: 2.2, shock: 1.1, coin: 3, star: 2.6, warn: 2.1, spike: 0.8, bossIn: 0.85, bossDown: 0.8, bonk: 1.5, heal: 2.8,
     busted: 3.5, gomi: 2.8, container: 0.8, ice: 2.8, skid: 4, mission: 2.3, newTitle: 2.1, goal: 1.5, unlockTown: 2.2 };
   var JT = { clear: 1, wreck: 1.6, unlock: 2, stars: 2.5 };
 
@@ -916,16 +953,24 @@
     E.nf = c.createBiquadFilter(); E.nf.type = 'bandpass'; E.nf.frequency.value = 500; E.nf.Q.value = 0.9;
     E.ng = c.createGain(); E.ng.gain.value = 0; E.nf.connect(E.ng); E.ng.connect(E.out);
     E.nz = c.createBufferSource(); E.nz.buffer = g.noise; E.nz.loop = true; E.nz.connect(E.nf);
-    E.o1.start(t); E.o2.start(t); E.lfo.start(t); E.nz.start(t);
+    // wind (21回目): an airy rush that rises while you keep full speed (flow) and roars with nitro, swaying slowly so it breathes
+    E.wf = c.createBiquadFilter(); E.wf.type = 'bandpass'; E.wf.frequency.value = 1200; E.wf.Q.value = 0.7;
+    E.wg = c.createGain(); E.wg.gain.value = 0; E.wf.connect(E.wg); E.wg.connect(E.out);
+    E.wz = c.createBufferSource(); E.wz.buffer = g.noise; E.wz.loop = true; E.wz.connect(E.wf);
+    E.wl = c.createOscillator(); E.wl.frequency.value = 0.4; var wlg = c.createGain(); wlg.gain.value = 380; E.wl.connect(wlg); wlg.connect(E.wf.frequency);
+    E.o1.start(t); E.o2.start(t); E.lfo.start(t); E.nz.start(t); E.wz.start(t, 0.43); E.wl.start(t);
     return E;
   }
-  function engSet(E, sp, bo, now) {
+  function engSet(E, sp, bo, now, fl) {
+    fl = +fl || 0;
     var f = 32 + sp * 50 + (bo ? 16 : 0), tc = 0.07;
     E.o1.frequency.setTargetAtTime(f, now, tc); E.o2.frequency.setTargetAtTime(f * 0.5, now, tc); E.lfo.frequency.setTargetAtTime(f * 0.5, now, tc);
     E.lp.frequency.setTargetAtTime(240 + sp * 650 + (bo ? 1100 : 0), now, 0.08);
     E.out.gain.setTargetAtTime(0.028 + 0.017 * (sp > 1.2 ? 1.2 : sp) + (bo ? 0.02 : 0), now, 0.1);
     E.ng.gain.setTargetAtTime(bo ? 0.55 : 0.05 * sp, now, 0.1);
     E.nf.frequency.setTargetAtTime(bo ? 950 : 420 + sp * 200, now, 0.1);
+    E.wg.gain.setTargetAtTime(bo ? 0.55 : fl * 0.45, now, 0.3);
+    E.wf.frequency.setTargetAtTime(1000 + fl * 1000 + (bo ? 900 : 0), now, 0.3);
   }
   function makeSiren(g) {
     var c = g.ctx, R = { lv: 0, last: -1 }, t = c.currentTime, i;
@@ -1046,15 +1091,15 @@
         }, (J.dur + 2) * 1000);
       } catch (e) {}
     },
-    engine: function (speed, boosting) {
+    engine: function (speed, boosting, flow) {
       try {
         if (!ctx || !st.se || st.muffle) return;
-        var E = G0.eng || (G0.eng = makeEngine(G0)), now = ctx.currentTime, bo = !!boosting, sp = +speed || 0;
-        sp = sp < 0 ? 0 : sp > 1.6 ? 1.6 : sp;
+        var E = G0.eng || (G0.eng = makeEngine(G0)), now = ctx.currentTime, bo = !!boosting, sp = +speed || 0, fl = +flow || 0;
+        sp = sp < 0 ? 0 : sp > 1.6 ? 1.6 : sp; fl = fl < 0 ? 0 : fl > 1 ? 1 : fl;
         if (E.on && now - E.last < 0.05 && now >= E.last) return;
-        if (E.on && bo === E.bo && Math.abs(sp - E.sp) < 0.01) return;
-        E.last = now; E.on = true; E.sp = sp; E.bo = bo;
-        engSet(E, sp, bo, now);
+        if (E.on && bo === E.bo && Math.abs(sp - E.sp) < 0.01 && Math.abs(fl - (E.fl || 0)) < 0.02) return;
+        E.last = now; E.on = true; E.sp = sp; E.bo = bo; E.fl = fl;
+        engSet(E, sp, bo, now, fl);
       } catch (e) {}
     },
     engineOff: function () {
@@ -1102,7 +1147,7 @@
             if (s.nitro && SONGS[id].run) riser(P.S, t0);
           } else if (kind === 'se') { if (!SE.hasOwnProperty(id)) { resolve(new Float32Array(0)); return; } fireSe(g, id, t0, opts.amount); }
           else if (kind === 'jingle') { if (!JING[id]) { resolve(new Float32Array(0)); return; } fireJingle(g, id, t0); }
-          else if (kind === 'engine') { var E = makeEngine(g); engSet(E, clamp(+opts.speed || 1, 0, 1.6), !!opts.boost, t0); }
+          else if (kind === 'engine') { var E = makeEngine(g); engSet(E, clamp(+opts.speed || 1, 0, 1.6), !!opts.boost, t0, clamp(+opts.flow || 0, 0, 1)); }
           else if (kind === 'siren') { var R = makeSiren(g); sirSet(R, clamp(opts.level == null ? 1 : +opts.level, 0, 1), t0); }
           else if (kind === 'mix') { // dev: opts.events = [[seName, time, amount], ...] (+ optional music id with boss/heat/nitro)
             if (SONGS[id]) { var MP = new Player(g, id, t0, s); MP.run(pre + seconds, s); }
