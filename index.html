@@ -2645,13 +2645,13 @@ function rollOver(b){ b.rollTo = (Math.random() < 0.55 ? Math.PI : Math.PI * 2) 
 // the roadside wall a car is next to: blocks fall from there
 function wallBlocks(b, n){ const half = halfAt(Math.max(0, -b.y / M)), sg = Math.sign(b.x) || 1; if (Math.abs(b.x) > half - b.w) blocksFly(sg * (half + 10), b.y, sg, n); }
 // time: hit-stop freezes the world for a few frames, slow motion runs it at 0.3x, and the camera leans in on the crash (real time, see frame())
-let hitStopT = 0, slowMoT = 0, slowCool = 0, zoomK = 0, zoomX = 0, zoomY = 0, vZm = 1, vZx = 0, vZy = 0;
+let hitStopT = 0, slowMoT = 0, slowCool = 0, zoomK = 0, vZm = 1, vZx = 0, vZy = 0;
 function hitStop(sec){ if (!reduceMotion && !window.__NOFX) hitStopT = Math.max(hitStopT, sec); }
 function bigCrash(x, y, force){
   ring(x, y, 44); ring(x, y, 26, '#ffd24a'); shake = Math.max(shake, 9);
   if (reduceMotion || window.__NOFX) return;
   if (slowCool > 0 && !force){ hitStop(0.06); return; }
-  hitStop(0.07); slowMoT = 0.34; slowCool = 2.4; zoomX = x; zoomY = y;
+  hitStop(0.07); slowMoT = 0.34; slowCool = 2.4;
 }
 let toastTimer = 0;
 function banner(text){ const b = $('banner'); b.textContent = text; b.classList.remove('show'); void b.offsetWidth; b.classList.add('show'); }
@@ -3778,7 +3778,7 @@ function draw(){
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   if (!P || !W){ ctx.fillStyle = '#17324d'; ctx.fillRect(0, 0, W, H); return; }
   const k = reduceMotion ? 0 : shake, ox = (Math.random() - 0.5) * k, oy = (Math.random() - 0.5) * k;
-  vZm = 1 + 0.16 * zoomK; vZx = camX + (zoomX - camX) * 0.5 * zoomK; vZy = camY + (zoomY - camY) * 0.5 * zoomK;
+  vZm = 1 + 0.12 * zoomK; vZx = camX; vZy = camY;  // lean in around your own car: the view never pans toward the crash, which looked like a swipe
   const ca = DPR*s*vZm, ce = DPR*(W/2 - vZx*s*vZm + ox), cf = DPR*(H*ANCHOR - vZy*s*vZm + oy);
   ctx.setTransform(ca, 0, 0, ca, ce, cf);
   const top = worldTop() - 20, bot = worldBottom() + 20, left = camX - W/(2*s) - 20, right = camX + W/(2*s) + 20;
@@ -4446,7 +4446,8 @@ function frame(ts){
   if (state !== 'play' && state !== 'ending'){ hitStopT = slowMoT = 0; }
   else if (hitStopT > 0){ hitStopT -= dt; gdt = 0; } else if (slowMoT > 0){ slowMoT -= dt; gdt = dt * 0.3; }
   if (slowCool > 0) slowCool -= dt;
-  zoomK += ((slowMoT > 0 || hitStopT > 0 ? 1 : 0) - zoomK) * Math.min(1, dt * (slowMoT > 0 || hitStopT > 0 ? 12 : 4));
+  // the close-up rises during the hit-stop, holds, and is back to normal by the end of the slow motion, so nothing slides when full speed returns (11/17)
+  zoomK += ((hitStopT > 0 ? 1 : slowMoT > 0 ? Math.min(1, slowMoT / 0.2) : 0) - zoomK) * Math.min(1, dt * 16);
   if (state === 'play' || state === 'ending'){ if (gdt > 0) update(gdt); draw(); if (state === 'play'){ hud(dt); tickHint(dt); sndDo(R => R.engine(Math.min(1.6, -P.vy / 150), boosting)); } }
   requestAnimationFrame(frame);
 }
