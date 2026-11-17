@@ -18,3 +18,4 @@
 - 絵・音・コインのしくみを変えるときは claude/game-art-rule.md（音はコードで作る・運でコインを増やさない）
 - 直したら `node tools/build.mjs` → node --check（ゲームの script）と dev/tests/f1.py・final.py・ko_check.py（倒した種類の数え忘れ）でエラー0を確かめる。`node tools/build.mjs --check` で出口が最新かも見る
 - ライセンスファイルは置かない（著作権はしょーくんのまま）
+- ゲーム工房に出す版は RELEASES.md のいちばん上に足して PR（マージは司令塔）。main に入ると release.yml がタグと Releases を作り、司令塔が工房に取りこむ
