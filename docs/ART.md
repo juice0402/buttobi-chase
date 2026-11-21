@@ -8,7 +8,7 @@
 | assets/title-wide.webp（1600×1200） | A | Canva の AI・2026-11-17 | MAHbJTicZaU（MAHbJJibwyc をもとに横長に描き直し）。窓は同じようにぬり直し | タイトル画面（横） |
 | docs/kobo/icon.png（1024×1024） | A | Canva の AI・2026-11-17 | MAHbJbkNp3U（MAHbJJibwyc をもとに）。こちらで前のマークのあとをぼかした | アイコン（ゲーム工房・あとで App Store） |
 | docs/kobo/cover.png（800×1200） | A＋C | 2026-11-17 | assets/title.webp の上にゲームのロゴ（コードの字・Dela Gothic One）。元は tools/cover/cover.html（しょーくんが案1「ロゴ上」を選んだ） | ゲーム工房の表紙 |
-| ほかの絵（車・街・エフェクト・UI・あそびかたの絵） | C | コードで描く | src/index.html の drawing | ゲーム全体 |
+| ほかの絵（車・街・エフェクト・UI・あそびかたの絵） | C | コードで描く | src/js/06-draw-cars.js・07-draw-ground.js | ゲーム全体 |
 
 - 書き出し：Canva の作業用デザイン DAHbJFrro48「ぶっとびチェイス 絵（作業用）」（1ページ目＝縦 1000×1500、2ページ目＝横 1600×1200、3ページ目＝アイコン 1024×1024）を PNG で書き出し → WebP（品質80）
 - ロゴ・文字は絵に入れない（コードで Dela Gothic One・Zen Maru Gothic＝OFL）

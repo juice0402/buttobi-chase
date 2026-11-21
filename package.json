@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "test": "node tools/build.mjs --check"
+  }
+}
