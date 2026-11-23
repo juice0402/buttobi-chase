@@ -1,39 +1,38 @@
-# ぶっとびチェイス 地図（行は 2026-11-17・ver 1.5 の目安）
+# ぶっとびチェイス 地図（2026-11-22・ver 1.5。ファイルの分け方は夜の作業 #1）
 
-読み方：この地図 → `grep -n` で関数名・文字をさがす（src/index.html）→ その前後だけ読む → Edit で変わる所だけ直す → `node tools/build.mjs`。丸ごと読む・書き直すことはしない。出口の index.html は読まない（絵の base64 が入っている）。
+読み方：この地図 → `grep -n` で関数名・文字をさがす（`grep -rn 名前 src/`）→ その前後だけ読む → Edit で変わる所だけ直す → `node tools/build.mjs`。丸ごと読む・書き直すことはしない。出口の index.html は読まない（絵の base64 が入っている）。
+
+## ビルドと確かめ
+- `node tools/build.mjs`（`npm run build`）：src/index.html（わく）の `@@include <ファイル>@@` の行を、そのファイルの中身にそのまま置きかえ、`../assets/<名前>` を data: URI にして、出口の index.html を作る
+- `node tools/build.mjs --check`（`npm test`）：出口の index.html が src/・assets/ と同じか、src/sound/ をつないだものが dev/sound.js と同じかを見る（ちがえば止まる）
+- **index.html は自動で作るファイル。手で直さない**（直すのは src/ と assets/）。出口なのでコミットはする
+- src の .js はつないで1つの script になる（ファイルの切れ目は関数・節の切れ目。1つだけでは動かない）。分けかたを変えても、つないだ中身が同じなら出口は1バイトも変わらない
 
 ## ファイル
 | ファイル | 役目 |
 |---|---|
-| src/index.html | ゲームの元（直すのはここ・4,848行）。アーティファクトと同じ中身に、外側の doctype・head（1〜8行）をつけたもの。絵は `../assets/<名前>` で指す |
+| src/index.html | わく（163行）：doctype・head・`<style>`・HTML（canvas・HUD・あそびかた・タイトル・リザルト・ガレージ・設定・一時停止）・`<script>` と、下のファイルをつなぐ `@@include` の行（この順につなぐ） |
+| src/css/screens.css | CSS：道と全体・走る画面の上（HUD）・タイトル（タイトルの絵・縦／iPad 縦／横）・リザルト・ガレージ（整備室 .bay・ポイント .ptbar・.pts）・あそびかた |
+| src/css/sheets-sizes-motion.css | CSS：一時停止と設定の板（.ov・.sheet）・画面の大きさごと（背の低いスマホ・背の高いスマホ・iPad 横・タブレット・iPad 縦・iPad 横）・作りこみの動き（fx…・火花 .spk・動きをへらす設定）・garage sizes |
+| src/sound/1-tools.js〜4-loops-api.js | script 1：音（window.RaceSound）。1 道具と楽譜・2 曲（makeSong・Player）・3 効果音（SE）・4 エンジンとサイレン・API。4つをつなぐと dev/sound.js と同じ |
+| src/js/01-data-save.js | 定数・TOWNS（街）・CARS（車15台・0番は軽自動車）・TITLES（称号）・STAT_MAX・PT_PRICES・UPGRADES・セーブ（SAVE_KEY・古いセーブの直し・carV）・TOWN_MIS・DAILY |
+| src/js/02-state-road.js | 道具（helpers）・state（スピードのフロー flowT…）・追っ手の作戦・道のしかけ（工事・かべ） |
+| src/js/03-crash-effects.js | クラッシュ（tryBoost・nitroBlast・nitroHit・impactOn・RAM_SELF）・エフェクト・toy look & crash juice |
+| src/js/04-ai.js | 追っ手の AI |
+| src/js/05-update.js | update |
+| src/js/06-draw-cars.js | 描く（drawing）の頭：toyGloss・toyUnder・drawPart・drawVehicle・carSprite・ニトロの光・block（積み木の建物）・こわれた建物 |
+| src/js/07-draw-ground.js | 地面の帯（groundStamp・drawGround・drawGroundLive）・工事・看板・draw（フローのスピード線・ニトロの線は終わり） |
+| src/js/08-hud-garage.js | HUD とメニュー（hud・carPic）・作りこみの動きの道具（RM・fxRestart・fxLines・fxIn・tilesIn・fxCount・openOv / closeOv・fxGo）・ガレージ（renderHero・renderPanel・drawBay・bayFx・renderTown・renderGarage・openGarage・fxGot・fxHero） |
+| src/js/09-result-title.js | 走りの終わり（finishRun）・指のヒント・一時停止・音のスイッチ・あそびかた（TUT・showTut・drawTut）・タイトル（showTitle・leaveTitle）・iOS のタップ |
+| src/js/10-input-boot.js | 入力（指・キー・ボタン。ガレージのタップは $('garage') の click）・ループ（frame）と起動（boot）・window.__butto（file: で開いたときだけ） |
 | assets/ | 絵のファイル（一覧と出どころは docs/ART.md） |
-| tools/build.mjs | src/index.html と assets/ から出口の index.html を作る（`../assets/…` を data: URI に）。`--check` でずれを見る |
+| tools/build.mjs | 上の「ビルドと確かめ」 |
 | index.html | 出口（遊ぶ人が開く・ゲーム工房と App Store が取りこむ・アーティファクトもここから）。自動で作る・手で直さない・読まない |
 | sound-test.html | 音の試聴ページ（dev/sound.js と同じ中身） |
-| dev/sound.js | 音のもと。直したら index.html の最初の script と sound-test.html も同じにする |
+| dev/sound.js | 音のもと。直したら src/sound/ と sound-test.html も同じにする（`--check` が src/sound/ とのずれを見る） |
 | dev/tests/ | playwright のテスト（CLAUDE.md） |
 | dev/out/ | テストが作るファイル（読まない・コミットしない） |
 | RELEASES.md・.github/workflows/release.yml・tools/release/ | ゲーム工房に出す版。main に入るとまだタグのない版にタグと Releases を作る |
-
-## src/index.html
-| 行 | 中身 |
-|---|---|
-| 16〜300 | CSS：16 道と全体・46 走る画面の上（HUD）・101 タイトル（117 タイトルの絵・縦／iPad 縦／横）・133 リザルト・169 ガレージ・277 あそびかた |
-| 303〜322 | CSS：一時停止と設定の板（.ov・.sheet） |
-| 357〜560 | CSS：画面の大きさごと（357 背の低いスマホ・388 背の高いスマホ・408 iPad 横・423 タブレット・528 iPad 縦・540 iPad 横）。強化タブの整備室（.bay）・ポイント（.ptbar・.pts）はガレージの CSS の終わり（254 あたり） |
-| 560〜625 | CSS：作りこみの動き（fx…・fxrattle・fxlift・火花 .spk）と、動きをへらす設定のとき止める動き。最後に「garage sizes」（ガレージの高さをそろえる・21回目） |
-| 625〜745 | HTML：canvas・HUD・あそびかた・タイトル・リザルト・ガレージ・設定・一時停止 |
-| 748〜1950 | script 1：音（window.RaceSound）。dev/sound.js と同じ |
-| 1959〜2250 | データ：1971 TOWNS（街）・2037 CARS（車15台・0番は軽自動車）・2081 TITLES（称号）・2110 STAT_MAX・PT_PRICES・UPGRADES（強化のポイント）・2120 セーブ（SAVE_KEY・古いセーブのポイントへの直し・carV の車の入れかえ）・2195 TOWN_MIS（街のミッション）・2202 DAILY（今日のミッション） |
-| 2251〜3372 | 走る中身：2251 state（スピードのフロー flowT…）・2351 追っ手の作戦・2407 道のしかけ・2550 クラッシュ（tryBoost・nitroBlast・nitroHit・体当たり impactOn・RAM_SELF）・2757 エフェクト（2780 toy look & crash juice）・2850 追っ手のAI・3154 update |
-| 3373〜4184 | 描く（drawing）。車の絵（drawVehicle）・地面の帯（groundStamp）・draw（フローのスピード線・ニトロの線は draw の終わり） |
-| 4185 | HUD とメニューの共通（hud・carPic） |
-| 4235 | 作りこみの動きの道具：RM（動きを止めるか）・fxRestart・fxLines（スピード線）・fxIn（横から入る）・tilesIn（タイルを左上から敷く）・fxCount（数字のかぞえ上げ）・openOv / closeOv（板が横から入って左へ出ていく）・fxGo（走りだしの線） |
-| 4301 | ガレージ：renderHero・renderPanel（強化タブ＝整備室・ポイント・振り分け）・drawBay（整備室の絵）・bayFx（揺れ・持ち上がり・火花）・renderTown・renderGarage・openGarage・fxGot・fxHero |
-| 4481 | 走りの終わり：finishRun（リザルトの中身と動き） |
-| 4602 | あそびかた：TUT（カード3枚の絵と文）・showTut・drawTut・タイトル（showTitle・leaveTitle。タップかキーを待ってからスタート） |
-| 4671 | 入力：指・キー・ボタン（ガレージのタップは $('garage') の click にまとまっている。強化は pt-buy・st-add・st-sub・respec） |
-| 4786 | ループと起動。4803 window.__butto（file: で開いたときだけ）・4830 boot |
 
 ## 決まり
 - 動き（animation）の名前は fx ではじめる。押したときだけの1回の動き（くり返す・下から出る動きは入れない）。中身はすぐ進み、動きは見た目だけ。RM() が true（動きをへらす設定・window.__NOFX）なら動かさない
