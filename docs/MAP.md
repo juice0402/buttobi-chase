@@ -16,7 +16,7 @@
 | src/css/sheets-sizes-motion.css | CSS：一時停止と設定の板（.ov・.sheet）・画面の大きさごと（背の低いスマホ・背の高いスマホ・iPad 横・タブレット・iPad 縦・iPad 横）・作りこみの動き（fx…・火花 .spk・動きをへらす設定）・garage sizes |
 | src/sound/1-tools.js〜4-loops-api.js | script 1：音（window.RaceSound）。1 道具と楽譜・2 曲（makeSong・Player）・3 効果音（SE）・4 エンジンとサイレン・API。4つをつなぐと dev/sound.js と同じ |
 | src/js/01-data-save.js | 定数・TOWNS（街）・CARS（車15台・0番は軽自動車）・TITLES（称号）・STAT_MAX・PT_PRICES・UPGRADES・セーブ（SAVE_KEY・古いセーブの直し・carV）・TOWN_MIS・DAILY |
-| src/js/02-state-road.js | 道具（helpers）・state（スピードのフロー flowT…）・追っ手の作戦・道のしかけ（工事・かべ） |
+| src/js/02-state-road.js | 道具（helpers・snd・sndDo・hap＝アプリの振動）・state（スピードのフロー flowT…）・追っ手の作戦・道のしかけ（工事・かべ） |
 | src/js/03-crash-effects.js | クラッシュ（tryBoost・nitroBlast・nitroHit・impactOn・RAM_SELF）・エフェクト・toy look & crash juice |
 | src/js/04-ai.js | 追っ手の AI |
 | src/js/05-update.js | update |
@@ -24,7 +24,7 @@
 | src/js/07-draw-ground.js | 地面の帯（groundStamp・drawGround・drawGroundLive）・工事・看板・draw（フローのスピード線・ニトロの線は終わり） |
 | src/js/08-hud-garage.js | HUD とメニュー（hud・carPic）・作りこみの動きの道具（RM・fxRestart・fxLines・fxIn・tilesIn・fxCount・openOv / closeOv・fxGo）・ガレージ（renderHero・renderPanel・drawBay・bayFx・renderTown・renderGarage・openGarage・fxGot・fxHero） |
 | src/js/09-result-title.js | 走りの終わり（finishRun）・指のヒント・一時停止・音のスイッチ・あそびかた（TUT・showTut・drawTut）・タイトル（showTitle・leaveTitle）・iOS のタップ |
-| src/js/10-input-boot.js | 入力（指・キー・ボタン。ガレージのタップは $('garage') の click）・ループ（frame）と起動（boot）・window.__butto（file: で開いたときだけ） |
+| src/js/10-input-boot.js | 入力（指・キー・ボタン。ガレージのタップは $('garage') の click）・Game Center（gcScore・gcSync・ガレージのトロフィー #openRank）・ループ（frame）・自動運転（autoDrive）・window.__butto（file: で開いたときだけ・アプリの中にはない）・App Store のスクショの場面（runShot・shotSave）・起動（boot） |
 | assets/ | 絵のファイル（一覧と出どころは docs/ART.md） |
 | tools/build.mjs | 上の「ビルドと確かめ」 |
 | index.html | 出口（遊ぶ人が開く・ゲーム工房と App Store が取りこむ・アーティファクトもここから）。自動で作る・手で直さない・読まない |
@@ -48,3 +48,5 @@
 - スピードのフロー（21回目）：トップスピードの93%以上を FLOW_T1（3秒）・FLOW_T2（7秒）続けると段が上がる（flowLv・見た目の強さ flowK）。スピード線・車の後ろの風・カメラが少し引く（FLOW_ZOOM）・画面の横が光る・風の音（R.engine の3つ目）・段が上がると whoosh。当たる・遅くなる・85%を切ると0に。速さ・ルール・コインは変えない
 - ニトロ（21回目）：始めに nitroBlast（衝撃波。すぐ横の車は nitroHit・少し先は押しのける・横の建物がくずれる・shock の音）。走っている間は道のはしの建物をくずす（edgeSmashT）、はね飛ばした車がかべに当たると建物がくずれる（nFling）。ニトロ中はヒットストップなし
 - タイトルの絵（11/17）：assets/title.webp（縦）・title-wide.webp（横）。Canva の AI の絵（A）で、一覧と出どころは docs/ART.md。ロゴは絵に入れずコードの字。縦はロゴ上・ボタン下、iPad 縦（縦横比 3/5 以上）はロゴを左に、横は左にロゴとボタン
+- iOS アプリ（ios-kobo・11/24）：アプリが入れる window.APP_* を使う。振動は hap()（APP_HAPTIC。ニトロ heavy・自分のクラッシュ light／追っ手 medium・大きいダメージ medium・クラッシュ error・にげきった success）。Game Center は1回のスコアの最高（save.hiScore）を APP_SCORE で送る（リザルトのたびと、ログインしたとき）。ガレージの上のトロフィー（#openRank）はログインしてから出て、APP_RANKING を開く。ウェブ版では何も変わらない
+- App Store のスクショ（file: で開いたときだけ）：`#shot=<場面>:<街>:<秒>:<車>` で、書きこまないデモのセーブ（shotSave）で場面を作って止める（shotHold）。run・nitro・boss・result・garage（<街> の数がタブ）。使っている場面は ios-kobo の apps/buttobi-chase/app.json の screenshots。ゲームの中身を変えたら、場面がずれていないか撮り直して見る（同じ数字なら毎回同じ絵・画面の大きさで中身はかわる）

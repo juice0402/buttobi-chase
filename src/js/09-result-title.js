@@ -18,6 +18,7 @@ function finishRun(show){
   save.money += sum; save.best = Math.max(save.best, Math.floor(dist)); if (endKind === 'clear') save.clears++;
   save.plays = (save.plays || 0) + 1;
   save.titles[title.id] = true; if (hiNew) save.hiScore = sum;
+  gcScore();
   // every other title this run also earned goes into the collection (the run is still named by its best one)
   // (the plain ones too: にげきり屋 for any escape, まだまだ見習い for any crash)
   { const tst = titleStats(), baseId = endKind === 'clear' ? 'run' : endKind === 'wreck' ? 'rookie' : '';

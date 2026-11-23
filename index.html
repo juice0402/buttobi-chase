@@ -702,6 +702,7 @@ body.gt-up .hero,body.gt-mis .hero,body.gt-title .hero{display:none}
     <header class="g-head">
       <h2>ガレージ</h2>
       <div class="coins"><b id="gMoney">0</b><small>コイン</small></div>
+      <button type="button" class="iconbtn" id="openRank" aria-label="ランキング" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v1.5a3.5 3.5 0 0 0 3.6 3.4M17 6h3v1.5a3.5 3.5 0 0 1-3.6 3.4"/><path d="M12 14v3.5M8 20.5h8M9.5 17.5h5v3h-5z"/></svg></button>
       <button type="button" class="iconbtn" id="openSet" aria-label="設定"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M2.8 12h2.6M18.6 12h2.6M5.5 5.5l1.8 1.8M16.7 16.7l1.8 1.8M5.5 18.5l1.8-1.8M16.7 7.3l1.8-1.8"/></svg></button>
     </header>
     <div class="tabs" role="tablist" id="gTabs">
@@ -2232,7 +2233,8 @@ function todayMis(){
 function dailyState(){ const k = dayKey(); if (!save.daily || save.daily.day !== k) save.daily = {day:k, done:{}}; return save.daily; }
 const townStars = i => { const T = save.towns[i]; return (T.clear ? 1 : 0) + (RANK_ORDER[T.rank] >= 4 ? 1 : 0) + (T.mis.every(Boolean) ? 1 : 0); };
 const townOpen = i => i === 0 || !!save.towns[i - 1].clear;
-function writeSave(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(e){} }
+let shotOn = false;   // App Store screenshot scenes (#shot=… in 10-input-boot) play on a demo save that is never written
+function writeSave(){ if (shotOn) return; try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(e){} }
 
 /* ---------- helpers ---------- */
 const clamp = (v,a,b) => v < a ? a : v > b ? b : v;
@@ -2271,6 +2273,8 @@ let drag = null; const keys = {left:false, right:false};
 const SND = () => (window.RaceSound && save.se !== undefined) ? window.RaceSound : null;
 function snd(name, a){ try { const R = SND(); if (R) R.se(name, a); } catch(e){} }
 function sndDo(fn){ try { const R = SND(); if (R) fn(R); } catch(e){} }
+/* the iOS app buzzes the phone (window.APP_HAPTIC from ios-kobo・iPhone only; the web and iPad do nothing) */
+function hap(k){ try { if (window.APP_HAPTIC) window.APP_HAPTIC(k); } catch(e){} }
 const car = () => CARS[save.car];
 const runCoins = () => takeMoney + trafMoney + nearMoney + bossMoney + gomiMoney;
 const worldTop = () => camY - H * ANCHOR / s;
@@ -2569,7 +2573,7 @@ function addBoost(v){
 function tryBoost(){
   if (state !== 'play' || boosting) return;
   if (boost < 100){ const bb = $('boostBar'); bb.classList.remove('nope'); void bb.offsetWidth; bb.classList.add('nope'); return; }
-  boosting = true; P.slowT = 0; shake = Math.max(shake, 12); burst(P.x, P.y, 'spark', 24); snd('nitroGo'); snd('shock'); sndDo(R => R.nitro(true));
+  boosting = true; P.slowT = 0; shake = Math.max(shake, 12); burst(P.x, P.y, 'spark', 24); hap('heavy'); snd('nitroGo'); snd('shock'); sndDo(R => R.nitro(true));
   const f = $('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
   nitroBlast();
 }
@@ -2600,14 +2604,14 @@ function damage(d){
   if (d <= 0 || state !== 'play' || boosting) return;
   dmgBy[dmgSrc] = (dmgBy[dmgSrc] || 0) + d; dmgSrc = '?';
   P.hp -= d; dmgTaken += d; shake = Math.max(shake, Math.min(8, 2 + d*0.3)); if (d >= 3){ hurtT = 0.25; flowT = 0; }
-  if (d >= 4){ popMe(P.x, P.y + 12, `-${Math.round(d)}`, '#ffffff'); snd('hit', Math.min(1, d / 30)); }
+  if (d >= 4){ popMe(P.x, P.y + 12, `-${Math.round(d)}`, '#ffffff'); snd('hit', Math.min(1, d / 30)); hap('medium'); }
   if (P.hp <= 0){ P.hp = 0; playerWreck(); }
 }
 /* the HUD is not refreshed while a run ends, so a nitro that was on when it ended has its glow taken down here */
 function nitroOff(){ nitroFx.classList.remove('on'); bbBar.classList.remove('on'); }
 function playerWreck(){
   state = 'ending'; endKind = 'wreck'; endT = 1.8; P.state = 'wreck'; P.av = 9; P.air = 0.6; P.airMax = 0.6; P.fire = 3;
-  burst(P.x, P.y, 'boom', 22); parts(P, 10); rollOver(P); bigCrash(P.x, P.y, true); banner('クラッシュ！'); drag = null; boosting = false; nitroOff(); snd('bigcrash'); sndDo(R => { R.nitro(false); R.engineOff(); R.siren(0); R.jingle('wreck'); });
+  burst(P.x, P.y, 'boom', 22); parts(P, 10); rollOver(P); bigCrash(P.x, P.y, true); hap('error'); banner('クラッシュ！'); drag = null; boosting = false; nitroOff(); snd('bigcrash'); sndDo(R => { R.nitro(false); R.engineOff(); R.siren(0); R.jingle('wreck'); });
 }
 
 function comboUp(){
@@ -2640,6 +2644,7 @@ function crash(b, how){
   parts(b, b.role === 'chaser' ? 7 : 4); if (!b.fixed) rollOver(b); if (how === 'wall') wallBlocks(b, 7);
   shake = Math.max(shake, 3); snd(how === 'crush' ? 'crush' : 'crash');
   const byPlayer = b.lastHit === 'player' && t - b.lastHitT < 2;
+  if (state === 'play' && (byPlayer || Math.hypot(b.x - P.x, b.y - P.y) < LURE_R)) hap(b.role === 'chaser' ? 'medium' : 'light');   // only crashes you made or that happened right by you
   if (b.role === 'chaser'){
     burst(b.x, b.y, 'boom', 12);
     if (state === 'play'){
@@ -3376,7 +3381,7 @@ function update(dt){
 
   if (playing){
     const ai = areaIndexAt(dist); if (ai !== areaIdx){ areaIdx = ai; banner(AREAS[ai].name); }
-    if (dist >= GOAL){ state = 'ending'; endKind = 'clear'; endT = 1.6; banner('にげきった！'); burst(P.x, P.y, 'spark', 30); boosting = false; nitroOff(); drag = null; snd('goal'); sndDo(R => { R.nitro(false); R.boss(false); R.siren(0); R.jingle('clear'); }); }
+    if (dist >= GOAL){ state = 'ending'; endKind = 'clear'; endT = 1.6; hap('success'); banner('にげきった！'); burst(P.x, P.y, 'spark', 30); boosting = false; nitroOff(); drag = null; snd('goal'); sndDo(R => { R.nitro(false); R.boss(false); R.siren(0); R.jingle('clear'); }); }
   } else if (state === 'ending'){
     if (endKind === 'clear'){ P.vy += clamp(-120 - P.vy, -200*dt, 200*dt); P.vx *= 0.9; }
     endT -= dt; if (endT <= 0) finishRun();
@@ -4521,6 +4526,7 @@ function finishRun(show){
   save.money += sum; save.best = Math.max(save.best, Math.floor(dist)); if (endKind === 'clear') save.clears++;
   save.plays = (save.plays || 0) + 1;
   save.titles[title.id] = true; if (hiNew) save.hiScore = sum;
+  gcScore();
   // every other title this run also earned goes into the collection (the run is still named by its best one)
   // (the plain ones too: にげきり屋 for any escape, まだまだ見習い for any crash)
   { const tst = titleStats(), baseId = endKind === 'clear' ? 'run' : endKind === 'wreck' ? 'rookie' : '';
@@ -4790,6 +4796,12 @@ $('go').addEventListener('click', () => {
   snd('tap'); startRun(); fxGo();
 });
 $('openSet').addEventListener('click', () => { if (garageFresh()) return; snd('tap'); syncSw(); $('wipe').hidden = false; $('wipeAsk').hidden = true; openOv('setOv'); });
+/* Game Center (iOS app only・ios-kobo の GameBridge): the best one-run score goes to the ranking, the trophy in the garage opens it.
+   The trophy shows only once the player is signed in (window.APP_GAMECENTER === true, announced by the 'app-gamecenter' event) */
+function gcScore(){ try { if (window.APP_GAMECENTER === true && window.APP_SCORE && save.hiScore > 0) window.APP_SCORE(save.hiScore); } catch(e){} }
+function gcSync(){ $('openRank').hidden = window.APP_GAMECENTER !== true; gcScore(); }
+window.addEventListener('app-gamecenter', gcSync);
+$('openRank').addEventListener('click', () => { if (garageFresh()) return; snd('tap'); try { if (window.APP_RANKING) window.APP_RANKING(); } catch(e){} });
 $('closeSet').addEventListener('click', () => { snd('tap'); closeOv('setOv'); });
 $('swSe').addEventListener('click', e => { setSound('se', !save.se); fxRestart(e.currentTarget, 'fxpick'); });
 $('pSe').addEventListener('click', e => { setSound('se', !save.se); fxRestart(e.currentTarget, 'fxpick'); });
@@ -4809,6 +4821,7 @@ window.addEventListener('pointerdown', unlockAudio, true); window.addEventListen
 /* ---------- loop & boot ---------- */
 let last = 0, rafPrev = 0, rafEma = 16.7;
 function frame(ts){
+  if (shotHold){ requestAnimationFrame(frame); return; }   // a screenshot scene stands still
   /* 120 Hz screens (iPad Pro, new iPhone Pro): play at ~60 fps, half the work. 60 / 90 Hz screens are untouched. */
   const gap = ts - rafPrev; rafPrev = ts; if (gap > 0 && gap < 40) rafEma += (gap - rafEma) * 0.05;
   if (last && rafEma < 10 && ts - last < 12.5 && (state === 'play' || state === 'ending')){ requestAnimationFrame(frame); return; }
@@ -4822,34 +4835,71 @@ function frame(ts){
   if (state === 'play' || state === 'ending'){ if (gdt > 0) update(gdt); draw(); if (state === 'play'){ hud(dt); tickHint(dt); sndDo(R => R.engine(Math.min(1.6, -P.vy / 150), boosting, flowK)); } }
   requestAnimationFrame(frame);
 }
-/* local test hook (only when the file is opened from disk, never on the published page): an autopilot that dodges traffic, for balance runs */
-if (location.protocol === 'file:') window.__butto = {
-  get: () => ({x:P ? Math.round(P.x) : 0, camping, state, dist:Math.round(dist), townI, star, boss:!!boss, money:save.money, coins:runCoins(), hp:P && Math.round(P.hp), endKind, t:Math.round(t)}),
+/* an autopilot that dodges traffic: balance runs (__butto.sim) and the App Store screenshot scenes */
+function autoDrive(sec, opt){
+  opt = opt || {}; const dt = 1/60, stopAt = t + sec; let lastRes = null;
+  while ((state === 'play' || state === 'ending') && t < stopAt){
+    if (state === 'play'){
+      const half = halfAt(dist), lim = half - P.w/2 - 2; let best = P.x, bs = -1e9;
+      for (let x = -lim; x <= lim; x += 8){
+        let free = 420;
+        for (const c of cars){ const ahead = P.y - c.y; if (ahead < -10 || ahead > 420) continue; if (c.role === 'chaser' && c.state === 'drive' && !c.boss) continue;
+          if (Math.abs(c.x - x) < (c.w + P.w)/2 + 6) free = Math.min(free, ahead - (c.opp ? 120 : 0)); }
+        for (const sp of spikes){ const ahead = P.y - sp.y; if (ahead > 0 && ahead < 300 && Math.abs(sp.x - x) < sp.w/2 + P.w/2 + 4) free = Math.min(free, ahead); }
+        for (const w of works){ const ahead = P.y - w.y1; if (ahead < w.y0 - w.y1 - 10 || ahead > 420) continue; if (x + P.w/2 + 4 > w.x0 && x - P.w/2 - 4 < w.x1) free = Math.min(free, Math.max(0, ahead)); }
+        for (const p of ice){ const ahead = P.y - p.y; if (ahead > -p.h/2 && ahead < 200 && Math.abs(p.x - x) < p.w/2 + 4) free -= 60; }
+        const sc = free - Math.abs(x - P.x) * 0.25 + (opt.wild ? Math.random() * 40 : 0);
+        if (sc > bs){ bs = sc; best = x; }
+      }
+      targetX = best;
+      if (boost >= 100 && (boss || cars.some(c => c.role === 'chaser' && c.state === 'drive' && Math.abs(c.y - P.y) < 160))) tryBoost();
+    }
+    update(dt);
+  }
+  return {dmg:Object.fromEntries(Object.entries(dmgBy).map(([k, v]) => [k, Math.round(v)])), town:townI, end:endKind || state, dist:Math.round(dist), score:runScore(), take:takeN, boss:bossN, traf:trafN, near:nearN, time:Math.round(t), star:maxStar, ko:Object.assign({}, ko), ice:iceN, hp:Math.round(P.hp)};
+}
+/* local test hook (only when the file is opened from disk, never on the published page or in the iOS app) */
+if (location.protocol === 'file:' && !window.APP_PLATFORM) window.__butto = {
+  get: () => ({x:P ? Math.round(P.x) : 0, camping, state, dist:Math.round(dist), townI, star, boss:!!boss, money:save.money, coins:runCoins(), hp:P && Math.round(P.hp), endKind, t:Math.round(t),
+    chase:P ? cars.filter(c => c.role === 'chaser' && c.state === 'drive' && Math.abs(c.y - P.y) < 260).length : 0, nitro:boosting, bossDy:boss && P ? Math.round(boss.y - P.y) : null}),
   save: () => save, load: o => { useSave(o); writeSave(); },
   start: i => { save.town = i; startRun(); }, garage: () => openGarage(), pause: () => pauseGame(),
-  sim(sec, opt){
-    opt = opt || {}; const dt = 1/60, stopAt = t + sec; let lastRes = null;
-    while ((state === 'play' || state === 'ending') && t < stopAt){
-      if (state === 'play'){
-        const half = halfAt(dist), lim = half - P.w/2 - 2; let best = P.x, bs = -1e9;
-        for (let x = -lim; x <= lim; x += 8){
-          let free = 420;
-          for (const c of cars){ const ahead = P.y - c.y; if (ahead < -10 || ahead > 420) continue; if (c.role === 'chaser' && c.state === 'drive' && !c.boss) continue;
-            if (Math.abs(c.x - x) < (c.w + P.w)/2 + 6) free = Math.min(free, ahead - (c.opp ? 120 : 0)); }
-          for (const sp of spikes){ const ahead = P.y - sp.y; if (ahead > 0 && ahead < 300 && Math.abs(sp.x - x) < sp.w/2 + P.w/2 + 4) free = Math.min(free, ahead); }
-          for (const w of works){ const ahead = P.y - w.y1; if (ahead < w.y0 - w.y1 - 10 || ahead > 420) continue; if (x + P.w/2 + 4 > w.x0 && x - P.w/2 - 4 < w.x1) free = Math.min(free, Math.max(0, ahead)); }
-          for (const p of ice){ const ahead = P.y - p.y; if (ahead > -p.h/2 && ahead < 200 && Math.abs(p.x - x) < p.w/2 + 4) free -= 60; }
-          const sc = free - Math.abs(x - P.x) * 0.25 + (opt.wild ? Math.random() * 40 : 0);
-          if (sc > bs){ bs = sc; best = x; }
-        }
-        targetX = best;
-        if (boost >= 100 && (boss || cars.some(c => c.role === 'chaser' && c.state === 'drive' && Math.abs(c.y - P.y) < 160))) tryBoost();
-      }
-      update(dt);
-    }
-    return {dmg:Object.fromEntries(Object.entries(dmgBy).map(([k, v]) => [k, Math.round(v)])), town:townI, end:endKind || state, dist:Math.round(dist), score:runScore(), take:takeN, boss:bossN, traf:trafN, near:nearN, time:Math.round(t), star:maxStar, ko:Object.assign({}, ko), ice:iceN, hp:Math.round(P.hp)};
-  }
+  sim: autoDrive
 };
+/* App Store screenshots (ios-kobo の shots.py・file: で開いたときだけ。アプリで遊ぶ人には出ない): `#shot=<場面>:<街>:<秒>:<車>` puts the game into
+   a fixed scene on a demo save that is never written, and holds it still. Math.random can be seeded before the hash is set (app.json の js),
+   so the same picture comes out every time.
+     run    … 街 <街> を <秒> だけ自動運転で走ったところ      nitro … 同じく走ってから、ニトロの衝撃波
+     boss   … ボスが出てから <秒> たったところ             result … 街の終わりまで自動で走ったリザルト
+     garage … ガレージ（<街> の数がタブ：0 車・1 強化・2 ミッション・3 称号） */
+let shotHold = false;
+function shotSave(car){
+  const s = freshSave();
+  Object.assign(s, {money:38450, best:5600, hiScore:21800, plays:40, clears:9, tutDone:true, car, town:0});
+  s.owned = CARS.map((c, i) => i <= 6 || i === 10 || i === car);
+  s.pts = CARS.map((c, i) => s.owned[i] ? 7 : 0);
+  s.up = CARS.map((c, i) => s.owned[i] ? {eng:2, body:3, boost:1, ram:1} : {eng:0, body:0, boost:0, ram:0});
+  s.carRank = CARS.map((c, i) => s.owned[i] ? (i < 2 ? 'S' : 'A') : '');
+  s.gold = CARS.map((c, i) => i < 2);
+  s.towns = TOWNS.map((T, i) => i < 3 ? {clear:true, rank:i < 2 ? 'A' : 'B', best:T.ranks[i < 2 ? 1 : 2], mis:[true, i < 2, i === 0]} : freshTown());
+  TITLES.slice(0, 8).forEach(T => { s.titles[T.id] = true; });
+  return s;
+}
+function runShot(){
+  const m = /^#shot=([a-z]+)(?::(\d+))?(?::(\d+(?:\.\d+)?))?(?::(\d+))?$/.exec(location.hash);
+  if (!m) return;
+  const kind = m[1], ti = Math.min(TOWNS.length - 1, +(m[2] || 0)), sec = +(m[3] || 0), carI = Math.min(CARS.length - 1, +(m[4] || 0));
+  shotOn = true; shotHold = false; clearTimeout(titleTimer);
+  useSave(shotSave(carI)); setTown(ti);
+  if (kind === 'garage'){ openGarage(); gTab = ['car', 'up', 'mis', 'title'][ti] || 'car'; renderGarage(); return; }
+  save.town = ti; startRun(ti);
+  if (kind === 'boss'){ for (let i = 0; i < 600 && !boss && state === 'play'; i++) autoDrive(0.5); autoDrive(sec || 3); }
+  else if (kind === 'nitro'){ autoDrive(sec || 15); if (state === 'play'){ boost = 100; tryBoost(); autoDrive(0.2); } }
+  else if (kind === 'result'){ autoDrive(900); return; }
+  else autoDrive(sec || 20);
+  if (state !== 'play') return;
+  hudT = 0; hud(0); draw(); $('banner').classList.remove('show'); shotHold = true;
+}
 function boot(data){
   loadSave();
   if (data && data.save && typeof data.save === 'object') useSave(data.save);
@@ -4858,7 +4908,8 @@ function boot(data){
   resize(); resetWorld(); draw();
   if (document.fonts && document.fonts.load) document.fonts.load('400 16px "Dela Gothic One"').then(() => { if (state !== 'play' && state !== 'ending') draw(); }).catch(() => {});
   requestAnimationFrame(frame);
-  showTitle();
+  showTitle(); gcSync();
+  if (location.protocol === 'file:'){ window.addEventListener('hashchange', runShot); if (location.hash) runShot(); }
 }
 try { const hk = window.claude && window.claude.hot; if (hk && typeof hk.snapshot === 'function') hk.snapshot(() => ({save})); } catch(e){}
 const hot = window.claude && window.claude.hot;

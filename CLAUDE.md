@@ -13,7 +13,7 @@
 ## 決まり
 - 直す前に docs/MAP.md（地図）を見て、src/ の検索した所だけ読む。直したら `node tools/build.mjs`（出口の index.html を作り直す）
 - 動きは fx… の名前で1回だけ（くり返す・下から出る動きなし）。メニューの文は語りかけなし・「！」なし（docs/MAP.md の決まり）
-- file: で開いたときだけ window.__butto がある（get・save・load・start・sim・garage・pause）。公開ページにはない
+- file: で開いたときだけ window.__butto がある（get・save・load・start・sim・garage・pause）。公開ページと iOS アプリにはない。App Store のスクショの場面 `#shot=…` と、アプリの振動・Game Center は docs/MAP.md の「決まり」
 - 試しに遊ぶページ（アーティファクト）https://claude.ai/artifact/9MNEHG5BAX88qBR5FT1h45 にも同じ中身を出している。アーティファクトは出口の index.html から、スケルトン（doctype・head）なしの中身だけで出す
 - 絵・音・コインのしくみを変えるときは claude/game-art-rule.md（音はコードで作る・運でコインを増やさない）
 - 直したら `node tools/build.mjs` → node --check（ゲームの script）と dev/tests/f1.py・final.py・ko_check.py（倒した種類の数え忘れ）でエラー0を確かめる。`node tools/build.mjs --check` で出口が最新かも見る

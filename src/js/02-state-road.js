@@ -35,6 +35,8 @@ let drag = null; const keys = {left:false, right:false};
 const SND = () => (window.RaceSound && save.se !== undefined) ? window.RaceSound : null;
 function snd(name, a){ try { const R = SND(); if (R) R.se(name, a); } catch(e){} }
 function sndDo(fn){ try { const R = SND(); if (R) fn(R); } catch(e){} }
+/* the iOS app buzzes the phone (window.APP_HAPTIC from ios-kobo・iPhone only; the web and iPad do nothing) */
+function hap(k){ try { if (window.APP_HAPTIC) window.APP_HAPTIC(k); } catch(e){} }
 const car = () => CARS[save.car];
 const runCoins = () => takeMoney + trafMoney + nearMoney + bossMoney + gomiMoney;
 const worldTop = () => camY - H * ANCHOR / s;
