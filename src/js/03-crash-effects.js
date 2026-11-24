@@ -7,7 +7,7 @@ function addBoost(v){
 function tryBoost(){
   if (state !== 'play' || boosting) return;
   if (boost < 100){ const bb = $('boostBar'); bb.classList.remove('nope'); void bb.offsetWidth; bb.classList.add('nope'); return; }
-  boosting = true; P.slowT = 0; shake = Math.max(shake, 12); burst(P.x, P.y, 'spark', 24); snd('nitroGo'); snd('shock'); sndDo(R => R.nitro(true));
+  boosting = true; P.slowT = 0; shake = Math.max(shake, 12); burst(P.x, P.y, 'spark', 24); hap('heavy'); snd('nitroGo'); snd('shock'); sndDo(R => R.nitro(true));
   const f = $('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go');
   nitroBlast();
 }
@@ -38,14 +38,14 @@ function damage(d){
   if (d <= 0 || state !== 'play' || boosting) return;
   dmgBy[dmgSrc] = (dmgBy[dmgSrc] || 0) + d; dmgSrc = '?';
   P.hp -= d; dmgTaken += d; shake = Math.max(shake, Math.min(8, 2 + d*0.3)); if (d >= 3){ hurtT = 0.25; flowT = 0; }
-  if (d >= 4){ popMe(P.x, P.y + 12, `-${Math.round(d)}`, '#ffffff'); snd('hit', Math.min(1, d / 30)); }
+  if (d >= 4){ popMe(P.x, P.y + 12, `-${Math.round(d)}`, '#ffffff'); snd('hit', Math.min(1, d / 30)); hap('medium'); }
   if (P.hp <= 0){ P.hp = 0; playerWreck(); }
 }
 /* the HUD is not refreshed while a run ends, so a nitro that was on when it ended has its glow taken down here */
 function nitroOff(){ nitroFx.classList.remove('on'); bbBar.classList.remove('on'); }
 function playerWreck(){
   state = 'ending'; endKind = 'wreck'; endT = 1.8; P.state = 'wreck'; P.av = 9; P.air = 0.6; P.airMax = 0.6; P.fire = 3;
-  burst(P.x, P.y, 'boom', 22); parts(P, 10); rollOver(P); bigCrash(P.x, P.y, true); banner('クラッシュ！'); drag = null; boosting = false; nitroOff(); snd('bigcrash'); sndDo(R => { R.nitro(false); R.engineOff(); R.siren(0); R.jingle('wreck'); });
+  burst(P.x, P.y, 'boom', 22); parts(P, 10); rollOver(P); bigCrash(P.x, P.y, true); hap('error'); banner('クラッシュ！'); drag = null; boosting = false; nitroOff(); snd('bigcrash'); sndDo(R => { R.nitro(false); R.engineOff(); R.siren(0); R.jingle('wreck'); });
 }
 
 function comboUp(){
@@ -78,6 +78,7 @@ function crash(b, how){
   parts(b, b.role === 'chaser' ? 7 : 4); if (!b.fixed) rollOver(b); if (how === 'wall') wallBlocks(b, 7);
   shake = Math.max(shake, 3); snd(how === 'crush' ? 'crush' : 'crash');
   const byPlayer = b.lastHit === 'player' && t - b.lastHitT < 2;
+  if (state === 'play' && (byPlayer || Math.hypot(b.x - P.x, b.y - P.y) < LURE_R)) hap(b.role === 'chaser' ? 'medium' : 'light');   // only crashes you made or that happened right by you
   if (b.role === 'chaser'){
     burst(b.x, b.y, 'boom', 12);
     if (state === 'play'){

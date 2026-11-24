@@ -210,7 +210,7 @@ function update(dt){
 
   if (playing){
     const ai = areaIndexAt(dist); if (ai !== areaIdx){ areaIdx = ai; banner(AREAS[ai].name); }
-    if (dist >= GOAL){ state = 'ending'; endKind = 'clear'; endT = 1.6; banner('にげきった！'); burst(P.x, P.y, 'spark', 30); boosting = false; nitroOff(); drag = null; snd('goal'); sndDo(R => { R.nitro(false); R.boss(false); R.siren(0); R.jingle('clear'); }); }
+    if (dist >= GOAL){ state = 'ending'; endKind = 'clear'; endT = 1.6; hap('success'); banner('にげきった！'); burst(P.x, P.y, 'spark', 30); boosting = false; nitroOff(); drag = null; snd('goal'); sndDo(R => { R.nitro(false); R.boss(false); R.siren(0); R.jingle('clear'); }); }
   } else if (state === 'ending'){
     if (endKind === 'clear'){ P.vy += clamp(-120 - P.vy, -200*dt, 200*dt); P.vx *= 0.9; }
     endT -= dt; if (endT <= 0) finishRun();

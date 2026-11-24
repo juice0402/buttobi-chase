@@ -276,5 +276,6 @@ function todayMis(){
 function dailyState(){ const k = dayKey(); if (!save.daily || save.daily.day !== k) save.daily = {day:k, done:{}}; return save.daily; }
 const townStars = i => { const T = save.towns[i]; return (T.clear ? 1 : 0) + (RANK_ORDER[T.rank] >= 4 ? 1 : 0) + (T.mis.every(Boolean) ? 1 : 0); };
 const townOpen = i => i === 0 || !!save.towns[i - 1].clear;
-function writeSave(){ try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(e){} }
+let shotOn = false;   // App Store screenshot scenes (#shot=… in 10-input-boot) play on a demo save that is never written
+function writeSave(){ if (shotOn) return; try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(e){} }
 
