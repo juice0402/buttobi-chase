@@ -4864,7 +4864,9 @@ if (location.protocol === 'file:' && !window.APP_PLATFORM) window.__butto = {
     chase:P ? cars.filter(c => c.role === 'chaser' && c.state === 'drive' && Math.abs(c.y - P.y) < 260).length : 0, nitro:boosting, bossDy:boss && P ? Math.round(boss.y - P.y) : null}),
   save: () => save, load: o => { useSave(o); writeSave(); },
   start: i => { save.town = i; startRun(); }, garage: () => openGarage(), pause: () => pauseGame(),
-  sim: autoDrive
+  sim: autoDrive,
+  // dev/badges.py borrows the car and block drawing for the Game Center badges: fn gets the helpers while ctx points at cv
+  art(cv, fn){ const main = ctx; ctx = cv.getContext('2d'); try { return fn({ctx, drawVehicle, shadowBox, block, circle, ellipse, rr, outline, shade, rnd, BLOCK_COL, CARS, CHASERS, TRAFFIC}); } finally { ctx = main; } }
 };
 /* App Store screenshots (ios-kobo の shots.py・file: で開いたときだけ。アプリで遊ぶ人には出ない): `#shot=<場面>:<街>:<秒>:<車>` puts the game into
    a fixed scene on a demo save that is never written, and holds it still. Math.random can be seeded before the hash is set (app.json の js),
