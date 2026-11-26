@@ -2234,7 +2234,7 @@ function dailyState(){ const k = dayKey(); if (!save.daily || save.daily.day !==
 const townStars = i => { const T = save.towns[i]; return (T.clear ? 1 : 0) + (RANK_ORDER[T.rank] >= 4 ? 1 : 0) + (T.mis.every(Boolean) ? 1 : 0); };
 const townOpen = i => i === 0 || !!save.towns[i - 1].clear;
 let shotOn = false;   // App Store screenshot scenes (#shot=… in 10-input-boot) play on a demo save that is never written
-function writeSave(){ if (shotOn) return; try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(e){} }
+function writeSave(){ if (shotOn) return; try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(e){} try { gcAchieve(); } catch(e){} }   // gcAchieve: Game Center (10-input-boot; not there yet while the save first loads)
 
 /* ---------- helpers ---------- */
 const clamp = (v,a,b) => v < a ? a : v > b ? b : v;
@@ -4798,8 +4798,31 @@ $('go').addEventListener('click', () => {
 $('openSet').addEventListener('click', () => { if (garageFresh()) return; snd('tap'); syncSw(); $('wipe').hidden = false; $('wipeAsk').hidden = true; openOv('setOv'); });
 /* Game Center (iOS app only・ios-kobo の GameBridge): the best one-run score goes to the ranking, the trophy in the garage opens it.
    The trophy shows only once the player is signed in (window.APP_GAMECENTER === true, announced by the 'app-gamecenter' event) */
-function gcScore(){ try { if (window.APP_GAMECENTER === true && window.APP_SCORE && save.hiScore > 0) window.APP_SCORE(save.hiScore); } catch(e){} }
-function gcSync(){ $('openRank').hidden = window.APP_GAMECENTER !== true; gcScore(); }
+function gcScore(){ if (shotOn) return; try { if (window.APP_GAMECENTER === true && window.APP_SCORE && save.hiScore > 0) window.APP_SCORE(save.hiScore); } catch(e){} }
+/* achievements (11/26・the list, names and badges are docs/kobo/gamecenter.json — the ids here must match it; dev/tests/gc_check.py checks).
+   Each one is read off the save, so old saves count too. writeSave sends the new ones; opening the game and signing in send them all again */
+const carOwned = key => !!save.owned[CARS.findIndex(c => c.key === key)];
+const ACHIEVE = [
+  ['race_first_run', () => save.plays >= 1],
+  ['race_town_1', () => save.towns[0].clear], ['race_town_2', () => save.towns[1].clear],
+  ['race_town_3', () => save.towns[2].clear], ['race_town_4', () => save.towns[3].clear],
+  ['race_new_car', () => save.owned.filter(Boolean).length >= 2],
+  ['race_full_tune', () => save.pts.some(n => n >= PT_MAX)],
+  ['race_gold', () => save.gold.some(Boolean)],
+  ['race_maki', () => !!save.titles.maki], ['race_train', () => !!save.titles.train], ['race_clean', () => !!save.titles.clean],
+  ['race_stars_all', () => TOWNS.every((T, i) => townStars(i) === 3)],
+  ['race_titles_all', () => TITLES.every(T => save.titles[T.id])],
+  ['race_police', () => carOwned('ppolice')], ['race_tank', () => carOwned('ptank')],
+];
+const achSent = new Set();
+function gcAchieve(all){
+  if (shotOn || !window.APP_ACHIEVE) return;
+  for (const [id, got] of ACHIEVE){
+    let ok = false; try { ok = got(); } catch(e){}
+    if (ok && (all || !achSent.has(id))){ achSent.add(id); try { window.APP_ACHIEVE(id); } catch(e){} }
+  }
+}
+function gcSync(){ $('openRank').hidden = window.APP_GAMECENTER !== true; gcScore(); gcAchieve(true); }
 window.addEventListener('app-gamecenter', gcSync);
 $('openRank').addEventListener('click', () => { if (garageFresh()) return; snd('tap'); try { if (window.APP_RANKING) window.APP_RANKING(); } catch(e){} });
 $('closeSet').addEventListener('click', () => { snd('tap'); closeOv('setOv'); });

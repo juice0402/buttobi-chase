@@ -277,5 +277,5 @@ function dailyState(){ const k = dayKey(); if (!save.daily || save.daily.day !==
 const townStars = i => { const T = save.towns[i]; return (T.clear ? 1 : 0) + (RANK_ORDER[T.rank] >= 4 ? 1 : 0) + (T.mis.every(Boolean) ? 1 : 0); };
 const townOpen = i => i === 0 || !!save.towns[i - 1].clear;
 let shotOn = false;   // App Store screenshot scenes (#shot=… in 10-input-boot) play on a demo save that is never written
-function writeSave(){ if (shotOn) return; try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(e){} }
+function writeSave(){ if (shotOn) return; try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch(e){} try { gcAchieve(); } catch(e){} }   // gcAchieve: Game Center (10-input-boot; not there yet while the save first loads)
 

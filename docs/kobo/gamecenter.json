@@ -1,0 +1,251 @@
+{
+  "leaderboard": {
+    "id": "buttobi_chase_best",
+    "name": {
+      "ja": "ハイスコア",
+      "en-US": "High Score"
+    }
+  },
+  "achievements": [
+    {
+      "id": "race_first_run",
+      "points": 10,
+      "hidden": false,
+      "image": "achievements/race_first_run.png",
+      "ja": {
+        "name": "はじめての逃走",
+        "before": "1回あそぶ",
+        "after": "1回あそんだ"
+      },
+      "en-US": {
+        "name": "First Getaway",
+        "before": "Play once",
+        "after": "Played once"
+      }
+    },
+    {
+      "id": "race_town_1",
+      "points": 10,
+      "hidden": false,
+      "image": "achievements/race_town_1.png",
+      "ja": {
+        "name": "はじまりの街",
+        "before": "はじまりの街をにげきる",
+        "after": "はじまりの街をにげきった"
+      },
+      "en-US": {
+        "name": "Starter Town",
+        "before": "Escape Starter Town",
+        "after": "Escaped Starter Town"
+      }
+    },
+    {
+      "id": "race_town_2",
+      "points": 25,
+      "hidden": false,
+      "image": "achievements/race_town_2.png",
+      "ja": {
+        "name": "港の街",
+        "before": "港の街をにげきる",
+        "after": "港の街をにげきった"
+      },
+      "en-US": {
+        "name": "Harbor Town",
+        "before": "Escape Harbor Town",
+        "after": "Escaped Harbor Town"
+      }
+    },
+    {
+      "id": "race_town_3",
+      "points": 50,
+      "hidden": true,
+      "image": "achievements/race_town_3.png",
+      "ja": {
+        "name": "雪の峠",
+        "before": "雪の峠をにげきる",
+        "after": "雪の峠をにげきった"
+      },
+      "en-US": {
+        "name": "Snowy Pass",
+        "before": "Escape the Snowy Pass",
+        "after": "Escaped the Snowy Pass"
+      }
+    },
+    {
+      "id": "race_town_4",
+      "points": 100,
+      "hidden": true,
+      "image": "achievements/race_town_4.png",
+      "ja": {
+        "name": "国境の荒れ地",
+        "before": "国境の荒れ地をにげきる",
+        "after": "国境の荒れ地をにげきった"
+      },
+      "en-US": {
+        "name": "Border Badlands",
+        "before": "Escape the Border Badlands",
+        "after": "Escaped the Border Badlands"
+      }
+    },
+    {
+      "id": "race_new_car",
+      "points": 10,
+      "hidden": false,
+      "image": "achievements/race_new_car.png",
+      "ja": {
+        "name": "はじめての乗りかえ",
+        "before": "車を1台買う",
+        "after": "車を1台買った"
+      },
+      "en-US": {
+        "name": "New Wheels",
+        "before": "Buy a car",
+        "after": "Bought a car"
+      }
+    },
+    {
+      "id": "race_full_tune",
+      "points": 25,
+      "hidden": false,
+      "image": "achievements/race_full_tune.png",
+      "ja": {
+        "name": "フルチューン",
+        "before": "1台の車にポイントを全部買う",
+        "after": "1台の車にポイントを全部買った"
+      },
+      "en-US": {
+        "name": "Full Tune",
+        "before": "Buy every upgrade point for one car",
+        "after": "Bought every upgrade point for a car"
+      }
+    },
+    {
+      "id": "race_gold",
+      "points": 25,
+      "hidden": false,
+      "image": "achievements/race_gold.png",
+      "ja": {
+        "name": "金のしるし",
+        "before": "どれかの車で S ランクを取る",
+        "after": "S ランクを取った"
+      },
+      "en-US": {
+        "name": "Gold Mark",
+        "before": "Get an S rank with any car",
+        "after": "Got an S rank"
+      }
+    },
+    {
+      "id": "race_maki",
+      "points": 25,
+      "hidden": false,
+      "image": "achievements/race_maki.png",
+      "ja": {
+        "name": "まきこみ上手",
+        "before": "1回の逃走で、追っ手を一般車に15台まきこむ",
+        "after": "1回の逃走で、追っ手を一般車に15台まきこんだ"
+      },
+      "en-US": {
+        "name": "Pile-Up Pro",
+        "before": "Lure 15 chasers into traffic in one run",
+        "after": "Lured 15 chasers into traffic in one run"
+      }
+    },
+    {
+      "id": "race_train",
+      "points": 25,
+      "hidden": false,
+      "image": "achievements/race_train.png",
+      "ja": {
+        "name": "ふみきりの魔王",
+        "before": "1回の逃走で、電車で追っ手を3台たおす",
+        "after": "1回の逃走で、電車で追っ手を3台たおした"
+      },
+      "en-US": {
+        "name": "Crossing King",
+        "before": "Take out 3 chasers with trains in one run",
+        "after": "Took out 3 chasers with trains in one run"
+      }
+    },
+    {
+      "id": "race_clean",
+      "points": 50,
+      "hidden": false,
+      "image": "achievements/race_clean.png",
+      "ja": {
+        "name": "無傷の逃がし屋",
+        "before": "ほとんどぶつからずに にげきる",
+        "after": "ほとんどぶつからずに にげきった"
+      },
+      "en-US": {
+        "name": "Untouched",
+        "before": "Escape with barely a scratch",
+        "after": "Escaped with barely a scratch"
+      }
+    },
+    {
+      "id": "race_stars_all",
+      "points": 100,
+      "hidden": false,
+      "image": "achievements/race_stars_all.png",
+      "ja": {
+        "name": "ぜんぶの街で★3つ",
+        "before": "すべての街で★を3つそろえる",
+        "after": "すべての街で★を3つそろえた"
+      },
+      "en-US": {
+        "name": "All Stars",
+        "before": "Get 3 stars in every town",
+        "after": "Got 3 stars in every town"
+      }
+    },
+    {
+      "id": "race_titles_all",
+      "points": 100,
+      "hidden": false,
+      "image": "achievements/race_titles_all.png",
+      "ja": {
+        "name": "称号コンプリート",
+        "before": "称号をぜんぶ集める",
+        "after": "称号をぜんぶ集めた"
+      },
+      "en-US": {
+        "name": "Every Title",
+        "before": "Collect every title",
+        "after": "Collected every title"
+      }
+    },
+    {
+      "id": "race_police",
+      "points": 50,
+      "hidden": true,
+      "image": "achievements/race_police.png",
+      "ja": {
+        "name": "ひみつのパトカー",
+        "before": "ひみつのパトカーを手に入れる",
+        "after": "ひみつのパトカーを手に入れた"
+      },
+      "en-US": {
+        "name": "Secret Cruiser",
+        "before": "Get the secret police car",
+        "after": "Got the secret police car"
+      }
+    },
+    {
+      "id": "race_tank",
+      "points": 100,
+      "hidden": true,
+      "image": "achievements/race_tank.png",
+      "ja": {
+        "name": "戦車乗り",
+        "before": "戦車を手に入れる",
+        "after": "戦車を手に入れた"
+      },
+      "en-US": {
+        "name": "Tank Driver",
+        "before": "Get the tank",
+        "after": "Got the tank"
+      }
+    }
+  ]
+}

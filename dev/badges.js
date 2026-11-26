@@ -60,8 +60,8 @@ function badgeKit(H){
       veh('sports', -9, 6); },
     town_4(){ grass('#d9b27c'); road(0, 46, '#b98a55', false);
       ctx.fillStyle = 'rgba(120,90,50,0.35)'; for (let i = 0; i < 18; i++) ellipse(-50 + rnd(i*4)*100, -50 + rnd(i*6)*100, 3 + rnd(i)*4, 2 + rnd(i*2)*2);
-      veh('armor', 6, 30, 0.12, '#4b3f35', 0.9); boom(10, 4, 10); chips([[-30, 30, 7, 7, '#e8735a', 0.4], [32, -8, 6, 8, '#f0b94a', -0.3], [-24, 46, 6, 6, '#4f8fc0', 0.8]]);
-      veh('pkei', -10, -26); speed(-10, -6, 3, 12); },
+      veh('armor', 8, 26, 0.12, '#4b3f35', 0.8); boom(11, 4, 9); chips([[-30, 30, 7, 7, '#e8735a', 0.4], [32, -8, 6, 8, '#f0b94a', -0.3], [-24, 46, 6, 6, '#4f8fc0', 0.8]]);
+      veh('pkei', -10, -20); speed(-10, 0, 3, 10); },
     new_car(){ fill('#2b3a4c'); ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.fillRect(-30, -60, 2, 120); ctx.fillRect(28, -60, 2, 120);
       ctx.fillStyle = '#f4d35e'; for (let x = -60; x < 60; x += 12){ ctx.beginPath(); ctx.moveTo(x, 40); ctx.lineTo(x + 6, 40); ctx.lineTo(x + 12, 46); ctx.lineTo(x + 6, 46); ctx.fill(); }
       veh('muscle', 0, -2, 0, null, 1.25); sparkle(-22, -26, 6); sparkle(22, -10, 4.5); sparkle(18, 26, 5); },
@@ -96,7 +96,7 @@ function badgeKit(H){
     tank(){ grass('#d9b27c');
       chips([[-38, -30, 9, 9, '#e8735a', 0.4], [36, -36, 8, 10, '#4f8fc0', -0.5], [-40, 30, 8, 8, '#6fb68b', 0.7], [38, 26, 9, 8, '#f0b94a', -0.2]]);
       ctx.fillStyle = 'rgba(120,90,50,0.35)'; for (let y = -50; y < 60; y += 7){ ctx.fillRect(-14, y, 6, 3); ctx.fillRect(8, y, 6, 3); }
-      veh('ptank', 0, 10, 0, null, 1.0); },
+      veh('ptank', 0, 14, 0, null, 0.85); },
   };
   function cup(){
     ctx.beginPath(); ctx.moveTo(-20, -30); ctx.lineTo(20, -30); ctx.lineTo(18, -8); ctx.quadraticCurveTo(14, 8, 4, 10); ctx.lineTo(4, 22); ctx.lineTo(14, 22); ctx.lineTo(14, 30); ctx.lineTo(-14, 30); ctx.lineTo(-14, 22); ctx.lineTo(-4, 22); ctx.lineTo(-4, 10); ctx.quadraticCurveTo(-14, 8, -18, -8); ctx.closePath(); ctx.fill();
@@ -118,7 +118,7 @@ function badgeKit(H){
       for (let i = 0; i < 12; i++){ const a = i*Math.PI/6; ctx.fillStyle = shade(ring, -0.12); circle(Math.cos(a)*55, Math.sin(a)*55, 1.6); ctx.fillStyle = 'rgba(255,255,255,0.5)'; circle(Math.cos(a)*55 - 0.4, Math.sin(a)*55 - 0.4, 0.7); }
       ctx.fillStyle = shade(ring, -0.3); circle(0, 0, R + 1.5);
       ctx.save(); ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI*2); ctx.clip();
-      scene();
+      ctx.save(); ctx.scale(1.15, 1.15); scene(); ctx.restore();   // a little closer, so the cars read at Game Center's small size
       // a soft inner shadow so the scene sits inside the medal
       const g = ctx.createRadialGradient(0, 0, R*0.72, 0, 0, R); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(10,20,30,0.28)');
       ctx.fillStyle = g; ctx.fillRect(-R, -R, R*2, R*2);
