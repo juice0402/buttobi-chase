@@ -189,9 +189,9 @@
       "hidden": false,
       "image": "achievements/race_stars_all.png",
       "ja": {
-        "name": "ぜんぶの街で★3つ",
-        "before": "すべての街で★を3つそろえる",
-        "after": "すべての街で★を3つそろえた"
+        "name": "ぜんぶの街で星3つ",
+        "before": "すべての街で星を3つそろえる",
+        "after": "すべての街で星を3つそろえた"
       },
       "en-US": {
         "name": "All Stars",
