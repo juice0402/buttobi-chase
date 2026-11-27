@@ -5,3 +5,4 @@ dev/tests/_bal_*
 dev/tests/bal_*.json
 .claude/
 !docs/kobo/*.png
+!docs/kobo/achievements/*.png
